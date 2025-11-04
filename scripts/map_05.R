@@ -53,7 +53,7 @@ colnames(zoom_3_hillshade_df)
 
 # let's make our ggplots shorter by saving
 # our theme:
-rAtlas_theme <- theme_minimal() +
+my_theme <- theme_minimal() +
   theme(axis.title.x=element_blank(), 
         axis.title.y=element_blank(), 
         axis.text.x=element_blank(), 
@@ -71,7 +71,7 @@ zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme(rAtlas_theme) +
+  theme(my_theme) +
   coord_sf() + 
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Campus hillshade")
 
@@ -85,7 +85,7 @@ zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
   scale_fill_viridis_c(guide="none") +
-  theme(rAtlas_theme) +
+  theme(my_theme) +
   coord_sf() + 
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "UCSB DEM")
 
@@ -99,7 +99,7 @@ zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme(rAtlas_theme) +
+  theme(my_theme) +
   coord_sf() + 
   ggtitle("Map 5: zm 3: UCSB & Surroundings", subtitle = gg_labelmaker(current_ggplot+1))
 
