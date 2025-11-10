@@ -114,7 +114,6 @@ to match the look of 3-4-5
 
 ![Map 6 until now](readme_images/map6.1.png "Map 6 until now")
 
-![Map 6: A zoom in to the UCSB Campus](final_output/map7_row_1.png "A zoom in to the UCSB Campus")
 
 ## Map 7: The Layout
 ![map 7](final_output/map_07.png)
