@@ -52,7 +52,7 @@ except where noted.
 -   Extent should be the same as #3 inset of map 7.
 -   NCOS – for now the new lagoon habitat shapefile
 -   Water
--   Bathymentry and elevation in one layer
+-   Bathymetry and elevation in one layer
     -   hillshade
 -   bike paths
 -   buildings – for context
@@ -62,7 +62,7 @@ except where noted.
 
 Something like this: ![Map 1 DRAFT](/final_output/map_01.png "Map 1")
 
-### Map 2 A stylized thematic map with trees, water, and bikeways
+### Map 2. A stylized thematic map with trees, water, and bikeways
 
 -   ArcGIS Online: Water:
 -   NCOS upper lagoon shapefile of bathymetric topo lines or polygons is
@@ -78,14 +78,14 @@ species](/readme_images/map2_TreeSpecies.png "Map 2 tree height")
 
 Map 6 is the top tryptic = Maps 3-4-5 zoom-in.
 
-#### Map 3 California Overview
+#### Map 3. California Overview
 Portrait 3x4 Western US
 Does it want water?
 - remove tic marks
 ![Map 3 currently](/final_output/map_03.png "Map 3")
 
 
-#### Map 4 The Bite of California
+#### Map 4. The Bite of California
 Portrait 3x4 
 - Needs to be further zoomed in?
 - populated places needs to be better visualized
@@ -97,7 +97,7 @@ Portrait 3x4
 
 
 
-#### Map 5 Extended Campus
+#### Map 5. Extended Campus
 (issue #14) 
 Landscape 4x3 
 \* extended campus will have maptiles background? \* 
@@ -106,17 +106,18 @@ Landscape 4x3
 
 
 
-### Map 6 The tryptic
+### Map 6. The tryptic
 
 Wide Landscape 9x16ish? 
 \* A stripped down version of map #1, symbolized
 to match the look of 3-4-5 
 
 ![Map 6 until now](readme_images/map6.1.png "Map 6 until now")
+
 ![Map 6: A zoom in to the UCSB Campus](final_output/map7_row_1.png "A zoom in to the UCSB Campus")
 
 ## Map 7: The Layout
-!
+![map 7](final_output/map_07.png)
 
 #### Map 7 sketch:
 
