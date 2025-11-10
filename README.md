@@ -142,6 +142,9 @@ surrounded by nearby neighbors that are higher.
 ## Map 12 / Episode 12: 12 months of NDVI Raster Stack
 
 ![A bunch of NDVIs](final_output/map_12.png "Map 12: A stack of NDVIs")
+![NDVIs 2023 - 2024](final_output/plot_12.png "Mean NDVIs 2023 - 2024")
+
+
 
 [UCSB Carpentry](https://ucsbcarpentry.github.io)
 
