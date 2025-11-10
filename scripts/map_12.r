@@ -400,6 +400,22 @@ ggplot(avg_NDVI_df, mapping = aes(Month, MeanNDVI)) +
   geom_point() +
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "can't read this axis")
 
+# turn the x axis vertical.
+ggplot(avg_NDVI_df, mapping = aes(Month, MeanNDVI)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Now we can read this axis")
+
+ggsave("images/plot_12.png", plot=last_plot())
+
+
+# we still need to format those as Julian dates
+# hallucinated graph:
+# ggplot(avg_NDVI_df, mapping = aes(JulianDate, MeanNDVI)) +
+#  geom_point() +
+#  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Now we can read this axis")
+
+
 
 # we'll need weather data to mimic the lesson.
 # or use our brains and eyes to define 

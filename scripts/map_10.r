@@ -36,7 +36,7 @@ creeks      <- project(creeks, bike_paths)
 creek_bike_pts <- intersect(creeks, bike_paths)
 str(creek_bike_pts)
 
-# creek_bike_pts <- vect(creek_bike_pts)
+creek_bike_pts <- vect(creek_bike_pts)
 
 # let's put in another plot here to prove it
 plot(creek_bike_pts)

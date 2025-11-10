@@ -141,7 +141,7 @@ bikes_crop <- crop(bikes_proj, new_ext)
 streams_crop <- crop(streams, new_ext)
 coastline_crop <- crop(coastline_proj, new_ext)
 iv_crop_poly <- st_as_sf(as.polygons(new_ext))
-iv_buildings <- st_crop(iv_buildings, iv_crop_poly)
+# iv_buildings <- st_crop(iv_buildings, iv_crop_poly)
 
 # Run again the plot to see the differences
 ggplot() +
