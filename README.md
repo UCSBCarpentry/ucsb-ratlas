@@ -128,10 +128,7 @@ We used to have a jpg of the whiteboard here.
 For starters, this will be one 8-band image visualized several different
 ways. Which is an expansion of episode 5. Something like this: 
 ![4 color images](readme_images/map_08.png "Map 8: 4 PlanetScopes")
-![map 8?](final_output/map8.png)
-![map 8?](final_output/map_08.png)
-![map 8?](final_output/map_08.1.jpg)
-![map 8?](final_output/map_08.jpg)
+![map 8](final_output/map8.png)
 
 
 ## 9 Analysis: Find landscape depressions on Campus DEM
