@@ -69,45 +69,50 @@ Something like this: ![Map 1 DRAFT](/final_output/map_01.png "Map 1")
     it this [bird habitat
     file?](https://drive.google.com/file/d/1ssytmTbpC1rpT5b-h8AxtvSgNrsGQVNY/view?usp=drive_link)
     – yes bird habitats
+-   Shows as dark mode (and I like it)
 
 Something like this: ![map 2 with tree
-species](/readme_images/map2_TreeSpecies.png "Map 2 tree height")Trees
-from
+species](/readme_images/map2_TreeSpecies.png "Map 2 tree height")
 
 ### Map 7 An atlas page layout with 4 insets:
 
-Top tryptic is maps 3-4-5 zoom-in. Then Map 6
+Map 6 is the top tryptic = Maps 3-4-5 zoom-in.
 
-#### map 3 California Overview
-![Map 3 currently](/final_output/map_03.png "Map 3")
-
+#### Map 3 California Overview
 Portrait 3x4 Western US
+![Map 3 currently](/final_output/map_03.png "Map 3")
 
 
 #### map 4 The Bite of California
+Portrait 3x4 
+- Needs to be further zoomed in
+- populated places needs to be better visualized
+- needs water
+- shows as dark mode
 ![Map 4](/final_output/map_04.png "Map 4")
 
-Portrait 3x4 Needs to be further zoomed in. 
 
 
 #### map 5 Extended Campus
+(issue #14) 
+Landscape 4x3 \* extended campus will have maptiles background? \* 
+![Map 5](/final_output/map_05.png "Map 5")
 
-(issue #14) Landscape 4x3 \* extended campus will have maptiles
-background? \* Bacara-ish to 154/101
 
 
-#### Map 6 Campus Detail
+#### Map 6 The tryptic
 
-Wide Landscape 9x16ish? \* A stripped down version of map #1, symbolized
-to match the look of 3-4-5 ![Map 6 until
-now](readme_images/map6.1.png "Map 6 until now")
+Wide Landscape 9x16ish? 
+\* A stripped down version of map #1, symbolized
+to match the look of 3-4-5 
 
-Maps 3-4-5: ![Triplet zoom
-in](/final_output/map7_row_1.png "Draft zoom.")
+![Map 6 until now](readme_images/map6.1.png "Map 6 until now")
+![Map 6: A zoom in to the UCSB Campus](final_output/map7_row_1.png "A zoom in to the UCSB Campus")
+
+
 
 
 #### Map 3 sketch:
-
 we used to have a jpg of the whiteboard here.
 
 
