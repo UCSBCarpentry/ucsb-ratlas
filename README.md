@@ -45,7 +45,7 @@ ggtitles to keep track of where they are generated.
 All outputs from map scripts should have a 3 tall x 4 wide aspect ratio,
 except where noted.
 
-![Check out our progess](progress.md "August, 2025 outputs.")
+[Check out our progess](progress.md "August, 2025 outputs.")
 
 ### Map 1. A wide view of campus with:
 
@@ -80,22 +80,25 @@ Map 6 is the top tryptic = Maps 3-4-5 zoom-in.
 
 #### Map 3 California Overview
 Portrait 3x4 Western US
+Does it want water?
 ![Map 3 currently](/final_output/map_03.png "Map 3")
 
 
 #### map 4 The Bite of California
 Portrait 3x4 
-- Needs to be further zoomed in
+- Needs to be further zoomed in?
 - populated places needs to be better visualized
-- needs water
-- shows as dark mode
+- needs water!
+- shows as dark mode and I don't like it
 ![Map 4](/final_output/map_04.png "Map 4")
 
 
 
 #### map 5 Extended Campus
 (issue #14) 
-Landscape 4x3 \* extended campus will have maptiles background? \* 
+Landscape 4x3 
+\* extended campus will have maptiles background? \* 
+- shows as dark mode and I don't like it
 ![Map 5](/final_output/map_05.png "Map 5")
 
 
@@ -109,7 +112,8 @@ to match the look of 3-4-5
 ![Map 6 until now](readme_images/map6.1.png "Map 6 until now")
 ![Map 6: A zoom in to the UCSB Campus](final_output/map7_row_1.png "A zoom in to the UCSB Campus")
 
-
+### Map 7: The Layout
+!
 
 
 #### Map 3 sketch:
