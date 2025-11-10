@@ -81,20 +81,23 @@ Map 6 is the top tryptic = Maps 3-4-5 zoom-in.
 #### Map 3 California Overview
 Portrait 3x4 Western US
 Does it want water?
+- remove tic marks
 ![Map 3 currently](/final_output/map_03.png "Map 3")
 
 
-#### map 4 The Bite of California
+#### Map 4 The Bite of California
 Portrait 3x4 
 - Needs to be further zoomed in?
 - populated places needs to be better visualized
 - needs water!
 - shows as dark mode and I don't like it
+- remove degrees
+
 ![Map 4](/final_output/map_04.png "Map 4")
 
 
 
-#### map 5 Extended Campus
+#### Map 5 Extended Campus
 (issue #14) 
 Landscape 4x3 
 \* extended campus will have maptiles background? \* 
@@ -103,7 +106,7 @@ Landscape 4x3
 
 
 
-#### Map 6 The tryptic
+### Map 6 The tryptic
 
 Wide Landscape 9x16ish? 
 \* A stripped down version of map #1, symbolized
@@ -112,15 +115,15 @@ to match the look of 3-4-5
 ![Map 6 until now](readme_images/map6.1.png "Map 6 until now")
 ![Map 6: A zoom in to the UCSB Campus](final_output/map7_row_1.png "A zoom in to the UCSB Campus")
 
-### Map 7: The Layout
+## Map 7: The Layout
 !
 
+#### Map 7 sketch:
 
-#### Map 3 sketch:
-we used to have a jpg of the whiteboard here.
+We used to have a jpg of the whiteboard here.
 
 
-### Map 8 RS Imagery
+## Map 8 RS Imagery
 
 For starters, this will be one 8-band image visualized several different
 ways. Which is an expansion of episode 5. Something like this: 
@@ -131,16 +134,16 @@ ways. Which is an expansion of episode 5. Something like this:
 ![map 8?](final_output/map_08.jpg)
 
 
-### 9 Analysis: Find landscape depressions on Campus DEM
+## 9 Analysis: Find landscape depressions on Campus DEM
 
 ie: identify vernal pools. Find elevations \> sea level that are
 surrounded by nearby neighbors that are higher.
 
-### 10 Analysis: Find bike paths that cross water?
+## 10 Analysis: Find bike paths that cross water?
 
-### Map 11: Look at a Dibblee
+## Map 11: Look at a Dibblee
 
-### Map 12 / Episode 12: 12 months of NDVI Raster Stack
+## Map 12 / Episode 12: 12 months of NDVI Raster Stack
 
 ![A bunch of NDVIs](final_output/map_12.png "Map 12: A stack of NDVIs")
 
