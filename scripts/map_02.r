@@ -33,6 +33,7 @@ library(terra)     # Required for loading vector data with vect() function
 library(tidyterra) # Required for using geom_spatvector() with ggplot
 library(ggspatial) # Required for map scale -annotation_scale()- and compass -annotation_north_arrow()-
 library(ggnewscale) # Required for mapping multiple scales in ggplot
+library(sf)
 
 
 ## Read data
@@ -45,14 +46,15 @@ streams <- vect("source_data/california_streams/California_Streams.shp")
 # Coastline polygon
 coastline <- vect("source_data/pacific_ocean-shapefile/3853-s3_2002_s3_reg_pacific_ocean_lines.shp")
 # IV buildings
-iv_buildings <- sf::st_read("source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp")
-iv_buildings <- sf::st_transform(iv_buildings, crs(trees))
+iv_buildings <- st_read("source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp")
 
 # Let's take a quick first look at our data and find out their projections
 plot(trees)
 crs(trees, describe=TRUE)
 plot(bikes)
 crs(bikes, describe=TRUE)
+
+# this streams is giant.
 # plot(streams) 
 crs(streams, describe=TRUE)
 # plot(coastline) 
@@ -106,14 +108,14 @@ bikes_crop <- crop(bikes_proj, trees)
 streams_crop <- crop(streams, trees)
 coastline_crop <- crop(coastline_proj, trees)
 
-# With this dataset, let's do a first test of how our map would look like
-# question, what in the queens english? 
 
+# With these datasets, let's do a first test of how our map would look like
 ggplot() +
   geom_spatvector(data=trees, colour='green4') +
   geom_spatvector(data=streams_crop, colour='lightblue') +
   geom_spatvector(data = bikes_crop, colour='black') +
   geom_spatvector(data=coastline_crop, colour='darkblue') +
+  geom_spatvector(data=iv_buildings) + 
   ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf()
   
@@ -138,8 +140,8 @@ new_ext <- ext(-xrange + ext_trees$xmin, xrange + ext_trees$xmax,
 bikes_crop <- crop(bikes_proj, new_ext)
 streams_crop <- crop(streams, new_ext)
 coastline_crop <- crop(coastline_proj, new_ext)
-iv_crop_poly <- sf::st_as_sf(as.polygons(new_ext))
-iv_buildings <- sf::st_crop(iv_buildings, iv_crop_poly)
+iv_crop_poly <- st_as_sf(as.polygons(new_ext))
+iv_buildings <- st_crop(iv_buildings, iv_crop_poly)
 
 # Run again the plot to see the differences
 ggplot() +
@@ -147,6 +149,7 @@ ggplot() +
   geom_spatvector(data = streams_crop, , colour='lightblue') +
   geom_spatvector(data = bikes_crop, colour='black') +
   geom_spatvector(data = coastline_crop, colour='darkblue') +
+  geom_spatvector(data=iv_buildings) + 
   ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf()
 
@@ -167,14 +170,17 @@ summary(trees$HT)
 
 # Let's plot the trees data scaling each point according to the height of the tree
 ggplot() +
-  geom_spatvector(data=trees, aes(size=HT), colour = 'green4')
+  geom_spatvector(data=trees, aes(size=HT), colour = 'green4') +
+  ggtitle(gg_labelmaker(current_ggplot+1), subtitle="Tree Heights")
 
 # We could modify it a bit to reduce the scale of the dots. Here the values
 # in the range parameter means the size in milimeters of the dots, going from
 # 0 mm to 2 mm
 ggplot() +
   geom_spatvector(data=trees, aes(size=HT), colour = 'green4') +
-  scale_size_continuous(range = c(0, 2)) 
+  scale_size_continuous(range = c(0, 2)) +
+  ggtitle(gg_labelmaker(current_ggplot+1), subtitle="Tree Heights")
+
 
 # But we can notice that there are trees with height 0, seedlings. Do we want to 
 # keep these? Probably not. We could make a histogram to see the distribution 
