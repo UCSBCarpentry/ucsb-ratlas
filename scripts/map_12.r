@@ -406,7 +406,7 @@ ggplot(avg_NDVI_df, mapping = aes(Month, MeanNDVI)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Now we can read this axis")
 
-ggsave("images/plot_12.png", plot=last_plot())
+ggsave("final_output/plot_12.png", plot=last_plot())
 
 
 # we still need to format those as Julian dates
