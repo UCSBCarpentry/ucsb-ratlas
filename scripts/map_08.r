@@ -46,6 +46,7 @@ par(mfrow = c(1,1))
 
 #load an 8-band image: data_prep puts it here:
 planet_scene <- rast("source_data/planet/planet/20232024_UCSB_campus_PlanetScope/PSScene/20230912_175450_00_2439_3B_AnalyticMS_SR_8b_clip.tif")
+planet_scene
 
 # won't plot without a stretch
 # plotRGB(planet_scene)
