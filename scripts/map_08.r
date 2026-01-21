@@ -38,15 +38,16 @@ gg_labelmaker <- function(plot_num){
 #######
 
 
-# make sure output window is 1x1
-# because you muck with it a lot
-par(mfrow = c(1,1))
-
-
 
 #load an 8-band image: data_prep puts it here:
 planet_scene <- rast("source_data/planet/planet/20232024_UCSB_campus_PlanetScope/PSScene/20230912_175450_00_2439_3B_AnalyticMS_SR_8b_clip.tif")
 planet_scene
+
+# check it out
+class(planet_scene)
+res(planet_scene)
+dim(planet_scene)
+crs(planet_scene)
 
 # won't plot without a stretch
 # plotRGB(planet_scene)
@@ -65,7 +66,7 @@ plotRGB(planet_scene, stretch = "hist",
 
 #  something pretty or odd
 plotRGB(planet_scene, stretch = "hist",
-        r = 7, g = 4, b = 1)
+        r = 1, g = 2, b = 6)
 
 #  yellow = green
 plotRGB(planet_scene, stretch = "hist",
@@ -83,34 +84,59 @@ plotRGB(planet_scene, stretch = "hist",
 par(mfrow = c(2,2))
   
 #  natural color
-plotRGB(planet_scene, stretch = "hist",
+natural <- plotRGB(planet_scene, stretch = "hist",
         r = 4, g = 3, b = 2,
         main = "natural color")
 
 
 #  false-color IR
-plotRGB(planet_scene, stretch = "hist",
+false_color_ir <- plotRGB(planet_scene, stretch = "hist",
         r = 8, g = 3, b = 2,
-        main = "false-color infrared")
+        main = "false color infrared")
 
 #  yellow = green
-plotRGB(planet_scene, stretch = "hist",
+yellow_green <- plotRGB(planet_scene, stretch = "hist",
         r = 7, g = 5, b = 1,
         main = "yellow = green")
 
-#  pretty
-plotRGB(planet_scene, stretch = "hist",
+#  pretty 7,4,1
+pretty_741 <- plotRGB(planet_scene, stretch = "hist",
         r = 7, g = 4, b = 1,
         main = "pretty")
 
-# and save the image
+
+
+# save the image
+# i realize this is repetitive 
+# open device
 png("final_output/map_08.png")
-jpeg("final_output/map_08.1.jpg")
-
-# save the output as a png
 par(mfrow = c(2,2))
-#  natural color
 
+#  natural color
+natural <- plotRGB(planet_scene, stretch = "hist",
+                   r = 4, g = 3, b = 2,
+                   main = "natural color")
+
+
+#  false-color IR
+false_color_ir <- plotRGB(planet_scene, stretch = "hist",
+                          r = 8, g = 3, b = 2,
+                          main = "false color infrared")
+
+#  yellow = green
+yellow_green <- plotRGB(planet_scene, stretch = "hist",
+                        r = 7, g = 5, b = 1,
+                        main = "yellow = green")
+
+#  pretty 7,4,1
+pretty_741 <- plotRGB(planet_scene, stretch = "hist",
+                      r = 7, g = 4, b = 1,
+                      main = "pretty")
+
+
+
+dev.off()
+   
 
 # reset your par() before leaving
 par(mfrow = c(1,1))

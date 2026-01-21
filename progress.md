@@ -19,7 +19,7 @@ Something like this:
 ### Map 2 A stylized thematic map with trees, water, and bikeways
 Something like this:
 ![map 2 with tree species](/final_output/map_02.png "Map 2 Trees and Torches")
-
+Which oddly shows on a dark background if you are a dark-mode user. Crazy transparancy!
 
 ## Map 7 An atlas page layout with 4 insets:
 Top tryptic is maps 3-4-5 zoom-in.
@@ -28,8 +28,10 @@ Top tryptic is maps 3-4-5 zoom-in.
 ![Map 3: Western US](/final_output/map_03.png "Map 3")
 
 ![Map 4: California](/final_output/map_04.png "Map 4")
+Needs water
 
 ![Map 5: Bight of California](/final_output/map_05.png "Map 5")
+Needs water
 
 ### Map 6
 ![Map 6: UCSB & Environs](/final_output/map_06.png "Map 6")
@@ -47,13 +49,11 @@ Something like this:
 
 
 
-
-
 ### 9 Analysis: Find landscape depressions on Campus DEM
 ie: identify vernal pools.
 Find elevations > sea level that are surrounded by nearby neighbors that are higher.
 
-### 10 Analysis: Find bike paths that cross water?
+### 10 Analysis: Bike paths that cross water
 
 ### Map 11: Look at a Dibblee
 
