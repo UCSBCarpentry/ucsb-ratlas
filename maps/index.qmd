@@ -12,10 +12,10 @@ The atlas consists of 12 planned plates and analytical workflows covering raster
 | Plate | Title | Key Geospatial Concepts & Data Layers | Status |
 |:---:|---|---|:---:|
 | [**Map 1**](map_01.qmd) | Campus Overview | Topo-bathymetric raster merging, hillshade, bikeways, campus & Isla Vista buildings | Complete |
-| [**Map 2**](map_02.qmd) | Thematic Trees & Water | Classified tree inventory by height/genus, stream networks, styled coastal aesthetics | Complete |
-| [**Map 3**](map_03.qmd) | Western US Locator | Continental elevation model, regional context, graticule styling | Complete |
-| [**Map 4**](map_04.qmd) | California Coast | State boundary, coastal terrain, populated places vector points | Complete |
-| [**Map 5**](map_05.qmd) | Bight of California | Sub-regional Channel Islands & Santa Barbara Channel bathymetry | Complete |
+| [**Map 2**](map_02.qmd) | Thematic Trees & Water | Classified tree inventory by height/genus, stream networks, styled coastal aesthetics | Tweak |
+| [**Map 3**](map_03.qmd) | Western US Locator | Continental elevation model, regional context, graticule styling | Tweak |
+| [**Map 4**](map_04.qmd) | California Coast | State boundary, coastal terrain, populated places vector points | Incomplete |
+| [**Map 5**](map_05.qmd) | Bight of California | Sub-regional Channel Islands & Santa Barbara Channel bathymetry | Incomplete |
 | [**Map 6**](map_06.qmd) | UCSB & Environs | Wide base map linking regional geometry to campus boundaries | Complete |
 | [**Map 7**](map_07.qmd) | Atlas Page Layout | Multi-panel layout combining Maps 3, 4, 5 & 6 using `magick` | Complete |
 | [**Map 8**](map_08.qmd) | Satellite Remote Sensing | PlanetScope 4-band / 8-band multispectral seasonal imagery | Complete |
