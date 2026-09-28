@@ -1,0 +1,29 @@
+---
+title: "Map 4: California Coast"
+subtitle: "State-level regional locator inset highlighting the coastline and populated centers"
+---
+
+## Rendered Map Plate
+
+![Map 4: California coastline and regional elevation](../final_output/map_04.png){fig-alt="Map 4 California Coast" width="80%"}
+
+---
+
+## Technical Summary
+
+* **Objective:** Serve as the middle locator panel (Inset 2 of the Map 7 tryptic), bridging continental context down to the California state scale.
+* **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `sf`
+* **Data Sources:**
+  * California subsetted DEM
+  * California Populated Places vector points
+  * Coastline and state boundary features
+* **Aspect Ratio:** 3 tall x 4 wide portrait orientation.
+
+---
+
+## R Script (`scripts/map_04.r`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_04.r")
+```

@@ -1,0 +1,633 @@
+[
+  {
+    "objectID": "maps/map_12.html",
+    "href": "maps/map_12.html",
+    "title": "Map 12: 12-Month NDVI Stack",
+    "section": "",
+    "text": "Map 12: 12 monthly NDVI scenes over the UCSB campus\n\n\n\n\n\n\n\n\nPlot 12: Mean campus NDVI across the annual cycle",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 12: 12-Month NDVI Stack"
+    ]
+  },
+  {
+    "objectID": "maps/map_12.html#rendered-map-plates",
+    "href": "maps/map_12.html#rendered-map-plates",
+    "title": "Map 12: 12-Month NDVI Stack",
+    "section": "",
+    "text": "Map 12: 12 monthly NDVI scenes over the UCSB campus\n\n\n\n\n\n\n\n\nPlot 12: Mean campus NDVI across the annual cycle",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 12: 12-Month NDVI Stack"
+    ]
+  },
+  {
+    "objectID": "maps/map_12.html#technical-summary",
+    "href": "maps/map_12.html#technical-summary",
+    "title": "Map 12: 12-Month NDVI Stack",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Calculate monthly Normalized Difference Vegetation Index (NDVI) rasters across an entire annual cycle using PlanetScope satellite collections to answer the question: What month is UCSB greenest?\nFormula: \\[\\text{NDVI} = \\frac{\\text{NIR} - \\text{Red}}{\\text{NIR} + \\text{Red}} = \\frac{\\text{Band 8} - \\text{Band 6}}{\\text{Band 8} + \\text{Band 6}}\\]\nKey Packages: terra, ggplot2, dplyr, tidyr, lubridate, scales\nData Sources:\n\nMonthly PlanetScope AnalyticMS scenes (output_data/ndvi/*.tif)\nCampus boundary polygon\n\nOutputs:\n\nFaceted multi-panel map plate: final_output/map_12.png\nTime-series trajectory plot: final_output/plot_12.png",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 12: 12-Month NDVI Stack"
+    ]
+  },
+  {
+    "objectID": "maps/map_12.html#r-script-scriptsmap_12.r",
+    "href": "maps/map_12.html#r-script-scriptsmap_12.r",
+    "title": "Map 12: 12-Month NDVI Stack",
+    "section": "R Script (scripts/map_12.r)",
+    "text": "R Script (scripts/map_12.r)\n\n\nShow R Code\n# map 12\n# let's build monthly NDVI's for campus\n# as in episode 12\n\n# to answer the question:\n# What month was the greenest?\n\n# clean the environment and hidden objects\nrm(list = ls())\n\n# reset the par() before starting.\npar(mfrow = c(1, 1))\n\n# set map number\ncurrent_sheet &lt;- 12\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\ngg_labelmaker &lt;- function(plot_num) {\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse = \" \")\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n\n# every ggtitle() or labs() should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\nlibrary(scales)\nlibrary(tidyr)\nlibrary(dplyr)\nlibrary(ggplot2)\n# library(raster)\nlibrary(terra)\nlibrary(geojsonsf) # to handle geojson\n# library(sf) #&lt;- to handle geojson (not geojsonsf? -KL)\nlibrary(lubridate)\n\n\n# NDVIs were premade in the Carpentries lesson, but\n# we already know enough raster math to make our\n# own, as in\n# episode 4\n\n# brick is raster. rast is terra\n# the 2 different ndvis looks VERY different when\n# you do this raster math\n# for now we leave raster::bricks behind\n\n# make an NDVI for 1 file\ntiff_path &lt;- c(\"source_data/planet/planet/20232024_UCSB_campus_PlanetScope/PSScene/\")\n\n# for reference, plot ONE of our 8 band files with\n# semi-natural color\n# this is PlanetScope\n\nimage &lt;- rast(paste(tiff_path, \"20230912_175450_00_2439_3B_AnalyticMS_SR_8b_clip.tif\", sep = \"\"))\n# ala-episode 5\nplotRGB(image, r = 6, g = 3, b = 1, stretch = \"hist\")\nimage\n\nsummary(image)\n\n# here is the NDVI calculation:\n# (NIR - Red) / (NIR + Red)\nndvi_tiff &lt;- ((image[[8]] - image[[6]]) / (image[[8]] + image[[6]])) * 10000\n\n# plot(ndvi_tiff)\nsummary(values(ndvi_tiff))\nstr(ndvi_tiff)\nclass(ndvi_tiff)\nstr(ndvi_tiff$nir)\nplot(ndvi_tiff$nir)\n\n# not sure how the columns get named \"NIR\"\n# probably the first layer imported\n# we will circle back to that\n\nnames(ndvi_tiff)\nndvi_tiff\n\n\n# We need a common extent to\n# stack things up\n# we'll use the original AOI from our Planet request:\nucsb_extent &lt;- vect(\"source_data/planet/planet/ucsb_60sqkm_planet_extent.geojson\")\nstr(ucsb_extent)\ncrs(ucsb_extent)\ncrs(image) # &lt;---- we want to standardize on this CRS\ncrs(ndvi_tiff)\n\n# go ahead and assign it:\nucsb_extent &lt;- project(x = ucsb_extent, y = image)\ncrs(ucsb_extent)\n\n# the CRSs are now the same\ncrs(ucsb_extent) == crs(image)\n\n# but the extents are different\next(ucsb_extent) == ext(image)\next(ucsb_extent) == ext(ndvi_tiff)\n\n\n# I need to extend my calculated NDVI to the AOI extent\nndvi_tiff &lt;- extend(ndvi_tiff, ucsb_extent)\n# plot(ndvi_tiff)\nndvi_tiff\n\n\n# extents are still different after extend:\next(ucsb_extent) == ext(ndvi_tiff)\n\n# so reset the extent back to the AOI\n# extent object:\nset.ext(ndvi_tiff, ext(ucsb_extent))\n\n\n# now they are exactly the same extent\next(ucsb_extent) == ext(ndvi_tiff)\n\nplot(ndvi_tiff)\ndim(ndvi_tiff)\nstr(ndvi_tiff)\nnames(ndvi_tiff)\n\n# this works in ggplot too\nndvi_tiff_df &lt;- as.data.frame(ndvi_tiff, xy = TRUE) %&gt;%\n  pivot_longer(-(x:y), names_to = \"variable\", values_to = \"value\")\n\nstr(ndvi_tiff_df)\n\nggplot() +\n  geom_raster(data = ndvi_tiff_df, aes(x = x, y = y, fill = value)) +\n  ggtitle(gg_labelmaker(current_ggplot + 1))\n\n\n# now let's load the 2023-24 8-band rasters\n# loop over the files and build a raster stack\n\n# get a file list\n# ep 12\nscene_paths &lt;- list.files(\"source_data/planet/planet/20232024_UCSB_campus_PlanetScope/PSScene/\",\n  full.names = TRUE,\n  pattern = \"8b_clip.tif\"\n)\nscene_paths\n\n# someplace to put our images\ndir.create(\"output_data/ndvi\", showWarnings = FALSE)\n\n\n# calculate the NDVIs\n# and fill in (extend) to the AOI\n# loop\n# this takes a while\nfor (images in scene_paths) {\n  source_image &lt;- rast(images)\n  source_image &lt;- aggregate(source_image, fact = 4)\n  ndvi_tiff &lt;- ((source_image[[8]] - source_image[[6]]) / (source_image[[8]] + source_image[[6]]))\n  new_filename &lt;- (substr(images, 67, 90))\n  new_path &lt;- paste(\"output_data/ndvi/\", new_filename, \".tif\", sep = \"\")\n  ndvi_tiff &lt;- extend(ndvi_tiff, ucsb_extent, fill = NA, snap = \"near\")\n  set.ext(ndvi_tiff, ext(ucsb_extent))\n  names(ndvi_tiff) &lt;- substr(new_filename, 0, 13)\n  print(names(ndvi_tiff))\n  print(new_filename)\n  print(dim(ndvi_tiff))\n  writeRaster(ndvi_tiff, new_path, overwrite = TRUE)\n}\n\n\n# 3 or 4 of the resulting tiffs are wonky\n# their dimensions are wildly off.\n# but almost all of them are 554 x 885 pixels\n# let's get rid of the ones that aren't:\n\n# # get a list of the new files:\nndvi_series_names &lt;- list.files(\"output_data/ndvi\")\nndvi_series_names\n\ntestraster_path &lt;- paste(\"output_data/ndvi/\", ndvi_series_names[1], sep = \"\")\n\ntestraster &lt;- rast(testraster_path)\n\n\n# check the files's resolutions and\n# keep only the\n# 554 x 885 now that we are downsampled\nlength(ndvi_series_names)\nstr(ndvi_series_names)\nvalid_tiff &lt;- c(554, 885, 1)\nstr(valid_tiff)\n\n\n# delete any files that aren't the standard\n# resolution\nfor (image in ndvi_series_names) {\n  test_size &lt;- rast(paste(\"output_data/ndvi/\", image, sep = \"\"))\n  # length 1 qualifier\n  test_result &lt;- (dim(test_size) == valid_tiff)\n  print(test_result)\n  ifelse((dim(test_size) == valid_tiff), print(\"A match!!!\"), file.remove(paste(\"output_data/ndvi/\", image, sep = \"\")))\n}\n\n# reload the names\nndvi_series_names &lt;- list.files(\"output_data/ndvi\")\nndvi_series_paths &lt;- paste(\"output_data/ndvi/\", ndvi_series_names, sep = \"\")\nndvi_series_paths\n\n# now we can see there are 4 fewer tiffs.\nlength(ndvi_series_names)\n\n# now we can build a more standard raster stack with no errors\nndvi_series_stack &lt;- rast(ndvi_series_paths)\n\nsummary(ndvi_series_stack[, 1])\nstr(ndvi_series_stack)\nnlyr(ndvi_series_stack)\nsummary(values(ndvi_series_stack))\n\n# they plot!:\n# 20230427 still looks suspicious\nplot(ndvi_series_stack)\n\nggsave(\"images/ndvi_series_stack_1.png\", plot = last_plot(), bg = \"white\")\n\n# there are duplicate column names / dates\n# this turns out to be a feature!\n# need to put it back in later\n\n### let's crop the stack to the NCOS area to make a\n#   more relevant map for campus.\n#   and make this plotting even faster\n\n# ncos_extent &lt;- vect(\"source_data/planet/planet/ncos_aoi.geojson\")\nncos_extent &lt;- vect(\"scripts/ncos.geojson\")\n\n# I think this reprojection might cause just enough of a shift to muck us up\nncos_extent &lt;- project(ncos_extent, ndvi_series_stack)\n\nndvi_series_stack &lt;- crop(ndvi_series_stack, ncos_extent)\nndvi_series_stack\n# 15 panels\nplot(ndvi_series_stack)\n\nndvi_series_df &lt;- as.data.frame(ndvi_series_stack, xy = TRUE, na.rm = FALSE) %&gt;%\n  pivot_longer(-(x:y), names_to = \"image_date\", values_to = \"NDVI_value\")\nstr(ndvi_series_df)\n\n# the scales of NDVI values are correct!!!!\nggplot() +\n  geom_raster(data = ndvi_series_df, aes(x = x, y = y, fill = NDVI_value)) +\n  facet_wrap(~image_date) +\n  ggtitle(gg_labelmaker(current_ggplot + 1))\n\n# we need a diverging color scheme\n# to make it look more like a proper ndvi (episode 13, except I choose an even better one)\nggplot() +\n  geom_raster(data = ndvi_series_df, aes(x = x, y = y, fill = NDVI_value)) +\n  scale_fill_distiller(palette = \"RdYlGn\", direction = 1) +\n  facet_wrap(~image_date) +\n  theme_minimal() +\n  ggtitle(gg_labelmaker(current_ggplot + 1))\n\n\n# fix those facet labels!\n# this is what it should look like:\nstr(ndvi_series_df)\nyear_month_label &lt;- substr(ndvi_series_df$image_date, 2, 9)\nyear_month_label\n\n# now that we've tested, mutate here to add the new column:\nndvi_series_w_dates_df &lt;- mutate(ndvi_series_df, yyyymmdd = substr(ndvi_series_df$image_date, 2, 9))\nndvi_series_w_dates_df\nstr(ndvi_series_w_dates_df)\n\n# now we only have 11 panels because there were some duplicate dates.\n# but voila: now we don't have any empty areas:\nggplot() +\n  geom_raster(data = ndvi_series_w_dates_df, aes(x = x, y = y, fill = NDVI_value)) +\n  scale_fill_distiller(palette = \"RdYlBu\", direction = 1) +\n  facet_wrap(~yyyymmdd) +\n  theme_minimal() +\n  ggtitle(gg_labelmaker(current_ggplot + 1))\n\n\n# we need to arrange and clearly these by date.\n# Julian dates. Converting to Julian dates is episode 13\n\n# challenge: mutate on another column that is julian date.\nstr(ndvi_series_w_dates_df)\n\nndvi_series_dates_as_dates_df &lt;- mutate(ndvi_series_w_dates_df, date = as_date(yyyymmdd))\nstr(ndvi_series_dates_as_dates_df)\nndvi_series_dates_as_dates_df$date\n\nndvi_series_julian_dates_df &lt;- mutate(ndvi_series_dates_as_dates_df, julian_date = yday(date))\n\nstr(ndvi_series_julian_dates_df)\n\nggplot() +\n  geom_raster(data = ndvi_series_julian_dates_df, aes(x = x, y = y, fill = NDVI_value)) +\n  scale_fill_distiller(palette = \"RdYlBu\", direction = 1) +\n  facet_wrap(~julian_date) +\n  theme_minimal() +\n  ggtitle(gg_labelmaker(current_ggplot + 1))\n\n# does my 'feature' about combining layers actually\n# add values together as they are stacking up?\n# there's only 11 panels in my plot here.\n\n\n# to find the 'greenest' months,  here, we can make\n# histograms, make bins\n# OR figure the mean NDVI for each image as in ep 14.\n\n# this default one shows us what?\n# looks like April 2024 is the greenest:\n\nstr(ndvi_series_dates_as_dates_df)\nggplot(ndvi_series_dates_as_dates_df) +\n  geom_histogram(aes(NDVI_value)) +\n  facet_wrap(~date) +\n  ggtitle(gg_labelmaker(current_ggplot + 1))\n\n\n# maybe we want some custom bins at common NDVI break points\nsummary(ndvi_series_dates_as_dates_df)\n\nlocal_ndvi_breaks &lt;- c(-1, 0, .001, .01, .1, .11, .115, .2, .4, 1)\n\nndvi_series_custom_binned_df &lt;- ndvi_series_dates_as_dates_df %&gt;%\n  mutate(bins = cut(NDVI_value, breaks = local_ndvi_breaks))\n\nstr(ndvi_series_custom_binned_df)\n# this is still a visual judgement call, but April and June look pretty green\n# and we can't read the x axis\nggplot(ndvi_series_custom_binned_df, aes(x = bins)) +\n  geom_bar() +\n  facet_wrap(~date) +\n  ggtitle(gg_labelmaker(current_ggplot + 1))\n\n\n# how about on a map?\nstr(ndvi_series_custom_binned_df)\nggplot() +\n  geom_raster(data = ndvi_series_custom_binned_df, aes(x = x, y = y, fill = NDVI_value)) +\n  scale_fill_distiller(palette = \"RdYlBu\", direction = 1) +\n  facet_wrap(~date) +\n  theme_minimal() +\n  ggtitle(\"11 NDVIs. What month is greenest?\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nggsave(\"final_output/map_12.png\", plot = last_plot(), bg = \"white\")\n\n# this is the OR from above.\n# visually we can't see the greenest, so\n# let's make a dataframe of average NDVI\n# and plot them\n# this is from ep. 14:\n\nstr(ndvi_series_custom_binned_df)\n\n# this ep 14 tidbit isn't working.\n# maybe we need to work on spatrasters.\navg_NDVI &lt;- global(ndvi_series_stack, mean, na.rm = TRUE)\n\n\navg_NDVI\nstr(avg_NDVI)\nncol(avg_NDVI)\n\nndvi_months &lt;- c(row.names(avg_NDVI))\navg_NDVI &lt;- mutate(avg_NDVI, months = ndvi_months)\nstr(avg_NDVI)\n\ncolnames(avg_NDVI) &lt;- c(\"MeanNDVI\", \"Month\")\n\navg_NDVI\n\n\navg_NDVI\nsummary(avg_NDVI)\nstr(avg_NDVI)\n\n# here we go #############\n\n# finally: a logical plot of average NDVIs over time.\n# plot(avg_NDVI$MeanNDVI)\n\navg_NDVI_df &lt;- as.data.frame(avg_NDVI, rm.na = FALSE)\nstr(avg_NDVI_df)\n\nggplot(avg_NDVI_df, mapping = aes(Month, MeanNDVI)) +\n  geom_point() +\n  ggtitle(gg_labelmaker(current_ggplot + 1), subtitle = \"can't read this axis\")\n\n# turn the x axis vertical.\nggplot(avg_NDVI_df, mapping = aes(Month, MeanNDVI)) +\n  geom_point() +\n  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +\n  ggtitle(gg_labelmaker(current_ggplot + 1), subtitle = \"Now we can read this axis\")\n\nggsave(\"final_output/plot_12.png\", plot = last_plot(), bg = \"white\")\n\n\n# we still need to format those as Julian dates\n# hallucinated graph:\n# ggplot(avg_NDVI_df, mapping = aes(JulianDate, MeanNDVI)) +\n#  geom_point() +\n#  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = \"Now we can read this axis\")\n\n\n# we'll need weather data to mimic the lesson.\n# or use our brains and eyes to define\n# when was it rainiest?\n\n\ncurrent_sheet &lt;- \"Map 12 Complete\"\ncurrent_sheet",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 12: 12-Month NDVI Stack"
+    ]
+  },
+  {
+    "objectID": "maps/map_10.html",
+    "href": "maps/map_10.html",
+    "title": "Map 10: Paths & Creeks Analysis",
+    "section": "",
+    "text": "This analysis performs a vector intersection between the campus bike path network and local stream/creek centerlines to locate all points where trails cross water features.\n\nPrimary packages: terra, tidyverse, tidyterra\nInputs:\n\nBike paths shapefile (source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp)\nStream network (source_data/california_streams/streams_crop.shp)\n\nOutput: output_data/creek_bike_intersections.shp",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 10: Bike Paths & Creeks"
+    ]
+  },
+  {
+    "objectID": "maps/map_10.html#overview",
+    "href": "maps/map_10.html#overview",
+    "title": "Map 10: Paths & Creeks Analysis",
+    "section": "",
+    "text": "This analysis performs a vector intersection between the campus bike path network and local stream/creek centerlines to locate all points where trails cross water features.\n\nPrimary packages: terra, tidyverse, tidyterra\nInputs:\n\nBike paths shapefile (source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp)\nStream network (source_data/california_streams/streams_crop.shp)\n\nOutput: output_data/creek_bike_intersections.shp",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 10: Bike Paths & Creeks"
+    ]
+  },
+  {
+    "objectID": "maps/map_10.html#cartographic-workflow",
+    "href": "maps/map_10.html#cartographic-workflow",
+    "title": "Map 10: Paths & Creeks Analysis",
+    "section": "Cartographic Workflow",
+    "text": "Cartographic Workflow\n\nRead bike path and stream vector layers using terra::vect().\nReproject streams into the bike path Coordinate Reference System using terra::project().\nCompute geometric point intersections using terra::intersect().\nExport the resulting intersection points to an ESRI Shapefile.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 10: Bike Paths & Creeks"
+    ]
+  },
+  {
+    "objectID": "maps/map_10.html#r-script-scriptsmap_10.r",
+    "href": "maps/map_10.html#r-script-scriptsmap_10.r",
+    "title": "Map 10: Paths & Creeks Analysis",
+    "section": "R Script (scripts/map_10.r)",
+    "text": "R Script (scripts/map_10.r)\n\n\nShow R Code\n# map 10\nlibrary(terra)\nlibrary(tidyverse)\nlibrary(tidyterra)\n# clean the environment and hidden objects\nrm(list = ls())\n\n# set map number\ncurrent_sheet &lt;- 10\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\ngg_labelmaker &lt;- function(plot_num) {\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse = \" \")\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n\n# every ggtitle() or labs() should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\n# ---------- 1. read layers ----------\n# bike_paths &lt;- vect(\"\") # replace with updated bike-path file\nbike_paths &lt;- vect(\"source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp\")\ncreeks &lt;- vect(\"source_data/california_streams/streams_crop.shp\")\n\n# ---------- 2. common CRS ----------\ncreeks &lt;- project(creeks, bike_paths)\n\n# plot creeks and paths together here to prove it\n\n# ---------- 3. intersection points ----------\ncreek_bike_pts &lt;- terra::intersect(creeks, bike_paths)\nstr(creek_bike_pts)\n\n# let's put in another plot here to prove it\nplot(creek_bike_pts)\n\n\n# ---------- 4. write shapefile ----------\n#  Do we output a new point shapefile as a result?\nout_file &lt;- \"output_data/creek_bike_intersections.shp\"\nwriteVector(creek_bike_pts, out_file, overwrite = TRUE)",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 10: Bike Paths & Creeks"
+    ]
+  },
+  {
+    "objectID": "maps/map_08.html",
+    "href": "maps/map_08.html",
+    "title": "Map 8: Satellite Remote Sensing",
+    "section": "",
+    "text": "Map 8: Multi-spectral PlanetScope imagery across seasons",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 8: Satellite Imagery"
+    ]
+  },
+  {
+    "objectID": "maps/map_08.html#rendered-map-plate",
+    "href": "maps/map_08.html#rendered-map-plate",
+    "title": "Map 8: Satellite Remote Sensing",
+    "section": "",
+    "text": "Map 8: Multi-spectral PlanetScope imagery across seasons",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 8: Satellite Imagery"
+    ]
+  },
+  {
+    "objectID": "maps/map_08.html#technical-summary",
+    "href": "maps/map_08.html#technical-summary",
+    "title": "Map 8: Satellite Remote Sensing",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Explore multi-band raster manipulation using PlanetScope 4-band and 8-band high-resolution satellite scenes covering UCSB across multiple seasonal collections.\nKey Packages: terra (pure raster workflow)\nTechniques Demonstrated:\n\nMulti-band raster subsetting and indexing\nNatural color RGB compositing (plotRGB with linear stretch)\nFalse-color Infrared (CIR) compositing highlighting active photosynthetic vegetation\nDynamic range scaling and histogram stretching\n\nOutput: final_output/map_08.png",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 8: Satellite Imagery"
+    ]
+  },
+  {
+    "objectID": "maps/map_08.html#r-script-scriptsmap_08.r",
+    "href": "maps/map_08.html#r-script-scriptsmap_08.r",
+    "title": "Map 8: Satellite Remote Sensing",
+    "section": "R Script (scripts/map_08.r)",
+    "text": "R Script (scripts/map_08.r)\n\n\nShow R Code\n# map 8 actually\n# multi-band imagery\n\n# for the episode about RGBs and multi-band rasters\n# episode 5\n# https://datacarpentry.github.io/r-raster-vector-geospatial/05-raster-multi-band-in-r.html#create-a-three-band-image\n\n# This map is all terra!\n\nlibrary(terra)\n# library(geojsonsf)\n# library(sf)\n# library(ggpubr)\n\n# clean the environment and hidden objects\nrm(list=ls())\n\n# reset your par() before starting\npar(mfrow = c(1,1))\n\n\n# set map number\ncurrent_sheet &lt;- 8\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\n\ngg_labelmaker &lt;- function(plot_num){\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse=\" \" )\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n# every ggtitle should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           \n#######\n\n\n\n#load an 8-band image: data_prep puts it here:\nplanet_scene &lt;- rast(\"source_data/planet/planet/20232024_UCSB_campus_PlanetScope/PSScene/20230912_175450_00_2439_3B_AnalyticMS_SR_8b_clip.tif\")\nplanet_scene\n\n# check it out\nclass(planet_scene)\nres(planet_scene)\ndim(planet_scene)\ncrs(planet_scene)\n\n# won't plot without a stretch\n# plotRGB(planet_scene)\n\nplotRGB(planet_scene, stretch = \"lin\")\nplotRGB(planet_scene, stretch = \"hist\")\n\n# Now plot out some different combinations:\n#  natural color\nplotRGB(planet_scene, stretch = \"hist\",\n        r = 4, g = 3, b = 2)\n\n#  false-color IR\nplotRGB(planet_scene, stretch = \"hist\",\n        r = 8, g = 3, b = 2)\n\n#  something pretty or odd\nplotRGB(planet_scene, stretch = \"hist\",\n        r = 1, g = 2, b = 6)\n\n#  yellow = green\nplotRGB(planet_scene, stretch = \"hist\",\n        r = 7, g = 5, b = 1)\n\n\n# Let's format one of those up:\n#  yellow = green\nplotRGB(planet_scene, stretch = \"hist\",\n        r = 7, g = 5, b = 1,\n        axes=TRUE,\n        main = \"yellow = green\")\n\n# set up my frame\npar(mfrow = c(2,2))\n  \n#  natural color\nnatural &lt;- plotRGB(planet_scene, stretch = \"hist\",\n        r = 4, g = 3, b = 2,\n        main = \"natural color\")\n\n\n#  false-color IR\nfalse_color_ir &lt;- plotRGB(planet_scene, stretch = \"hist\",\n        r = 8, g = 3, b = 2,\n        main = \"false color infrared\")\n\n#  yellow = green\nyellow_green &lt;- plotRGB(planet_scene, stretch = \"hist\",\n        r = 7, g = 5, b = 1,\n        main = \"yellow = green\")\n\n#  pretty 7,4,1\npretty_741 &lt;- plotRGB(planet_scene, stretch = \"hist\",\n        r = 7, g = 4, b = 1,\n        main = \"pretty\")\n\n\n\n# save the image\n# i realize this is repetitive \n# open device\npng(\"final_output/map_08.png\")\npar(mfrow = c(2,2))\n\n#  natural color\nnatural &lt;- plotRGB(planet_scene, stretch = \"hist\",\n                   r = 4, g = 3, b = 2,\n                   main = \"natural color\")\n\n\n#  false-color IR\nfalse_color_ir &lt;- plotRGB(planet_scene, stretch = \"hist\",\n                          r = 8, g = 3, b = 2,\n                          main = \"false color infrared\")\n\n#  yellow = green\nyellow_green &lt;- plotRGB(planet_scene, stretch = \"hist\",\n                        r = 7, g = 5, b = 1,\n                        main = \"yellow = green\")\n\n#  pretty 7,4,1\npretty_741 &lt;- plotRGB(planet_scene, stretch = \"hist\",\n                      r = 7, g = 4, b = 1,\n                      main = \"pretty\")\n\n\n\ndev.off()\n   \n\n# reset your par() before leaving\npar(mfrow = c(1,1))",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 8: Satellite Imagery"
+    ]
+  },
+  {
+    "objectID": "maps/map_06.html",
+    "href": "maps/map_06.html",
+    "title": "Map 6: UCSB & Environs",
+    "section": "",
+    "text": "Map 6: UCSB campus and coastal environs",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 6: UCSB & Environs"
+    ]
+  },
+  {
+    "objectID": "maps/map_06.html#rendered-map-plate",
+    "href": "maps/map_06.html#rendered-map-plate",
+    "title": "Map 6: UCSB & Environs",
+    "section": "",
+    "text": "Map 6: UCSB campus and coastal environs",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 6: UCSB & Environs"
+    ]
+  },
+  {
+    "objectID": "maps/map_06.html#technical-summary",
+    "href": "maps/map_06.html#technical-summary",
+    "title": "Map 6: UCSB & Environs",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Provide a broad, high-detail coastal base map of UCSB, Isla Vista, and the Pacific coastline, designed to sit as the bottom hero panel of the composite Map 7 atlas plate.\nKey Packages: terra, sf, ggplot2, dplyr\nData Sources:\n\nMerged topo-bathy raster (output_data/campus_bathotopo.tif)\nCampus buildings and Isla Vista structures\nBike path infrastructure network\nNCOS Shorebird Foraging Habitat polygons\n\nAspect Ratio: 12 inches wide x 9 inches tall (3600 x 2700 px at 300 ppi).",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 6: UCSB & Environs"
+    ]
+  },
+  {
+    "objectID": "maps/map_06.html#r-script-scriptsmap_06.r",
+    "href": "maps/map_06.html#r-script-scriptsmap_06.r",
+    "title": "Map 6: UCSB & Environs",
+    "section": "R Script (scripts/map_06.r)",
+    "text": "R Script (scripts/map_06.r)\n\n\nShow R Code\n# map 6\n# an alternate to map 1\n# for the bottom of the page on map 7\n\n\nlibrary(terra)\nlibrary(ggplot2)\nlibrary(dplyr)\n# library(raster)\nlibrary(sf)\n\n# clean the environment and hidden objects\nrm(list = ls())\n\n# set map number\ncurrent_sheet &lt;- 6\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\n# make our ggtitles automagically #######\ngg_labelmaker &lt;- function(plot_num) {\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse = \" \")\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n# every ggtitle should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\n# vector layers\nbuildings &lt;- st_read(\"source_data/campus_buildings/Campus_Buildings.shp\")\nbikeways &lt;- st_read(\"source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp\")\nhabitat &lt;- st_read(\"source_data/NCOS_Shorebird_Foraging_Habitat/NCOS_Shorebird_Foraging_Habitat.shp\")\niv_buildings &lt;- st_read(\"source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp\")\n\n# rasters\n# the background setup is bathymetry and topography mashed together\n# this is worked through in map_01.r\n# but we need to crop them tighter\n\ncampus_DEM &lt;- rast(\"source_data/campus_DEM.tif\")\ncampus_bath &lt;- rast(\"source_data/SB_bath.tif\")\ncampus_hillshade &lt;- rast(\"source_data/campus_hillshade.tif\")\n# and/or user bathotopo from map 1:\ncampus_bathotopo &lt;- rast(\"output_data/campus_bathotopo.tif\")\n\n\n# we will use the original projection of\n#    campus_DEM\n# for whatever needs it to overlay:\ncampus_projection &lt;- crs(campus_DEM)\ncampus_bath &lt;- project(campus_bath, campus_projection)\ncampus_hillshade &lt;- project(campus_hillshade, campus_projection)\nbuildings &lt;- st_transform(buildings, campus_projection)\nbikeways &lt;- st_transform(bikeways, campus_projection)\nhabitat &lt;- st_transform(habitat, campus_projection)\n\n# ###################\n# crop the 4 rasters to the extent of the batho-topo:\nplot(campus_bathotopo)\n\n# Get extent:\ncampus_bathotopo_extent &lt;- ext(campus_bathotopo)\n\n# Crop rasters:\ncampus_DEM_crop &lt;- crop(campus_DEM, campus_bathotopo_extent)\ncampus_bath_crop &lt;- crop(campus_bath, campus_bathotopo_extent)\ncampus_hillshade_crop &lt;- crop(campus_hillshade, campus_bathotopo_extent)\n\n# make dataframes\ncampus_DEM_df &lt;- as.data.frame(campus_DEM_crop, xy = TRUE) %&gt;%\n  rename(elevation = greatercampusDEM_1_1)\n\ncampus_bath_df &lt;- as.data.frame(campus_bath_crop, xy = TRUE) %&gt;%\n  rename(bathymetry = Bathymetry_2m_OffshoreCoalOilPoint)\n\ncampus_hillshade_df &lt;- as.data.frame(campus_hillshade_crop, xy = TRUE)\n\n## test vector overlays\n#\n# this is our first ggplot, so\n# let's make reuse our\n# our theme for the first time:\nrAtlas_theme &lt;- theme(\n  axis.title.x = element_blank(),\n  axis.title.y = element_blank(),\n  legend.position = \"none\",\n  panel.ontop = TRUE,\n  panel.grid.major = element_line(color = \"#FFFFFF33\"),\n  panel.background = element_blank()\n)\n\n\nggplot() +\n  geom_sf(data = habitat) +\n  geom_sf(data = buildings) +\n  geom_sf(data = iv_buildings) +\n  geom_sf(data = bikeways) +\n  theme(rAtlas_theme) +\n  ggtitle(gg_labelmaker(current_ggplot + 1)) +\n  coord_sf()\n\n\n############################\n# now do what's necessary to plot the new\n# closest-in #6 rasters together with the 4 vector layers\n\n# let's apply our named theme from map_05\n\n\n# these '6' versions should map when they are ready:\n# the graticule is getting blown out.\nggplot() +\n  geom_raster(data = campus_DEM_df, aes(x = x, y = y, fill = elevation)) +\n  geom_sf(data = buildings, color = \"hotpink\") +\n  geom_sf(data = bikeways, color = \"yellow\") +\n  geom_raster(data = campus_hillshade_df, aes(x = x, y = y, alpha = hillshade), show.legend = FALSE) +\n  geom_raster(data = campus_bath_df, aes(x = x, y = y, fill = bathymetry)) +\n  scale_fill_viridis_c(na.value = \"NA\") +\n  theme(rAtlas_theme) +\n  ggtitle(\"Map 6 = Map 1: Batho-topo Extent\", subtitle = (gg_labelmaker(current_ggplot + 1))) +\n  coord_sf()\n\n\nggsave(\"images/map6.1.png\", width = 12, height = 4, plot = last_plot(), bg = \"white\")\nggsave(\"final_output/map_06.png\", width = 12, height = 4, plot = last_plot(), bg = \"white\")",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 6: UCSB & Environs"
+    ]
+  },
+  {
+    "objectID": "maps/map_04.html",
+    "href": "maps/map_04.html",
+    "title": "Map 4: California Coast",
+    "section": "",
+    "text": "Map 4: California coastline and regional elevation",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 4: California"
+    ]
+  },
+  {
+    "objectID": "maps/map_04.html#rendered-map-plate",
+    "href": "maps/map_04.html#rendered-map-plate",
+    "title": "Map 4: California Coast",
+    "section": "",
+    "text": "Map 4: California coastline and regional elevation",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 4: California"
+    ]
+  },
+  {
+    "objectID": "maps/map_04.html#technical-summary",
+    "href": "maps/map_04.html#technical-summary",
+    "title": "Map 4: California Coast",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Serve as the middle locator panel (Inset 2 of the Map 7 tryptic), bridging continental context down to the California state scale.\nKey Packages: terra, tidyverse, tidyterra, sf\nData Sources:\n\nCalifornia subsetted DEM\nCalifornia Populated Places vector points\nCoastline and state boundary features\n\nAspect Ratio: 3 tall x 4 wide portrait orientation.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 4: California"
+    ]
+  },
+  {
+    "objectID": "maps/map_04.html#r-script-scriptsmap_04.r",
+    "href": "maps/map_04.html#r-script-scriptsmap_04.r",
+    "title": "Map 4: California Coast",
+    "section": "R Script (scripts/map_04.r)",
+    "text": "R Script (scripts/map_04.r)\n\n\nShow R Code\n# map 4\n# clean the environment and hidden objects\n\nrm(list = ls())\n\nlibrary(sf)\nlibrary(terra)\nlibrary(tidyterra)\nlibrary(geojsonsf)\nlibrary(ggplot2)\nlibrary(dplyr)\n\n# set map number\ncurrent_sheet &lt;- 4\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\n# our auto ggtitle maker\ngg_labelmaker &lt;- function(plot_num) {\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse = \" \")\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n# every ggtitle should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle\n\n\n# ############################\n# Map 4\n# Zoom 2: Bite of California\n\n# use campus CRS as standard\ncampus_DEM &lt;- rast(\"source_data/campus_DEM.tif\")\ncrs(campus_DEM)\ncampus_crs &lt;- crs(campus_DEM)\n\n# the extent of the campus_DEM\n# is the zoom 3 indicator,\nzoom_3_extent &lt;- ext(campus_DEM) %&gt;% vect()\ncrs(zoom_3_extent) &lt;- campus_crs\n\n\n# Get the west coast DEM and\n# Crop it to zoom 2 AOI\n# socal_aoi.geojson\nzoom_2 &lt;- rast(\"source_data/dem90_hf/dem90_hf.tif\")\nplot(zoom_2)\n\n# AOI came from a Planet harvest that we did\nzoom_2_crop_extent &lt;- geojson_sf(\"source_data/socal_aoi.geojson\")\nzoom_2_crop_extent &lt;- vect(zoom_2_crop_extent)\n\ncrs(zoom_2_crop_extent) == crs(zoom_2)\n\n# project it to match west_us\n# this will also 'rotate' southern california\n# when we crop it, making it visually more readable\nzoom_2_crop_extent &lt;- project(zoom_2_crop_extent, crs(zoom_2))\ncrs(zoom_2_crop_extent) == crs(zoom_2)\n\n# plot them together\n# to confirm that's the correct extent\n# that you want to crop to\nplot(zoom_2)\npolys(zoom_2_crop_extent)\n\n# now crop to that extent\nzoom_2_cropped &lt;- crop(x = zoom_2, y = zoom_2_crop_extent)\nplot(zoom_2_cropped)\n# we need water! #####################\n\n# batho-topo / SB_bath won't be big enough\nbath &lt;- rast(\"source_data/SB_bath.tif\")\nplot(bath)\n\n\n# let's try the global hillshade?\n# is it a hillshade? it looks like it.\nzoom_2_water &lt;- rast(\"source_data/global_raster/GRAY_HR_SR_OB.tif\")\nplot(zoom_2_water)\n\nzoom_2_crop_extent &lt;- project(zoom_2_crop_extent, crs(zoom_2_water))\nzoom_2_water &lt;- crop(x = zoom_2_water, y = (zoom_2_crop_extent))\nplot(zoom_2_water)\n\ncrs(zoom_2_water) == crs(zoom_2_cropped)\nzoom_2_water &lt;- project(zoom_2_water, crs(zoom_2_cropped))\ncrs(zoom_2_water) == crs(zoom_2_cropped)\n\n\n# make dataframes for ggplotting\nzoom_2_DEM_df &lt;- as.data.frame(zoom_2_cropped, xy = TRUE)\nzoom_2_hillshade_df &lt;- as.data.frame(zoom_2_water, xy = TRUE)\nstr(zoom_2_hillshade_df)\nstr(zoom_2_DEM_df)\n\n\n# let's START\n# with the graticule that we ended map 3 with:\n\nggplot() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.55), guide = \"none\") +\n  coord_sf() +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  ggtitle(\"Map 4: zm 2: hillshade\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  coord_sf() +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  ggtitle(\"Map 4: zm 2: dem\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n# try to overlay\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.55), guide = \"none\") +\n  coord_sf() +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  ggtitle(\"Map 4: zm 2: Overlay test\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n# so close!!!!!!\n\n\n# now I need the next zoom indicator\n# I need to project that too.\ncrs(zoom_3_extent) == crs(zoom_2_cropped)\nzoom_3_extent &lt;- project(zoom_3_extent, zoom_2_cropped)\nplot(zoom_3_extent)\n\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.55), guide = \"none\") +\n  coord_sf() +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  ggtitle(\"Map 4: zm 2: Overlay test\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n\n# add the zoom indicator to the ggplot\nggplot() +\n  geom_spatvector(data = zoom_3_extent, color = \"red\", fill = NA, lwd = 1) +\n  theme(\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  coord_sf()\n\n# now that I've added tidyterra, both the above geom_spatvecor\n# and the below geom_sf work\n\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.55), guide = \"none\") +\n  #  geom_spatvector(data=zoom_3_extent, color=\"red\", fill=NA, lwd=1)+\n  geom_sf(data = zoom_3_extent, color = \"red\", fill = NA, lwd = 1) +\n  coord_sf() +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  ggtitle(\"Map 4: zm 2: Overlay with Indicator\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.55), guide = \"none\") +\n  geom_sf(data = zoom_3_extent, color = \"red\", fill = NA, lwd = 1) +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  coord_sf() +\n  ggtitle(\"Map 4: zm 2: Different hillshade\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n\n# 'california populated places'\n# which is census data\n# for the sake of a nice vizualization\nplaces &lt;- vect(\"source_data/tl_2023_06_place/tl_2023_06_place.shp\")\nplot(places)\ncrs(places) == campus_crs\nplaces &lt;- project(places, campus_crs)\n\n# places still not showing up\n#---------------------------------------\n\nstr(zoom_2_hillshade_df)\n# For zoom 2, places does not overlay nicely.\n# this is another CRS error\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.5), guide = \"none\") +\n  geom_spatvector(data = places, fill = \"gray\") +\n  geom_spatvector(data = zoom_3_extent, color = \"red\", fill = NA) +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  coord_sf() +\n  ggtitle(\"Map 4: zm 2: Zoom test 2\", subtitle = gg_labelmaker(current_ggplot + 1))\n\ncrs(zoom_2_cropped) == campus_crs\ncrs(zoom_2_water) == campus_crs\ncrs(zoom_2_cropped) == crs(zoom_2_water)\ncrs(places) == campus_crs\n# places is the one to reproject right now.\n\nplaces &lt;- project(places, crs(zoom_2_cropped))\n\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.5), guide = \"none\") +\n  geom_spatvector(data = places, fill = \"gray\") +\n  geom_spatvector(data = zoom_3_extent, color = \"red\", fill = NA) +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  coord_sf() +\n  ggtitle(\"Map 4: zm 2: re-projected places\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n# this plots, but to the full extent of california.\n# we are gonna need to crop places\n\n# this also plots, but at the full extent of california.\n\nzoom_2_places &lt;- crop(places, zoom_2_cropped)\n\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.5), guide = \"none\") +\n  geom_spatvector(data = zoom_2_places, fill = \"gray\") +\n  geom_spatvector(data = zoom_3_extent, color = \"red\", fill = NA) +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  coord_sf() +\n  ggtitle(\"Map 4: zm 2: re-projected places\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n# it plots!!!!! but ugly.\nggsave(\"images/map4.png\", width = 3, height = 4, plot = last_plot(), bg = \"white\")\n\n# how can I make the fill transparent?\n\nggplot() +\n  geom_spatvector(data = zoom_2_places, color = \"#D3D3D380\", fill = \"#D4D4D450\") +\n  coord_sf() +\n  ggtitle(\"Map 4: zm 2: re-projected places\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n\n# better\n# and add places viz from map 3\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.5), guide = \"none\") +\n  geom_spatvector(data = zoom_2_places, fill = \"NA\", color = \"#EEEEEE33\") +\n  geom_spatvector(data = zoom_3_extent, color = \"red\", fill = NA) +\n  theme_minimal() +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  coord_sf() +\n  ggtitle(\"Map 4: zm 2: The Bight of California\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n# and a final one for saving\nggplot() +\n  geom_raster(\n    data = zoom_2_DEM_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_2_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.5), guide = \"none\") +\n  geom_spatvector(data = zoom_2_places, fill = \"NA\", color = \"#EEEEEE33\") +\n  geom_spatvector(data = zoom_3_extent, color = \"red\", fill = NA) +\n  theme_minimal() +\n  theme(\n    axis.title.x = element_blank(),\n    axis.title.y = element_blank(),\n    legend.position = \"none\",\n    panel.ontop = TRUE,\n    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n    panel.background = element_blank()\n  ) +\n  coord_sf() +\n  ggtitle(\"On the Bight of California\",\n    subtitle = \"this still needs work\"\n  )\n\nggsave(\"images/map4.png\", width = 4, height = 3, plot = last_plot(), bg = \"white\")\n\n\n# do we still need this zoom 2 hillshade?\n# we now turn zoom 2 DEM into a hillshade of the area to match:\n# hillshades are made of slopes and aspects\nzoom_2_slope &lt;- terrain(zoom_2_cropped, \"slope\", unit = \"radians\")\nplot(zoom_2_slope)\n\nzoom_2_aspect &lt;- terrain(zoom_2_cropped, \"aspect\", unit = \"radians\")\nplot(zoom_2_aspect)\nzoom_2_hillshade &lt;- shade(zoom_2_slope, zoom_2_aspect,\n  angle = 15,\n  direction = 270,\n  normalize = TRUE\n)\n\n\nggsave(\"images/map_04.png\", width = 3, height = 4, plot = last_plot(), bg = \"white\")",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 4: California"
+    ]
+  },
+  {
+    "objectID": "maps/map_02.html",
+    "href": "maps/map_02.html",
+    "title": "Map 2: Trees & Water",
+    "section": "",
+    "text": "Map 2: Campus trees by height and species with bikeways and lagoon water",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 2: Trees & Water"
+    ]
+  },
+  {
+    "objectID": "maps/map_02.html#rendered-map-plate",
+    "href": "maps/map_02.html#rendered-map-plate",
+    "title": "Map 2: Trees & Water",
+    "section": "",
+    "text": "Map 2: Campus trees by height and species with bikeways and lagoon water",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 2: Trees & Water"
+    ]
+  },
+  {
+    "objectID": "maps/map_02.html#technical-summary",
+    "href": "maps/map_02.html#technical-summary",
+    "title": "Map 2: Trees & Water",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Create a stylized thematic atlas plate visualizing UCSB’s extensive tree canopy classified by height and predominant species, juxtaposed with campus waterways and active transportation routes.\nKey Packages: sf, terra, tidyverse, scales\nData Sources:\n\nCampus Tree Inventory (source_data/trees/DTK_012116.shp)\nStream and lagoon network (source_data/california_streams/streams_crop.shp)\nBike path centerlines (source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp)\nCoastline boundary vector\n\nNotes: Built with a custom dark aesthetic and explicit background colors in ggsave to ensure consistent rendering across light and dark display modes.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 2: Trees & Water"
+    ]
+  },
+  {
+    "objectID": "maps/map_02.html#r-script-scriptsmap_02.r",
+    "href": "maps/map_02.html#r-script-scriptsmap_02.r",
+    "title": "Map 2: Trees & Water",
+    "section": "R Script (scripts/map_02.r)",
+    "text": "R Script (scripts/map_02.r)\n\n\nShow R Code\n# map 2\n# Stylized trees, bikeways, walkways, and water\n\n## Two water sources used until now:\n##  * Pacific Ocean Polygon https://geodata.library.ucsb.edu/catalog/3853-s3_2002_s3_reg_pacific_ocean\n##  * California Streams https://data.cnra.ca.gov/dataset/california-streams\n# core skills from the lesson are in ep. 7\n\n# clean the environment and hidden objects\nrm(list = ls())\n\n# make our ggtitles automagically #######\n# set map number\ncurrent_sheet &lt;- 2\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\ngg_labelmaker &lt;- function(plot_num) {\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse = \" \")\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n# every ggtitle should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\n\n# Load required libraries\nlibrary(tidyverse)\nlibrary(terra) # Required for loading vector data with vect() function\nlibrary(tidyterra) # Required for using geom_spatvector() with ggplot\nlibrary(ggspatial) # Required for map scale -annotation_scale()- and compass -annotation_north_arrow()-\nlibrary(ggnewscale) # Required for mapping multiple scales in ggplot\nlibrary(sf)\n\n\n## Read data\n# Trees\ntrees &lt;- vect(\"source_data/Treekeeper_012116/DTK_012116.shp\")\n# Bikes\nbikes &lt;- vect(\"source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp\")\n# Streams\nstreams &lt;- vect(\"source_data/california_streams/California_Streams.shp\")\n# Coastline polygon\ncoastline &lt;- vect(\"source_data/pacific_ocean-shapefile/3853-s3_2002_s3_reg_pacific_ocean_lines.shp\")\n# IV buildings\niv_buildings &lt;- st_read(\"source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp\")\n\n# Let's take a quick first look at our data and find out their projections\nplot(trees)\ncrs(trees, describe = TRUE)\nplot(bikes)\ncrs(bikes, describe = TRUE)\n\n# this streams is giant.\n# plot(streams)\ncrs(streams, describe = TRUE)\n# plot(coastline)\n# plot(streams)\n# crs(streams, describe=TRUE)\nplot(coastline)\ncrs(coastline, describe = TRUE)\n\n# 3 different CRSs at least:\n# * Trees: WGS84 - Pseudo-mercator / EPSG 3857\n# * Bikes: NAD83 / EPSG 2229\n# * Streams: WGS84  - Pseudo-mercator / EPSG 3857\n# * Coastline: WGS84 / EPSG 4326\n\n# So our first step will be to reproject our data to a common CRS. As the most\n# common one is WGS84 - Pseudo-mercator / EPSG 3857 from the `trees` and `streams`\n# data, we will use that one\n\n# Use the project() function, the first parameter is the SpatVector we want to\n# reproject, and the second argument is the desired crs we want it reprojected to.\n# For the second argument, we can supply a SpatVector and terra will automatically\n# get the crs from that SpatVector\nbikes_proj &lt;- project(bikes, trees)\ncoastline_proj &lt;- project(coastline, trees)\n\n\n## Challenge: Do we need to reproject the streams data?\n\n# Now that our data is in the same CRS, let's check their extent\next(trees)\n# * SpatExtent : -13344813.2450353, -13340270.0860384, 4083607.02801381, 4085810.69483412 (xmin, xmax, ymin, ymax)\n\next(streams)\n# * SpatExtent : -13851388.1259, -12638118.6176, 3827948.8521, 5309358.2157 (xmin, xmax, ymin, ymax)\n\next(bikes_proj)\n# * SpatExtent : -13344859.3101604, -13340139.1335369, 4083614.50498653, 4085816.84965297 (xmin, xmax, ymin, ymax)\n\next(coastline_proj)\n# * SpatExtent : -13358945.2438268, -13336909.6752497, 4074087.46157742, 4090166.00468701 (xmin, xmax, ymin, ymax)\n\n\n# Our data has very different extents, as the trees and bikes data covers only campus,\n# and the coastline and streams data cover all of California. For\n# this reason, we will use the terra:crop() function so all SpatVectors have the\n# same extent.\n\n# We will base our map in the extent of the `trees` data, so we will crop all vectors\n# to the extent of the `trees` data\nbikes_crop &lt;- crop(bikes_proj, trees)\nstreams_crop &lt;- crop(streams, trees)\ncoastline_crop &lt;- crop(coastline_proj, trees)\n\n\n# With these datasets, let's do a first test of how our map would look like\nggplot() +\n  geom_spatvector(data = trees, colour = \"green4\") +\n  geom_spatvector(data = streams_crop, colour = \"lightblue\") +\n  geom_spatvector(data = bikes_crop, colour = \"black\") +\n  geom_spatvector(data = coastline_crop, colour = \"darkblue\") +\n  geom_spatvector(data = iv_buildings) +\n  ggtitle(gg_labelmaker(current_ggplot + 1)) +\n  coord_sf()\n\n\n# But we see that the current extent used is too narrow, we almost can't see\n# the water streams or the offshore contours. So we are going to zoom out\n# a 25% of the range in the x and y axis\n\n# Store extent as object called `ext_trees`\next_trees &lt;- ext(trees)\n# Calculate range in each axis\nxrange &lt;- ext_trees$xmax - ext_trees$xmin\nyrange &lt;- ext_trees$ymax - ext_trees$ymin\n# Increase range by 25%\nxrange &lt;- xrange * 0.25\nyrange &lt;- yrange * 0.25\n# Create new extent\nnew_ext &lt;- ext(\n  -xrange + ext_trees$xmin, xrange + ext_trees$xmax,\n  -yrange + ext_trees$ymin, yrange + ext_trees$ymax\n)\n\n# Crop the SpatVectors again, but with the new extent\nbikes_crop &lt;- crop(bikes_proj, new_ext)\nstreams_crop &lt;- crop(streams, new_ext)\ncoastline_crop &lt;- crop(coastline_proj, new_ext)\niv_crop_poly &lt;- st_as_sf(as.polygons(new_ext))\n# iv_buildings &lt;- st_crop(iv_buildings, iv_crop_poly)\n\n# Run again the plot to see the differences\nggplot() +\n  geom_spatvector(data = trees, colour = \"green4\") +\n  geom_spatvector(data = streams_crop, , colour = \"lightblue\") +\n  geom_spatvector(data = bikes_crop, colour = \"black\") +\n  geom_spatvector(data = coastline_crop, colour = \"darkblue\") +\n  geom_spatvector(data = iv_buildings) +\n  ggtitle(gg_labelmaker(current_ggplot + 1)) +\n  coord_sf()\n\n# We will come back to stylize our map even more, but for now, let's explore\n# the trees data, which contains more information beyond points for the location\n# of the trees\n\n# Let's see the names of the columns included in the trees data and some values of each\nnames(trees)\nsummary(trees)\nhead(trees)\n\n# We can see a number of interesting features included in the data, like the\n# location (Geogx, STREET and ADDRESS attributes), species (SPP), height (HT),\n# condition (COND)\nunique(trees$SPP)\nsummary(trees$HT)\n\n# Let's plot the trees data scaling each point according to the height of the tree\nggplot() +\n  geom_spatvector(data = trees, aes(size = HT), colour = \"green4\") +\n  ggtitle(gg_labelmaker(current_ggplot + 1), subtitle = \"Tree Heights\")\n\n# We could modify it a bit to reduce the scale of the dots. Here the values\n# in the range parameter means the size in milimeters of the dots, going from\n# 0 mm to 2 mm\nggplot() +\n  geom_spatvector(data = trees, aes(size = HT), colour = \"green4\") +\n  scale_size_continuous(range = c(0, 2)) +\n  ggtitle(gg_labelmaker(current_ggplot + 1), subtitle = \"Tree Heights\")\n\n\n# But we can notice that there are trees with height 0, seedlings. Do we want to\n# keep these? Probably not. We could make a histogram to see the distribution\n# of the heights of the trees. But instead, let's just print the percentage of\n# trees (or which is the same, the percentage of rows in the dataset) with\n# height 0\nht_0 &lt;- trees %&gt;%\n  filter(HT == 0) %&gt;%\n  nrow()\ntotal &lt;- nrow(trees)\nperc_0 &lt;- (ht_0 / total) * 100\nprint(sprintf(\"%.2f%%\", perc_0))\n\n# So we are going to filter our the 1,480 observations (13.46% of the total) of\n# trees with height 0\ntrees_filt &lt;- trees %&gt;%\n  filter(HT &gt; 0)\n\n# Let's plot again to see the difference\nggplot() +\n  geom_spatvector(data = trees_filt, aes(size = HT), colour = \"green4\") +\n  scale_size_continuous(range = c(0, 2))\n\n# Now we can starting adding our other sets of data. To start with, the water streams,\n# changing the theme to minimal\nggplot() +\n  geom_spatvector(data = trees_filt, aes(size = HT), colour = \"green4\") +\n  scale_size_continuous(range = c(0, 2)) +\n  geom_spatvector(data = streams_crop, colour = \"cadetblue3\") +\n  theme_minimal()\n\n# Increasing the width of the lines that represent the streams and including\n# it in the legend\nggplot() +\n  geom_spatvector(data = trees_filt, aes(size = HT, colour = \"Trees\"), alpha = 0.5) +\n  scale_size_continuous(range = c(0, 2), name = \"Tree Height (ft)\") +\n  geom_spatvector(data = streams_crop, aes(colour = \"Streams\"), linewidth = 2, alpha = 0.6) +\n  scale_colour_manual(\n    name = \"Legend\",\n    values = c(\n      \"Trees\" = \"green4\",\n      \"Streams\" = \"cadetblue3\"\n    )\n  ) +\n  ggtitle(gg_labelmaker(current_ggplot + 1)) +\n  theme_minimal()\n\n\n## Challenge: What is the difference between setting the color of the trees\n#   inside the aes of the geom_spatvector layer and inside the scale_color_manual\n#   layer?\n\n# Including the bike paths\nggplot() +\n  geom_spatvector(data = trees_filt, aes(size = HT, colour = \"Trees\"), alpha = 0.5) +\n  scale_size_continuous(range = c(0, 2), name = \"Tree Height (ft)\") +\n  geom_spatvector(data = streams_crop, aes(colour = \"Streams\"), , linewidth = 2, alpha = 0.6) +\n  geom_spatvector(data = bikes_crop, aes(colour = \"Bike Paths\"), linewidth = 1) +\n  scale_colour_manual(\n    name = \"Legend\",\n    values = c(\n      \"Trees\" = \"green4\",\n      \"Streams\" = \"cadetblue3\",\n      \"Bike Paths\" = \"black\"\n    )\n  ) +\n  theme_minimal()\n\n# We can notice a problem here, as in the legend the bike paths seem to be a\n# polygon and not a line\n\n# If we transform this data to a data frame, we can see that it only contains\n# 4 rows, and the first of this is a MULTILINESTRING, which potentially is\n# causing our legend to not display correctly as a line. If you also transform\n# streams_crop as a data frame, you'll notice that each geometry is a LINESTRING\n# which makes it plot correctly in the legend\nbiked_df &lt;- as.data.frame(bikes_crop, geom = \"WKT\")\nbiked_df\n\n# To fix this, we need to dissagregate the MULTILINESTRING of bike paths into\n# individual LINESTRINGs. For that, we can use the `disagg` terra function, which\n# separates multi-objects into single objects\nbikes_lines &lt;- disagg(bikes_crop)\n\n# Trying again the same plot to check the differences\nggplot() +\n  geom_spatvector(data = trees_filt, aes(size = HT, colour = \"Trees\"), alpha = 0.5) +\n  scale_size_continuous(range = c(0, 2), name = \"Tree Height (ft)\") +\n  geom_spatvector(data = streams_crop, aes(colour = \"Streams\"), , linewidth = 2, alpha = 0.4) +\n  geom_spatvector(data = bikes_lines, aes(colour = \"Bike Paths\"), linewidth = 1) +\n  scale_colour_manual(\n    name = \"Legend\",\n    values = c(\n      \"Trees\" = \"green4\",\n      \"Streams\" = \"cadetblue3\",\n      \"Bike Paths\" = \"black\"\n    )\n  ) +\n  theme_minimal()\n\n# Finally adding the coastline geometry and legend.\n# Save this plot in an object so we don't have to repeat the same code\nmap2_gg1 &lt;- ggplot() +\n  geom_spatvector(data = streams_crop, aes(colour = \"Streams\"), , linewidth = 2, alpha = 0.6) +\n  geom_spatvector(data = bikes_lines, aes(colour = \"Bike Paths\"), linewidth = 1) +\n  geom_spatvector(data = trees_filt, aes(size = HT, colour = \"Trees\"), alpha = 0.5) +\n  scale_size_continuous(range = c(0, 2), name = \"Tree Height (ft)\") +\n  geom_spatvector(data = coastline_crop, aes(colour = \"Ocean\"), linewidth = 1, fill = \"dodgerblue\") +\n  scale_colour_manual(\n    name = \"Legend\",\n    values = c(\n      \"Trees\" = \"green4\",\n      \"Bike Paths\" = \"black\",\n      \"Streams\" = \"cadetblue3\",\n      \"Ocean\" = \"dodgerblue\"\n    )\n  ) +\n  theme_minimal()\nmap2_gg1\n\n# Adding title, subtitle and title for the axes\nmap2_gg2 &lt;- map2_gg1 +\n  labs(\n    title = \"Map 2 ggplot 2: Stylized thematic map of UCSB campus\",\n    subtitle = \"Trees, bike paths, and water\",\n    x = \"Longitude\", y = \"Latitude\"\n  )\nmap2_gg2\n\n\n# Modifying the aesthetics of the title and subtitle, removing the grid lines,\n# and adding a black border around the map\n# title and subtitle. Additionally, eliminating the white space between the\n# plot region and the border\nmap2_gg3 &lt;- map2_gg2 +\n  theme(\n    plot.title = element_text(hjust = 0.5),\n    plot.subtitle = element_text(hjust = 0.5),\n    panel.grid = element_blank(),\n    panel.border = element_rect(color = \"black\", fill = NA, linewidth = 0.5)\n  ) +\n  scale_x_continuous(expand = c(0, 0)) +\n  scale_y_continuous(expand = c(0, 0))\nmap2_gg3\n\n# Finally, adding a scale\nmap2_gg4 &lt;- map2_gg3 +\n  annotation_scale(location = \"bl\", width_hint = 0.1)\nmap2_gg4\n\n# Save this plot\nggsave(\n  \"images/map2_TreeHeight.png\",\n  plot = map2_gg4,\n  width = 16, height = 9,\n  dpi = 500,\n  units = \"in\",\n  bg = \"white\"\n)\n\n# We could make a different version of the plot, where we color the trees by their\n# species\n\n# We can see that there are 245 unique species of trees in our trees_filt data set\nunique(trees_filt$SPP)\n\n# For this reason, we are going to only color the 5 more frequent and leave all\n# other species grouped in a category called 'Other'\n\n# From our data, we count the frequencies over the SPP (species) attribute,\n# then we return the top 5 with the head() function, and then we pull\n# only the species names with the pull() function.\ntop5_species &lt;- trees_filt %&gt;%\n  count(SPP, sort = TRUE) %&gt;%\n  head() %&gt;%\n  pull(SPP)\n\n# Assign the same value (name) of the species if it is in the top5_species vector\n# or 'Other if it's not. The result is assigned to a new attribute of our\n# SpatVector called SPP_grouped\ntrees_filt$SPP_grouped &lt;- ifelse(trees_filt$SPP %in% top5_species,\n  str_to_title(trees_filt$SPP),\n  \"Other\"\n)\n\n# Finally, making the plot with the same aesthetics as the previous one\nmap2_gg5 &lt;- ggplot() +\n  geom_spatvector(data = trees_filt, aes(colour = SPP_grouped), alpha = 0.6, size = 0.5) +\n  scale_color_viridis_d(name = \"Tree species\") +\n  new_scale_color() +\n  geom_spatvector(data = streams_crop, aes(colour = \"Streams\"), , linewidth = 2, alpha = 0.6) +\n  geom_spatvector(data = bikes_lines, aes(colour = \"Bike Paths\"), linewidth = 1) +\n  geom_spatvector(data = coastline_crop, aes(colour = \"Ocean\"), linewidth = 1, fill = \"dodgerblue\") +\n  geom_sf(data = iv_buildings, color = alpha(\"gray60\", 0.2), fill = NA) +\n  scale_colour_manual(\n    name = \"Legend\",\n    values = c(\n      \"Bike Paths\" = \"black\",\n      \"Streams\" = \"cadetblue3\",\n      \"Ocean\" = \"dodgerblue\"\n    )\n  ) +\n  theme_minimal() +\n  labs(\n    subtitle = \"Map 2: Stylized thematic map of UCSB campus\",\n    title = \"Trees, bikes, and water. (v.5)\",\n    caption = gg_labelmaker(current_ggplot + 1),\n    x = NULL, y = NULL\n  ) +\n  theme(\n    plot.title = element_text(hjust = 0.5),\n    plot.subtitle = element_text(hjust = 0.5),\n    panel.grid = element_blank(),\n    panel.border = element_rect(color = \"black\", fill = NA, linewidth = 0.5)\n  ) +\n  scale_x_continuous(expand = c(0, 0)) +\n  scale_y_continuous(expand = c(0, 0), labels = scales::label_number(accuracy = 0.01)) +\n  annotation_scale(location = \"bl\", width_hint = 0.167)\nmap2_gg5\n\n# Save this plot\nggsave(\n  \"images/map2_5_TreeSpecies.png\",\n  plot = map2_gg5,\n  width = 16, height = 9,\n  dpi = 500,\n  units = \"in\",\n  bg = \"white\"\n)\n\nggsave(\n  \"readme_images/map2_TreeSpecies.png\",\n  plot = map2_gg5,\n  width = 16, height = 9,\n  dpi = 500,\n  units = \"in\",\n  bg = \"white\"\n)\n\n\n# Group trees by type: Conifer, Deciduous, Eucalyptus\n# Using str_detect from stringr (part of tidyverse) to find keywords in species names\ntrees_filt$Tree_Type &lt;- case_when(\n  str_detect(trees_filt$SPP, regex(\"PINUS|CEDRUS|CUPRESSUS|SEQUOIA|PICEA|ABIES\", ignore_case = TRUE)) ~ \"Conifer\",\n  str_detect(trees_filt$SPP, regex(\"QUERCUS|PLATANUS|ACER|ALNUS|BETULA|FAGUS|SALIX|POPULUS|PRUNUS\", ignore_case = TRUE)) ~ \"Deciduous\",\n  str_detect(trees_filt$SPP, regex(\"EUCALYPTUS\", ignore_case = TRUE)) ~ \"Eucalyptus\",\n  TRUE ~ \"Other\"\n)\n\nsummary(trees_filt)\nnames(trees_filt)\nunique(trees_filt$Tree_Type)\n\ntree_colors &lt;- c(\n  \"Conifer\" = \"darkgreen\",\n  \"Deciduous\" = \"lightgreen\",\n  \"Eucalyptus\" = \"firebrick\"\n)\n\ntrees_filt$Tree_Type != \"Other\"\n\n# Create a new plot coloring trees by their general type\nmap2_gg6 &lt;- ggplot() +\n  # Plot only the categorized trees, leave \"Other\" out for clarity\n  geom_spatvector(data = subset(trees_filt, trees_filt$Tree_Type != \"Other\"), aes(colour = Tree_Type), alpha = 0.8, size = 1.2) +\n  scale_colour_manual(\n    name = \"Tree Type\",\n    values = tree_colors\n  ) +\n  guides(colour = guide_legend(override.aes = list(size = 5))) + # Make legend points larger\n  new_scale_color() + # Reset color scale for the layers below\n  geom_spatvector(data = streams_crop, aes(colour = \"Streams\"), linewidth = 2, alpha = 0.6) +\n  geom_spatvector(data = bikes_lines, aes(colour = \"Bike Paths\"), linewidth = 1) +\n  geom_spatvector(data = coastline_crop, aes(colour = \"Ocean\"), linewidth = 1, fill = \"dodgerblue\") +\n  geom_sf(data = iv_buildings, color = alpha(\"gray60\", 0.2), fill = NA) +\n  scale_colour_manual(\n    name = \"Legend\",\n    values = c(\n      \"Bike Paths\" = \"black\",\n      \"Streams\" = \"cadetblue3\",\n      \"Ocean\" = \"dodgerblue\"\n    )\n  ) +\n  theme_minimal() +\n  labs(\n    title = \"Map 2: Tree Types on UCSB Campus\",\n    subtitle = \"Conifers (dark green), Deciduous (light green), and Eucalyptus (orange)\",\n    caption = gg_labelmaker(current_ggplot + 1),\n    x = NULL, y = NULL\n  ) +\n  theme(\n    plot.title = element_text(hjust = 0.5, size = 20),\n    plot.subtitle = element_text(hjust = 0.5, size = 14),\n    panel.grid = element_blank(),\n    panel.border = element_rect(color = \"black\", fill = NA, linewidth = 0.5),\n    legend.position = \"bottom\",\n    legend.box = \"horizontal\"\n  ) +\n  scale_x_continuous(expand = c(0, 0)) +\n  scale_y_continuous(expand = c(0, 0)) +\n  annotation_scale(location = \"br\", width_hint = 0.1) +\n  annotation_north_arrow(\n    location = \"tr\", which_north = \"true\",\n    style = north_arrow_fancy_orienteering\n  )\n\nmap2_gg6\n\n# Save the new plot\nggsave(\n  \"images/map2_TreeTypes.png\",\n  plot = map2_gg6,\n  width = 16, height = 9,\n  dpi = 500,\n  units = \"in\",\n  bg = \"white\"\n)\nggsave(\"final_output/map_02.png\", width = 16, height = 9, plot = map2_gg6, bg = \"white\")",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 2: Trees & Water"
+    ]
+  },
+  {
+    "objectID": "maps/index.html",
+    "href": "maps/index.html",
+    "title": "Atlas Maps",
+    "section": "",
+    "text": "The atlas consists of 12 planned plates and analytical workflows covering raster processing, vector overlays, projection conversions, multi-band remote sensing, and composite cartographic layouts.",
+    "crumbs": [
+      "Atlas Maps",
+      "Overview & Gallery"
+    ]
+  },
+  {
+    "objectID": "maps/index.html#plates-index",
+    "href": "maps/index.html#plates-index",
+    "title": "Atlas Maps",
+    "section": "Plates Index",
+    "text": "Plates Index\n\n\n\nPlate\nTitle\nKey Geospatial Concepts & Data Layers\nStatus\n\n\n\n\nMap 1\nCampus Overview\nTopo-bathymetric raster merging, hillshade, bikeways, campus & Isla Vista buildings\nComplete\n\n\nMap 2\nThematic Trees & Water\nClassified tree inventory by height/genus, stream networks, styled coastal aesthetics\nComplete\n\n\nMap 3\nWestern US Locator\nContinental elevation model, regional context, graticule styling\nComplete\n\n\nMap 4\nCalifornia Coast\nState boundary, coastal terrain, populated places vector points\nComplete\n\n\nMap 5\nBight of California\nSub-regional Channel Islands & Santa Barbara Channel bathymetry\nComplete\n\n\nMap 6\nUCSB & Environs\nWide base map linking regional geometry to campus boundaries\nComplete\n\n\nMap 7\nAtlas Page Layout\nMulti-panel layout combining Maps 3, 4, 5 & 6 using magick\nComplete\n\n\nMap 8\nSatellite Remote Sensing\nPlanetScope 4-band / 8-band multispectral seasonal imagery\nComplete\n\n\nMap 9\nVernal Pools (DEM)\nLandscape depression analysis using elevation neighbors\nIn Design\n\n\nMap 10\nBike Paths & Creeks\nVector intersection analysis (terra::intersect) of trails and waterways\nComplete\n\n\nMap 11\nDibblee Geologic Map\nHistoric Goleta quadrangle raster rectification and collar removal\nIn Progress\n\n\nMap 12\n12-Month NDVI Stack\nMulti-temporal raster stack, NDVI calculation, vegetation phenology curve\nComplete",
+    "crumbs": [
+      "Atlas Maps",
+      "Overview & Gallery"
+    ]
+  },
+  {
+    "objectID": "maps/index.html#featured-plates",
+    "href": "maps/index.html#featured-plates",
+    "title": "Atlas Maps",
+    "section": "Featured Plates",
+    "text": "Featured Plates\n\n\n\n\nMap 1: Campus Overview\nElevation, bathymetry, hillshade, and campus infrastructure.\n\n\n\n\n\nMap 2: Trees & Water\nStylized tree species and heights along coastal slough waters.\n\n\n\n\n\nMap 7: Composite Atlas Plate\n4-inset layout showcasing progressive geographic scale.\n\n\n\n\n\nMap 12: NDVI Phenology Stack\nAnnual vegetation index dynamics from satellite time series.",
+    "crumbs": [
+      "Atlas Maps",
+      "Overview & Gallery"
+    ]
+  },
+  {
+    "objectID": "datadictionary.html",
+    "href": "datadictionary.html",
+    "title": "Data Dictionary",
+    "section": "",
+    "text": "Note\n\n\n\nThis list catalogs data required for the 12 maps and 13 episodes described in this atlas project, along with their source origins and notes regarding how they integrate into the workshop flow."
+  },
+  {
+    "objectID": "datadictionary.html#overview-data-preparation",
+    "href": "datadictionary.html#overview-data-preparation",
+    "title": "Data Dictionary",
+    "section": "Overview & Data Preparation",
+    "text": "Overview & Data Preparation\nItems from the Carpentry Google Drive are downloaded as a single compressed archive by scripts/data_prep_new.r (or scripts/data_prep.r). They unpack into source_data/:\n\nHillshades at 3 scales and extents:\n\nCampus and the surrounding area\nThe Bight of California\nThe Western United States"
+  },
+  {
+    "objectID": "datadictionary.html#dem-sources",
+    "href": "datadictionary.html#dem-sources",
+    "title": "Data Dictionary",
+    "section": "DEM Sources",
+    "text": "DEM Sources\n\n\n\nDataset\nExtent / Description\nSource Link\n\n\n\n\nWestern US DEM\n90m DEM covering Western US\nScienceBase Item\n\n\nBight of California DEM\nRegional elevation model\nScienceBase Item\n\n\nCampus DEM (campus_DEM)\nLocal UCSB campus & Goleta Slough\nUCSB Carpentry Archive\n\n\nCampus Topo-Bathy\nSeamless bathymetry & topography (Henley Gate to Ellwood Beach)\nUSGS DS 781 (Block ID 63)"
+  },
+  {
+    "objectID": "datadictionary.html#layer-catalog-by-map",
+    "href": "datadictionary.html#layer-catalog-by-map",
+    "title": "Data Dictionary",
+    "section": "Layer Catalog by Map",
+    "text": "Layer Catalog by Map\n\nMap 1: Campus Overview\n\nCoordinate Reference System: Aligned to campus_DEM (NAD83 / California zone 5 / EPSG:2874 or UTM).\nVectors:\n\nWalkways & Campus Buildings: Campus_Buildings.shp (ICM via AGO circa 2017).\nCampus Trees: UCSB Treekeeper ArcGIS Online layer.\nBike Paths: bikelanescollapsedv8.shp (source_data/icm_bikes/bike_paths/).\nWetland & Lagoon Habitats: NCOS habitat boundary shapefiles.\n\nRasters:\n\nMerged bathymetry + topography: campus_bathotopo.tif\nHillshade raster generated via terra::shade().\n\n\n\n\nMap 2: Thematic Trees & Water\n\nCampus Trees (DTK_012116.shp) filtered by top 5 species and classified by height.\nStream and lagoon network (california_streams/streams_crop.shp).\nCampus bikeway centerlines.\n\n\n\nMaps 3, 4, 5 & 6: Progressive Zoom Series\n\nMap 3 (Western US): Broad regional context with hillshade and elevation gradient.\nMap 4 (California Coast): State boundary, populated places, and Channel Islands.\nMap 5 (Bight of California): Southern California coastal curvature, Santa Barbara Channel.\nMap 6 (UCSB & Environs): Detailed base map linking regional geometry to campus bounds.\n\n\n\nMap 8: PlanetScope Satellite Imagery\n\n4-band and 8-band PlanetScope imagery representing seasonal snapshots (Fall, Winter, Spring, Summer).\nUsed for natural color (RGB) and false-color infrared visualization.\n\n\n\nMap 10: Vector Intersections\n\nBike paths (bikelanescollapsedv8.shp) & California streams (streams_crop.shp).\nIntersection points computed via terra::intersect(), saved as output_data/creek_bike_intersections.shp.\n\n\n\nMap 11: Dibblee Geologic Quadrangle\n\nGeoreferenced geologic quadrangle map of Goleta (source_data/07gGoleta/DB0007.tif).\nRectified using terra::rectify().\n\n\n\nMap 12: 12-Month NDVI Phenology Stack\n\nMonthly PlanetScope imagery clipped to UCSB campus.\nNormalized Difference Vegetation Index: \\[\\text{NDVI} = \\frac{\\text{NIR} - \\text{Red}}{\\text{NIR} + \\text{Red}}\\]\nOutputs 12-month raster time series and mean NDVI seasonal profile plot."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "UCSB R-Atlas",
+    "section": "",
+    "text": "Welcome to the UCSB R-Atlas, a collection of publication-quality cartographic plates and geospatial workflows showcasing the University of California, Santa Barbara campus.\nThis project uses local UCSB examples applied to all steps of the Carpentries’ Introduction to Geospatial Raster and Vector Data with R curriculum."
+  },
+  {
+    "objectID": "index.html#atlas-map-plates",
+    "href": "index.html#atlas-map-plates",
+    "title": "UCSB R-Atlas",
+    "section": "Atlas Map Plates",
+    "text": "Atlas Map Plates\nExplore the 12 atlas maps and spatial analyses:\n\n\n\n\nMap 1: Campus Overview\nA wide view of the campus featuring bathymetry, topography, hillshade, bike paths, buildings, and lagoon habitats.\n\n\n\n\n\nMap 2: Trees & Water\nA stylized thematic map visualizing campus tree species and heights alongside water features and bikeways.\n\n\n\n\n\nMap 3: Western US\nRegional locator inset showing elevation across the Western United States.\n\n\n\n\n\nMap 4: California\nState-level locator map focusing on the California coastline and regional context.\n\n\n\n\n\nMap 5: Bight of California\nDetailed sub-regional view of the Southern California Bight and Santa Barbara Channel.\n\n\n\n\n\nMap 6: UCSB & Environs\nWide base map providing context for UCSB, Isla Vista, and surrounding coastal environments.\n\n\n\n\n\nMap 7: Atlas Page Layout\nComposite multi-inset atlas plate combining Maps 3, 4, 5, and 6 assembled using magick.\n\n\n\n\n\nMap 8: Satellite Remote Sensing\nPlanetScope multi-spectral satellite imagery comparing campus across seasons.\n\n\n\nMap 9: Vernal Pools Analysis\nTopographic depression analysis using DEMs to identify campus vernal pools (in design).\n\n\nMap 10: Paths & Creeks\nVector intersection analysis locating where campus bike paths cross local waterways and creeks.\n\n\nMap 11: Dibblee Geology\nGeoreferencing and collar removal for the historic Dibblee Goleta quadrangle geologic map.\n\n\n\n\nMap 12: 12-Month NDVI Stack\nTime-series raster analysis tracking vegetation phenology over a full calendar year."
+  },
+  {
+    "objectID": "index.html#getting-started",
+    "href": "index.html#getting-started",
+    "title": "UCSB R-Atlas",
+    "section": "Getting Started",
+    "text": "Getting Started\n\nClone the repository:\ngit clone https://github.com/UCSBCarpentry/ucsb-ratlas.git\ncd ucsb-ratlas\nDownload source data: Run scripts/data_prep_new.r (or scripts/data_prep.r) to download the required dataset archive from Google Drive and unzip into source_data/.\nRun map scripts: Execute scripts/run_every_map.r to render all atlas plates into images/ and final_output/.\nLearn more:\n\nExplore our Data Dictionary for layers and CRS definitions.\nRead our Progress Log for developmental notes.\nVisit UCSB Carpentry."
+  },
+  {
+    "objectID": "progress.html",
+    "href": "progress.html",
+    "title": "Project Progress",
+    "section": "",
+    "text": "Tracking the visual outputs, cartographic decisions, and developmental milestones of the UCSB R-Atlas."
+  },
+  {
+    "objectID": "progress.html#aspect-ratio-guidelines",
+    "href": "progress.html#aspect-ratio-guidelines",
+    "title": "Project Progress",
+    "section": "Aspect Ratio Guidelines",
+    "text": "Aspect Ratio Guidelines\nAll outputs from atlas map scripts are standardized to a 3 tall x 4 wide (or 4 tall x 3 wide) aspect ratio for consistent framing, except where multi-panel compositions require custom dimensions (such as Map 7)."
+  },
+  {
+    "objectID": "progress.html#plate-milestones",
+    "href": "progress.html#plate-milestones",
+    "title": "Project Progress",
+    "section": "Plate Milestones",
+    "text": "Plate Milestones\n\nMap 1: Campus Overview\n\n\n\nMap 1 Draft\n\n\n\n\nMap 2: Trees and Torches\n\n\n\nMap 2 Thematic Trees\n\n\n\n\nMap 7: Atlas Page Insets (Maps 3, 4, 5, 6)\nThe tryptic sequence zooms progressively from the Western United States into the Santa Barbara Channel and Campus:\n\n\n\n\n\n\nMap 3: Western US\n\n\n\n\n\n\n\nMap 4: California\n\n\n\n\n\n\n\nMap 5: Bight of CA\n\n\n\n\n\nCombined full-page layout:\n\n\n\nMap 7: Multi-panel composite\n\n\n\n\nMap 8: PlanetScope Satellite Imagery\n\n\n\nMap 8: Satellite snapshots\n\n\n\n\nMap 12: 12-Month NDVI Phenology Stack\n\n\n\nMap 12: Monthly NDVI series\n\n\n\n\n\nMap 12 Plot: Mean NDVI over time"
+  },
+  {
+    "objectID": "maps/map_01.html",
+    "href": "maps/map_01.html",
+    "title": "Map 1: Campus Overview",
+    "section": "",
+    "text": "Map 1: Wide campus overview showing topography, bathymetry, bikeways, and buildings",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 1: Campus Overview"
+    ]
+  },
+  {
+    "objectID": "maps/map_01.html#rendered-map-plate",
+    "href": "maps/map_01.html#rendered-map-plate",
+    "title": "Map 1: Campus Overview",
+    "section": "",
+    "text": "Map 1: Wide campus overview showing topography, bathymetry, bikeways, and buildings",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 1: Campus Overview"
+    ]
+  },
+  {
+    "objectID": "maps/map_01.html#technical-summary",
+    "href": "maps/map_01.html#technical-summary",
+    "title": "Map 1: Campus Overview",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Produce a broad overview plate of the UCSB campus combining elevation, ocean bathymetry, hillshading, bike path networks, and building footprints.\nKey Packages: terra, sf, tidyverse, scales\nData Sources:\n\nCampus DEM raster (source_data/campus_DEM/campus_DEM.tif)\nCoastal bathymetry raster (source_data/campus_bath/HenleyGateEllwoodBeach.tif)\nCampus buildings footprint shapefile (source_data/campus_buildings/Campus_Buildings.shp)\nIsla Vista building footprints (source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp)\nBike path centerlines (source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp)\nLagoon & shorebird foraging habitat (source_data/NCOS_Shorebird_Foraging_Habitat/)\n\nAspect Ratio: Standard 3 tall x 4 wide.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 1: Campus Overview"
+    ]
+  },
+  {
+    "objectID": "maps/map_01.html#r-script-scriptsmap_01.r",
+    "href": "maps/map_01.html#r-script-scriptsmap_01.r",
+    "title": "Map 1: Campus Overview",
+    "section": "R Script (scripts/map_01.r)",
+    "text": "R Script (scripts/map_01.r)\n\n\nShow R Code\n# map 1\n# Wide overview of campus\n\nlibrary(tidyverse)\n# library(raster)\nlibrary(terra)\nlibrary(sf)\nlibrary(scales)\n\n# clean the environment and hidden objects\nrm(list=ls())\n\ngg_labelmaker &lt;- function(plot_num){\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse=\" \" )\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n\n\n# make our ggtitles automagically #######\n# set map number\ncurrent_sheet &lt;- 1\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\n# every ggtitle() or labs() should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\n\n# we will use this to make the graticule and axes\nmy_theme &lt;-   theme(axis.title.x=element_blank(), \n                    axis.title.y=element_blank(), \n                    axis.text.x=element_blank(), \n                    axis.text.y=element_blank(), \n                    legend.position=\"none\", \n                    panel.ontop=TRUE,\n                    panel.grid.major = element_line(color = \"#FFFFFF33\"),\n                    panel.background = element_blank()) \n\n\n\n\n# add vector layers\nbuildings &lt;- st_read(\"source_data/campus_buildings/Campus_Buildings.shp\")\niv_buildings &lt;- st_read(\"source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp\")\n# walkways &lt;- ???\nbikeways &lt;- st_read(\"source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp\")\nhabitat &lt;- st_read(\"source_data/NCOS_Shorebird_Foraging_Habitat/NCOS_Shorebird_Foraging_Habitat.shp\")\n\n\n# basic terra plots\n# $geometry does just the shape.\nplot(buildings$geometry)\nplot(iv_buildings$geometry)\nplot(bikeways$geometry)\nplot(habitat$geometry)\n\n\n# overlays as in episode 8\n\n# #1 \nggplot() +\n  geom_sf(data=habitat) +\n  geom_sf(data=buildings) +\n  geom_sf(data=iv_buildings) +\n  geom_sf(data=bikeways) +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf()\n\nggsave(\"images/map1.1.png\", plot=last_plot())\n\n# don't forget you have a theme to use\nggplot() +\n  geom_sf(data=habitat) +\n  geom_sf(data=buildings) +\n  geom_sf(data=iv_buildings) +\n  geom_sf(data=bikeways)  +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf()\n\nggsave(\"images/map1.2.png\", plot=last_plot())\n\n\n\n# which buildings are on top?\n# the last ones added\n# #2 \nggplot() +\n  geom_sf(data=habitat, color=\"yellow\") +\n  geom_sf(data=iv_buildings, color=\"pink\") +\n  geom_sf(data=buildings) +\n  geom_sf(data=bikeways, color=\"blue\") +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf()\n\n\n# so visually let's put the non-campus gray\n# buildings below our campus buildings\n\nggplot() +\n  geom_sf(data=habitat, color=\"yellow\") +\n  geom_sf(data=iv_buildings, color=\"light gray\") +\n  geom_sf(data=buildings) +\n  geom_sf(data=bikeways, color=\"blue\") +\n  my_theme +\n    ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf() \n  \nggsave(\"images/1.2.png\", plot=last_plot())\n\n\n# the background setup is bathymetry and topography\n# mashed together\n\n# We'll need some bins\n# best coast line bins from ep 2\n# from ep 2, these are best sea level bins:\ncustom_bins &lt;- c(-3, 4.9, 5, 7.5, 10, 25, 40, 70, 100, 150, 200)\n\n\n\ncampus_DEM &lt;- rast(\"source_data/campus_DEM.tif\") \ncrs(campus_DEM)\n\n# does bathymetry still needs to be re-projected in order to overlay?\ncampus_bath &lt;- rast(\"source_data/SB_bath.tif\") \ncrs(campus_bath)\n\n# can't overlay them because they are different CRS's\n# that's part of the narrative of the lesson.\nplot(campus_DEM)\nplot(campus_bath)\n\n\ncampus_projection &lt;- crs(campus_DEM)\n\ncampus_bath &lt;- project(campus_bath, campus_projection)\nplot(campus_DEM)\nplot(campus_bath)\n\ncrs(campus_DEM) == crs(campus_bath)\n\n#################################\n# Julien solved this in ep_4\n# for these files, CRS, extent, and resolution all \n# need to be made to match:\n\n\n# do they have the same projections?\ncrs(campus_DEM) == crs(campus_bath)\n\n# do they have the same extents?\next(campus_DEM) == ext(campus_bath)\n\n\ncampus_bath &lt;- crop(x=campus_bath, y=campus_DEM)\nplot(campus_bath)\ncrs(campus_bath)\n\n# save campus bathymetry here\nwriteRaster(campus_bath, \"output_data/campus_bath_epsg2874.tif\", filetype=\"GTiff\", overwrite=TRUE)\n\n# make dataframes\ncampus_DEM_df &lt;- as.data.frame(campus_DEM, xy=TRUE) %&gt;%\n  rename(elevation = greatercampusDEM_1_1) # rename to match code later\nstr(campus_DEM_df)\n\ncampus_bath_df &lt;- as.data.frame(campus_bath, xy=TRUE) %&gt;%\n  rename(bathymetry = Bathymetry_2m_OffshoreCoalOilPoint)\nstr(campus_bath_df)\n\nsea_level &lt;- campus_DEM - 5\n\n# Set values below or equal to 0 to NA\nsea_level_0 &lt;- app(sea_level, function(x) ifelse(x &lt;=0, NA, x))\n\n# Note: this remove some values in the marsh that are below 0\n# we are going to want those back later \n\n# Make it a data frame and rebinned\nsea_level_df &lt;- as.data.frame(sea_level_0, xy=TRUE) %&gt;% \n  rename(elevation = lyr.1) %&gt;%\n  mutate(binned = cut(elevation, breaks=custom_bins))\n\n# to make our scale make sense, we can do \n# raster math \n# how would I do this with overlay?\nggplot() + \n  geom_raster(data = sea_level_df, aes(x=x, y=y, fill = binned)) + \n  my_theme +\n    ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf()\n\nsummary(sea_level_df)\ncustom_sea_bins &lt;- c(-8, -.1, .1, 3, 5, 7.5, 10, 25, 40, 70, 100, 150, 200)\n\nsea_level_df &lt;- sea_level_df %&gt;% \n  mutate(binned = cut(elevation, breaks=custom_sea_bins))\n\n\nlength(custom_sea_bins)\n\n# now sea level is zero.\nggplot() + \n  geom_raster(data = sea_level_df, aes(x=x, y=y, fill = binned)) +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf()\n\n# if we overlay, we should get the same result as at the \n# end of (episode 1?).\nggplot() +\n  geom_raster(data = campus_DEM_df, aes(x=x, y=y, fill = elevation)) +\n  geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = bathymetry)) +\n  scale_fill_viridis_c(na.value=\"NA\") +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = \"Does the ovlerlay work?\") +\n  coord_sf()\n\n\n\n# add custom bins to each.\n# these were based on experimentation\ncustom_DEM_bins &lt;- c(-3, -.01, .01, 2, 3, 4, 5, 10, 40, 200)\ncampus_DEM_df &lt;- campus_DEM_df %&gt;% \n  mutate(binned_DEM = cut(elevation, breaks = custom_DEM_bins))\n\nstr(campus_DEM_df)\n\ncustom_bath_bins &lt;- c(1, -5, -15, -35, -45, -55, -60, -65, -75, -100, -125)\nstr(custom_bath_bins)\n\nstr(campus_bath_df)\n\ncampus_bath_df &lt;- campus_bath_df %&gt;% \n  mutate(binned_bath = cut(bathymetry, breaks =custom_bath_bins))\n\nstr(campus_bath_df)\nstr(campus_DEM_df)\n\n# overlays works!!!!!\nggplot() + \n  geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = binned_bath)) +\n  scale_fill_manual(values = terrain.colors(10)) +\n  geom_raster(data=campus_DEM_df, aes(x=x, y=y, fill = binned_DEM)) +\n  scale_fill_manual(values = terrain.colors(19)) +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = \"overlay works!\") +\n  coord_quickmap()\n\n# switch the order\n# Not sure how color scheme gets on both layers\nggplot() +\n    geom_raster(data = campus_DEM_df, aes(x=x, y=y, fill = binned_DEM)) +\n    geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = binned_bath)) +\n    scale_fill_manual(values = terrain.colors(19)) +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_quickmap()\n\nggplot() +\n  geom_raster(data = campus_DEM_df, aes(x=x, y=y, fill = elevation)) +\n  geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = bathymetry)) +\n        scale_fill_viridis_c(na.value=\"NA\") +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_quickmap()\n  \n# create batho-topo\n# while we are here, we should make \n# one DEM that is both bathymetry and elevation\n# by combining campus_DEM and sea_level_0\n# this is also in episode 9\n# but ... does batho_topo plot the same?\n\n\nplot(campus_bath)\nplot(sea_level_0)\n\ncrs(campus_bath) == crs(sea_level_0)\n\n# they have different resolutions\nres(campus_bath)\nres(sea_level_0)\n\ncampus_bath_20m &lt;- resample(campus_bath, sea_level_0)\n\nres(sea_level_0) \nres(campus_bath_20m)\n\ncampus_bathotopo &lt;- merge(campus_bath_20m, sea_level_0)\n\nplot(campus_bathotopo)\nwriteRaster(campus_bathotopo, \"output_data/campus_bathotopo.tif\", overwrite=TRUE)\n# end batho-topo\n# even though we don't do anything with it here in map 1\n# ######\n\n  \n# overlay the vectors\n# they won't overlay because\n# you need to re-project the vectors\nggplot() +\n  geom_raster(data = campus_DEM_df, aes(x=x, y=y, fill = elevation)) +\n  geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = bathymetry)) +\n  scale_fill_viridis_c(na.value=\"NA\") +\n  geom_sf(data=habitat, color=\"yellow\") +\n  geom_sf(data=buildings) +\n  geom_sf(data=bikeways, color=\"blue\") +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n    coord_sf()\n\n# reproject the vectors\nbuildings &lt;- st_transform(buildings, crs(campus_DEM))\niv_buildings &lt;- st_transform(iv_buildings, crs(campus_DEM))\nbikeways &lt;- st_transform(bikeways, crs(campus_DEM))\nhabitat &lt;- st_transform(habitat, crs(campus_DEM))\n\n# now the overlays work\nggplot() +\n  geom_raster(data = campus_DEM_df, aes(x=x, y=y, fill = elevation)) +\n  geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = bathymetry)) +\n  scale_fill_viridis_c(na.value=\"NA\") +\n  geom_sf(data=habitat, color=\"yellow\") +\n  geom_sf(data=buildings) +\n  geom_sf(data=bikeways, color=\"blue\") +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf()\n\n\n# bring back the hillshade\n# open file from ep1-2\n# and maybe put it on top of batho_topo since you never use that one?\n\ncampus_hillshade_df &lt;- \n  rast(\"source_data/campus_hillshade.tif\") %&gt;% \n  as.data.frame(xy = TRUE) %&gt;% \n  rename(campus_hillshade = hillshade) # rename to match code later\n\nstr(campus_hillshade_df)\n\n\n#update color scheme for contrast \n# +hillshade\n# trying with the scales library to shorten the x, y to 2 decimals\nggplot() +\n  geom_raster(data = campus_DEM_df, aes(x=x, y=y, fill = elevation)) +\n  geom_raster(data = campus_hillshade_df, aes(x=x, y=y, alpha = campus_hillshade), show.legend = FALSE) +\n  geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = bathymetry)) +\n  scale_fill_viridis_c(na.value=\"NA\")+ \n  labs(labels =label_number(scale = 1/1000)) +\n  geom_sf(data=iv_buildings, color=alpha(\"light gray\", .1), fill=NA) +\n  geom_sf(data=buildings, color =\"hotpink\") +\n  geom_sf(data=habitat, color=\"darkorchid1\") +\n  geom_sf(data=bikeways, color=\"#00abff\") +\n  my_theme +\n  ggtitle(gg_labelmaker(current_ggplot+1)) +\n  coord_sf()\n\n\n# next we need to refine the plot and labels\n# Not a publication ready graphic (yet) ~episode 13\n# customize the x and y graticule to be xx.xx and smaller -&gt; number_format()\n# remove the x and y axis labels -&gt; axis.title.x/y = element_blank()\n# customize the legend title to include units of elevation -&gt; guide_legend()\ngg_title_string &lt;- gg_labelmaker(current_ggplot)\ngg_title_string\n# #  \nfinal_ggplot &lt;- ggplot() +\n  geom_raster(data = campus_DEM_df, aes(x=x, y=y, fill = elevation)) +\n  geom_raster(data = campus_hillshade_df, aes(x=x, y=y, alpha = campus_hillshade)) +\n  geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = bathymetry)) +\n  scale_y_continuous(labels = number_format(accuracy = 0.01)) +\n  scale_fill_viridis_c(na.value=\"NA\", guide = guide_legend(\"bathymetry / elevation (US ft)\"))+\n  geom_sf(data=iv_buildings, color=alpha(\"light gray\", .1), fill=NA) +\n  geom_sf(data=buildings, color =\"pink\") +\n  geom_sf(data=habitat, color=alpha(\"darkorchid1\", .1), fill=NA) +\n  geom_sf(data=bikeways, color=\"#00abff\") +\n  labs(title=gg_title_string, \n       subtitle=\"UCSB, buildings, environs, bikepaths\",\n       caption = \"rAtlas Map 1\") + \n  my_theme +\n  coord_sf()\n\n\n# is there anything we don't like about this?\n# do we want subtle off-campus bike paths?\n# or at least a current set that would got across NCOS?\n\nfinal_ggplot\nggsave(\"images/map1.11.png\", width = 16, height = 9, plot=final_ggplot)\nggsave(\"final_output/map_01.png\", width = 16, height = 9, plot=final_ggplot)",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 1: Campus Overview"
+    ]
+  },
+  {
+    "objectID": "maps/map_03.html",
+    "href": "maps/map_03.html",
+    "title": "Map 3: Western US",
+    "section": "",
+    "text": "Map 3: Western United States regional elevation model",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 3: Western US"
+    ]
+  },
+  {
+    "objectID": "maps/map_03.html#rendered-map-plate",
+    "href": "maps/map_03.html#rendered-map-plate",
+    "title": "Map 3: Western US",
+    "section": "",
+    "text": "Map 3: Western United States regional elevation model",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 3: Western US"
+    ]
+  },
+  {
+    "objectID": "maps/map_03.html#technical-summary",
+    "href": "maps/map_03.html#technical-summary",
+    "title": "Map 3: Western US",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Serve as the widest regional locator panel (Inset 1 of the Map 7 tryptic), establishing continental context for Southern California.\nKey Packages: terra, tidyverse, tidyterra\nData Sources:\n\nWestern United States 90-meter Digital Elevation Model\nContinental border and state line vector polygons\n\nAspect Ratio: 3 tall x 4 wide portrait orientation.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 3: Western US"
+    ]
+  },
+  {
+    "objectID": "maps/map_03.html#r-script-scriptsmap_03.r",
+    "href": "maps/map_03.html#r-script-scriptsmap_03.r",
+    "title": "Map 3: Western US",
+    "section": "R Script (scripts/map_03.r)",
+    "text": "R Script (scripts/map_03.r)\n\n\nShow R Code\n# map 3-4-5 is a tryptic,\n# that runs horizontally on top of map 7\n# zooming in to campus\n# ie: the zoom to Cali locator sheet\n\n# each of the 3 maps is a grayscale alpha hillshade\n# over (some color-scheme) DEMs,\n# -- just as in the overlay episode --\n#  -- which overlay episode Jonnie?     --\n\n\n# clean the environment and hidden objects\nrm(list = ls())\n\nlibrary(terra)\nlibrary(geojsonsf)\n# library(sf)\nlibrary(ggplot2)\nlibrary(tidyterra)\nlibrary(dplyr)\n# library(ggpubr)\n# library(raster)\n\n# make sure output window is 1x1\n# because you muck with it a lot\npar(mfrow = c(1, 1))\n\n# We'll need a grayscale palette later\ngrays &lt;- colorRampPalette(c(\"black\", \"white\"))(255)\n\n# set map number\ncurrent_sheet &lt;- 3\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\n# our auto ggtitle maker\ngg_labelmaker &lt;- function(plot_num) {\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse = \" \")\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n# every ggtitle should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\n# we will use this to make the graticule and axes\nmy_theme &lt;- theme(\n  axis.title.x = element_blank(),\n  axis.title.y = element_blank(),\n  axis.text.x = element_blank(),\n  axis.text.y = element_blank(),\n  legend.position = \"none\",\n  panel.ontop = TRUE,\n  panel.grid.major = element_line(color = \"#FFFFFF33\"),\n  panel.background = element_blank()\n)\n\n# set up a local CRS to use throughout\ncampus_DEM &lt;- rast(\"source_data/campus_DEM.tif\")\ncampus_crs &lt;- crs(campus_DEM)\nstr(campus_crs)\n\n\n# #####################\n# Map 3\n# Zoom 1: west US overview\n\n# hillshade:\nworld &lt;- rast(\"source_data/global_raster/GRAY_HR_SR_OB.tif\")\nplot(world)\n\n# dem:\nzoom_1_dem &lt;- rast(\"source_data/dem90_hf/dem90_hf.tif\")\nplot(zoom_1_dem)\n# this is a bit too big later on. let's downsample it:\nzoom_1_dem &lt;- aggregate(zoom_1_dem, fact = 5)\nplot(zoom_1_dem)\n\n# and get our clipping extent\nzoom_1_extent &lt;- geojson_sf(\"source_data/cali_overview.geojson\")\nzoom_1_extent_vect &lt;- vect(zoom_1_extent)\nzoom_1_extent_vect\nzoom_1_extent\n\n\n# clip the world hillshade to zoom_1\nzoom_1_hillshade &lt;- crop(x = world, y = zoom_1_extent)\nplot(zoom_1_hillshade)\n\ncrs(zoom_1_hillshade)\nzoom_1_extent_vect &lt;- project(x = zoom_1_extent_vect, y = zoom_1_hillshade)\n\n# clip the dem\ncrs(zoom_1_dem) == crs(zoom_1_hillshade)\nzoom_1_dem &lt;- project(zoom_1_dem, crs(zoom_1_hillshade))\ncrs(zoom_1_dem) == crs(zoom_1_hillshade)\n\nzoom_1_dem &lt;- crop(x = zoom_1_dem, y = zoom_1_hillshade)\n\nplot(zoom_1_dem)\nplot(zoom_1_hillshade)\n\n\n# we'll need this locator box socal_aoi.geojson\n# is the next crop extent.\n# it came from a Planet harvest that we did\nzoom_2_crop_extent &lt;- geojson_sf(\"source_data/socal_aoi.geojson\")\nzoom_2_crop_extent &lt;- vect(zoom_2_crop_extent)\n\n\n# now let's set up for ggplot\n# and alphas\n#################################################\n\n# first check that projections match\ncrs(zoom_1_hillshade) == crs(zoom_1_dem)\ncrs(zoom_1_dem) == crs(zoom_2_crop_extent)\ncrs(zoom_1_hillshade) == crs(zoom_2_crop_extent)\n# the rasters don't match the vector.\n# but we still seem to be able to overlay.\n\n\n# hillshade as ggplot\nstr(zoom_1_hillshade)\nzoom_1_hillshade_df &lt;- as.data.frame(zoom_1_hillshade, xy = TRUE)\ncolnames(zoom_1_hillshade_df)\n\nzoom_1_hillshade_plot &lt;- ggplot() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, fill = GRAY_HR_SR_OB)\n  ) +\n  scale_fill_continuous() +\n  coord_sf() +\n  ggtitle(\"Zoom 1 Hillshade\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nzoom_1_hillshade_plot\n\n# zoom 1 DEM as ggplot\nstr(zoom_1_dem)\nzoom_1_dem_df &lt;- as.data.frame(zoom_1_dem, xy = TRUE)\ncolnames(zoom_1_dem_df)\n\nzoom_1_dem_plot &lt;- ggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  coord_sf() +\n  ggtitle(\"Zoom1 DEM\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nzoom_1_dem_plot\n\n\n# hillshade as alpha\nzoom_1_hillshade_plot &lt;- ggplot() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.3, 0.6), guide = \"none\") +\n  coord_sf() +\n  ggtitle(\"Zoom 1 Hillshade Alpha\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nzoom_1_hillshade_plot\n\n\n# now overlay them\nzoom_1_overlay_plot &lt;- ggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.3, 0.6), guide = \"none\") +\n  geom_spatvector(data = zoom_2_crop_extent, color = \"red\", lwd = 1.5, fill = NA) +\n  coord_sf() +\n  my_theme +\n  ggtitle(\"Western US Fancy Overlay\", subtitle = gg_labelmaker(current_ggplot + 1))\nzoom_1_overlay_plot\n\n\n# the hillshade for the water is very subtle.\nzoom_1_overlay_plot\n\n# add the graticule\nzoom_1_overlay_plot &lt;- ggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.3, 0.6), guide = \"none\") +\n  geom_spatvector(data = zoom_2_crop_extent, color = \"red\", lwd = 1.5, fill = NA) +\n  my_theme +\n  coord_sf() +\n  ggtitle(\"Western US Fancy Overlay\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nzoom_1_overlay_plot\n\nggsave(\"images/map3.1.png\", width = 3, height = 4, plot = last_plot(), bg = \"white\")\n\n\n# now seize control of labels\nzoom_1_overlay_plot &lt;- ggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.3), guide = \"none\") +\n  geom_spatvector(data = zoom_2_crop_extent, color = \"red\", lwd = 1.5, fill = NA) +\n  my_theme +\n  coord_sf() +\n  ggtitle(\"Western US Fancy Overlay\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nzoom_1_overlay_plot\n\nggsave(\"images/map3.2.png\", width = 3, height = 4, plot = last_plot(), bg = \"white\")\n\n\n# now let's add\n# 'california populated places'\n# which is census data\n# for the sake of a nice vizualization\nplaces &lt;- vect(\"source_data/tl_2023_06_place/tl_2023_06_place.shp\")\nplot(places)\n\nzoom_1_overlay_places &lt;- ggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.3), guide = \"none\") +\n  geom_spatvector(data = places, fill = \"NA\") +\n  geom_spatvector(data = zoom_2_crop_extent, color = \"red\", lwd = 1.5, fill = NA) +\n  my_theme +\n  coord_sf() +\n  ggtitle(\"Western US\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nzoom_1_overlay_places\n\nggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.3), guide = \"none\") +\n  geom_spatvector(data = places, fill = \"NA\") +\n  geom_spatvector(data = zoom_2_crop_extent, color = \"red\", lwd = 1.5, fill = NA) +\n  my_theme +\n  coord_sf() +\n  ggtitle(\"Western US\", subtitle = gg_labelmaker(current_ggplot + 1))\n\nggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.3), guide = \"none\") +\n  geom_spatvector(data = places, fill = \"NA\", color = \"#EEEEEE33\") +\n  geom_spatvector(data = zoom_2_crop_extent, color = \"red\", lwd = 1, fill = NA) +\n  my_theme +\n  coord_sf() +\n  ggtitle(\"Western US\", subtitle = gg_labelmaker(current_ggplot + 1))\n\n\n# now one to save\nggplot() +\n  geom_raster(\n    data = zoom_1_dem_df,\n    aes(x = x, y = y, fill = dem90_hf)\n  ) +\n  scale_fill_viridis_c() +\n  geom_raster(\n    data = zoom_1_hillshade_df,\n    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)\n  ) +\n  scale_alpha(range = c(0.05, 0.3), guide = \"none\") +\n  geom_spatvector(data = places, fill = \"NA\", color = \"#EEEEEE33\") +\n  geom_spatvector(data = zoom_2_crop_extent, color = \"red\", lwd = 1, fill = NA) +\n  my_theme +\n  coord_sf() +\n  ggtitle(\"The Western United States\",\n    subtitle = \"on California's south-central coast\"\n  )\n\n\n#######################################################################################\n\n\nggsave(\"images/map3.png\", width = 3, height = 4, plot = last_plot(), bg = \"white\")\nggsave(\"final_output/map_03.png\", width = 3, height = 4, plot = last_plot(), bg = \"white\")",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 3: Western US"
+    ]
+  },
+  {
+    "objectID": "maps/map_05.html",
+    "href": "maps/map_05.html",
+    "title": "Map 5: Bight of California",
+    "section": "",
+    "text": "Map 5: Southern California Bight and Channel Islands",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 5: Bight of California"
+    ]
+  },
+  {
+    "objectID": "maps/map_05.html#rendered-map-plate",
+    "href": "maps/map_05.html#rendered-map-plate",
+    "title": "Map 5: Bight of California",
+    "section": "",
+    "text": "Map 5: Southern California Bight and Channel Islands",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 5: Bight of California"
+    ]
+  },
+  {
+    "objectID": "maps/map_05.html#technical-summary",
+    "href": "maps/map_05.html#technical-summary",
+    "title": "Map 5: Bight of California",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Serve as Inset 3 of the Map 7 tryptic, transitioning from state-wide perspective to the immediate coastal geography of the Santa Barbara Channel and Channel Islands.\nKey Packages: terra, tidyverse, tidyterra, sf\nData Sources:\n\nRegional Coastal DEM\nChannel Islands and coastline vectors\nPopulated places in Santa Barbara and Ventura counties\n\nAspect Ratio: 4 wide x 3 tall landscape orientation.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 5: Bight of California"
+    ]
+  },
+  {
+    "objectID": "maps/map_05.html#r-script-scriptsmap_05.r",
+    "href": "maps/map_05.html#r-script-scriptsmap_05.r",
+    "title": "Map 5: Bight of California",
+    "section": "R Script (scripts/map_05.R)",
+    "text": "R Script (scripts/map_05.R)\n\n\nShow R Code\n#################################################\n# zoom3\n# Map 5 ########################################\n# \n\n# clean the environment and hidden objects\n\nrm(list=ls())\n\nlibrary(sf)\nlibrary(terra)\nlibrary(tidyterra)\nlibrary(geojsonsf)\nlibrary(ggplot2)\nlibrary(dplyr)\n\n# set map number\ncurrent_sheet &lt;- 5\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\n# our auto ggtitle maker\ngg_labelmaker &lt;- function(plot_num){\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse=\" \" )\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n# every ggtitle should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle \n\n\n\n# ###########################\n# Map 5\n# Zoom 3: UCSB & Environs\n# these come pre-made\n\ncampus_DEM &lt;- rast(\"source_data/campus_DEM.tif\")\nplot(campus_DEM)\nzoom_3_hillshade &lt;- rast(\"source_data/campus_hillshade.tif\")\nplot(zoom_3_hillshade)\n\n\n#################################################\n# zoom3 as ggplot\ncampus_hillshade &lt;- rast(\"source_data/campus_hillshade.tif\")\nstr(campus_hillshade)\nzoom_3_hillshade_df &lt;- as.data.frame(campus_hillshade, xy=TRUE)\ncolnames(zoom_3_hillshade_df)\n\n# let's make our ggplots shorter by saving\n# our theme:\nmy_theme &lt;- theme_minimal() +\n  theme(axis.title.x=element_blank(), \n        axis.title.y=element_blank(), \n        axis.text.x=element_blank(), \n        axis.text.y=element_blank(), \n        legend.position=\"none\", \n        panel.ontop=TRUE,\n        panel.grid.major = element_line(color = \"#FFFFFF33\"),\n        panel.grid.minor = element_line(color = \"#FFFFFF66\"),\n        panel.background = element_blank())\n\n\n\n# ggplot the hillshade\nzoom_3_plot &lt;- ggplot() +\n  geom_raster(data = zoom_3_hillshade_df,\n              aes(x=x, y=y, alpha=hillshade)) +\n  scale_alpha(range = c(0.05, 0.5), guide=\"none\") +\n  theme(my_theme) +\n  coord_sf() + \n  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = \"Campus hillshade\")\n\nzoom_3_plot\n\n# ggplot the DEM\nzoom_3_DEM_df &lt;- as.data.frame(campus_DEM, xy=TRUE)\nstr(zoom_3_DEM_df)\n\nzoom_3_plot &lt;- ggplot() +\n  geom_raster(data = zoom_3_DEM_df,\n              aes(x=x, y=y, fill=greatercampusDEM_1_1)) +\n  scale_fill_viridis_c(guide=\"none\") +\n  theme(my_theme) +\n  coord_sf() + \n  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = \"UCSB DEM\")\n\nzoom_3_plot\n\n# now overlay\nzoom_3_plot &lt;- ggplot() +\n  geom_raster(data = zoom_3_DEM_df,\n              aes(x=x, y=y, fill=greatercampusDEM_1_1)) +\n  scale_fill_viridis_c() +\n  geom_raster(data = zoom_3_hillshade_df,\n              aes(x=x, y=y, alpha=hillshade)) +\n  scale_alpha(range = c(0.05, 0.5), guide=\"none\") +\n  theme(my_theme) +\n  coord_sf() + \n  ggtitle(\"Map 5: zm 3: UCSB & Surroundings\", subtitle = gg_labelmaker(current_ggplot+1))\n\nzoom_3_plot\n\n# back out of the shortened theme and use what works\nzoom_3_plot &lt;- ggplot() +\n  geom_raster(data = zoom_3_DEM_df,\n              aes(x=x, y=y, fill=greatercampusDEM_1_1)) +\n  scale_fill_viridis_c() +\n  geom_raster(data = zoom_3_hillshade_df,\n              aes(x=x, y=y, alpha=hillshade)) +\n  scale_alpha(range = c(0.05, 0.5), guide=\"none\") +\n  theme_minimal() +\n  theme(axis.title.x=element_blank(), \n        axis.title.y=element_blank(), \n        axis.text.x=element_blank(), \n        axis.text.y=element_blank(), \n        legend.position=\"none\", \n        panel.ontop=TRUE,\n        panel.grid.major = element_line(color = \"#FFFFFF33\"),\n        panel.background = element_blank()) +\n  coord_sf() + \n  ggtitle(\"Map 5: zm 3: no axis labels\", subtitle = gg_labelmaker(current_ggplot+1))\n\nzoom_3_plot\n\n# back out of the shortened theme and use what works\nzoom_3_plot &lt;- ggplot() +\n  geom_raster(data = zoom_3_DEM_df,\n              aes(x=x, y=y, fill=greatercampusDEM_1_1)) +\n  scale_fill_viridis_c() +\n  geom_raster(data = zoom_3_hillshade_df,\n              aes(x=x, y=y, alpha=hillshade)) +\n  scale_alpha(range = c(0.05, 0.5), guide=\"none\") +\n  theme_minimal() +\n  theme(axis.title.x=element_blank(), \n        axis.title.y=element_blank(), \n        axis.text.x=element_blank(), \n        axis.text.y=element_blank(), \n        legend.position=\"none\", \n        panel.ontop=TRUE,\n        panel.grid.major = element_line(color = \"#FFFFFF33\"),\n        panel.background = element_blank()) +\n  coord_sf() + \n  ggtitle(\"UCSB Surroundings\", subtitle = \"on unceded land of the Chumash\")\n\nzoom_3_plot\n\n\n\n# zoom 3 needs water, \n# add in topo_batho\ncampus_bathotopo &lt;- rast(\"output_data/campus_bathotopo.tif\")\ncampus_bathotopo_df &lt;- as.data.frame(campus_bathotopo, xy=TRUE)\n\n\n# there's an overlay problem here.\n\n\n\n\n# now add campus_bathotopo_df to the ggplot:\nzoom_3_plot &lt;- ggplot() +\n  geom_raster(data = campus_bathotopo_df, aes(x=x, y=y)) +\n  geom_raster(data = zoom_3_DEM_df,\n              aes(x=x, y=y, fill=greatercampusDEM_1_1)) +\n  scale_fill_viridis_c() +\n  geom_raster(data = zoom_3_hillshade_df,\n              aes(x=x, y=y, alpha=hillshade)) +\n  scale_alpha(range = c(0.05, 0.5), guide=\"none\") +\n  theme_minimal() +\n  theme(axis.title.x=element_blank(), \n        axis.title.y=element_blank(), \n        axis.text.x=element_blank(), \n        axis.text.y=element_blank(), \n        legend.position=\"none\", \n        panel.ontop=TRUE,\n        panel.grid.major = element_line(color = \"#FFFFFF33\"),\n        panel.background = element_blank()) +\n  coord_sf() + \n  ggtitle(\"UCSB Surroundings\", subtitle = \"on unceded land of the Chumash\")\n\nzoom_3_plot\n\n\nzoom_3_plot &lt;-ggplot() +\n  geom_raster(data = campus_bathotopo, aes(x=x, y=y)) +\n  geom_raster(data = zoom_3_DEM_df,\n              aes(x=x, y=y, fill=greatercampusDEM_1_1)) +\n  scale_fill_viridis_c() +\n  geom_raster(data = zoom_3_hillshade_df,\n              aes(x=x, y=y, alpha=hillshade)) +\n  scale_alpha(range = c(0.05, 0.5), guide=\"none\") +\n  theme_minimal() +\n  theme(my_theme) +\n  coord_sf() + \n  ggtitle(\"UCSB Surroundings\", subtitle = \"on unceded land of the Chumash\")\n\n\nzoom_3_plot\n\nggsave(\"images/map5.png\", width = 4, height = 3, plot=last_plot())\nggsave(\"final_output/map_05.png\", width = 4, height = 3, plot=zoom_3_plot)",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 5: Bight of California"
+    ]
+  },
+  {
+    "objectID": "maps/map_07.html",
+    "href": "maps/map_07.html",
+    "title": "Map 7: Atlas Page Layout",
+    "section": "",
+    "text": "Map 7: Full multi-inset atlas page showing regional zoom sequence and campus base map",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 7: Atlas Page Layout"
+    ]
+  },
+  {
+    "objectID": "maps/map_07.html#rendered-map-plate",
+    "href": "maps/map_07.html#rendered-map-plate",
+    "title": "Map 7: Atlas Page Layout",
+    "section": "",
+    "text": "Map 7: Full multi-inset atlas page showing regional zoom sequence and campus base map",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 7: Atlas Page Layout"
+    ]
+  },
+  {
+    "objectID": "maps/map_07.html#technical-summary",
+    "href": "maps/map_07.html#technical-summary",
+    "title": "Map 7: Atlas Page Layout",
+    "section": "Technical Summary",
+    "text": "Technical Summary\n\nObjective: Synthesize individual cartographic components into a publication-ready atlas sheet. The top row forms a three-tier geographic zoom sequence (Western US → California → Bight of California), anchored below by the campus base map (Map 6).\nKey Packages: magick\nInputs:\n\nimages/map3.png (900 x 1200 px)\nimages/map4.png (900 x 1200 px)\nimages/map5.png (1200 x 900 px)\nimages/map6.1.png (3600 x 1200 px)\n\nOutputs:\n\nTop tryptic row: final_output/map7_row_1.png\nComplete atlas sheet: final_output/map_07.png\n\n\n\n\nInset Sequence (Row 1 Tryptic)\n\n\n\nMap 7 Row 1: Zoom-in tryptic combining Maps 3, 4, and 5",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 7: Atlas Page Layout"
+    ]
+  },
+  {
+    "objectID": "maps/map_07.html#r-script-scriptsmap_07.r",
+    "href": "maps/map_07.html#r-script-scriptsmap_07.r",
+    "title": "Map 7: Atlas Page Layout",
+    "section": "R Script (scripts/map_07.r)",
+    "text": "R Script (scripts/map_07.r)\n\n\nShow R Code\n# Map 7\n# this is the  layout page with 4 maps on it\n# maps 3 - 4 - 5 zoom in tryptic\n# and map 6, which is a version of map 1\n# \n\n# clean the environment and hidden objects\nrm(list=ls())\n\n# Load magick package, which allows to make a montage of images\nlibrary(magick)\n\n# set map number\ncurrent_sheet &lt;- 7\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\n\n\n\n# We'll be doing a 12inx9in image, which at 300 PPI is 3600x2700 pixels\n\n# Load maps 3, 4, 5, and 6 using the magick::image_read function\nmap3 &lt;- image_read(\"images/map3.png\") # 3x4 inches = 900x1200 pixels\nmap4 &lt;- image_read(\"images/map4.png\") # 3x4 in = 900x1200 px\nmap5 &lt;- image_read(\"images/map5.png\") # 4x3 in = 1200x900 px\nmap6 &lt;- image_read(\"images/map6.1.png\") # 12x9 in = 3600x1200 px\n\nimage_read(\"images/map3.png\")\nimage_read(\"images/map4.png\")\nimage_read(\"images/map5.png\")\nimage_read(\"images/map6.1.png\")\n\n# There are multiple ways to use the magick package to append images,\n# you could use image_append(), image_montage(), or image_composite()\n\n\n\n# Let's first make row number 1 or our atlas page, which combines maps 3, 4, and 5\"\n# This will have a geometry of 4800x1200px (12x4 inches), so each tile is 1600x1200\n\nmap7_row1 &lt;- image_montage(image = c(map3, map4, map5),\n              tile = \"3x1\",\n              geometry = \"1600x1200\",\n              gravity = \"center\")\nmap7_row1\n\n# save that\nimage_write(map7_row1, \"final_output/map7_row_1.png\", format = \"png\")\n# output it\nimage_read(\"final_output/map7_row_1.png\")\n\nmap7 &lt;- image_montage(image = c(map7_row1, map6),\n                      tile = \"1x2\",\n                      geometry = \"4800x1200\")\n\nmap7\n\nmap_7_titled &lt;- image_annotate(map7, \"Map 7: Where is UCSB?\",\n                       size = 14,\n                       location = \"+0+0\")\n\n\n#save your output\nimage_write(map_7_titled, \"final_output/map_07.png\", format = \"png\")",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 7: Atlas Page Layout"
+    ]
+  },
+  {
+    "objectID": "maps/map_09.html",
+    "href": "maps/map_09.html",
+    "title": "Map 9: Vernal Pools Analysis (DEM)",
+    "section": "",
+    "text": "NotePlate in Development\n\n\n\nMap 9 is currently in the algorithmic design phase. This page outlines the analytical methodology, data requirements, and planned implementation.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 9: Vernal Pools (DEM)"
+    ]
+  },
+  {
+    "objectID": "maps/map_09.html#analytical-concept",
+    "href": "maps/map_09.html#analytical-concept",
+    "title": "Map 9: Vernal Pools Analysis (DEM)",
+    "section": "Analytical Concept",
+    "text": "Analytical Concept\nUCSB’s coastal mesa and North Campus Open Space (NCOS) host rare coastal vernal pool ecosystems — shallow depressions underlain by impermeable clay or hardpan layers that fill during winter rains and dry up by summer.\nThis analysis uses digital elevation models (DEM) to identify topographic sinks or micro-depressions that meet vernal pool hydrological criteria:\n\nElevation threshold: Must sit above mean sea level (\\(z &gt; 0\\text{ m}\\)) to exclude tidal flats and lagoons.\nLocal depression detection: Identify pixels whose elevation is strictly lower than their surrounding 8-connected neighbors (focal or sink detection).\nDepression filling / thresholding: Calculate depression depth using hydrological sink filling (terra::focal() or terrain fill algorithms) and filter out noise below minimum depth or area thresholds.\nVector polygon extraction: Convert detected pools into vector polygons to overlay on campus infrastructure and habitat maps.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 9: Vernal Pools (DEM)"
+    ]
+  },
+  {
+    "objectID": "maps/map_09.html#intended-data-inputs",
+    "href": "maps/map_09.html#intended-data-inputs",
+    "title": "Map 9: Vernal Pools Analysis (DEM)",
+    "section": "Intended Data Inputs",
+    "text": "Intended Data Inputs\n\nHigh-Resolution Campus DEM: source_data/campus_DEM/campus_DEM.tif\nNCOS Habitat Ground Truth: source_data/NCOS_Shorebird_Foraging_Habitat/\nReference Imagery: PlanetScope seasonal imagery to corroborate standing water presence.",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 9: Vernal Pools (DEM)"
+    ]
+  },
+  {
+    "objectID": "maps/map_09.html#planned-terra-workflow",
+    "href": "maps/map_09.html#planned-terra-workflow",
+    "title": "Map 9: Vernal Pools Analysis (DEM)",
+    "section": "Planned Terra Workflow",
+    "text": "Planned Terra Workflow\nlibrary(terra)\n\n# 1. Load elevation model\ncampus_dem &lt;- rast(\"source_data/campus_DEM/campus_DEM.tif\")\n\n# 2. Filter to elevations above sea level\ndry_land &lt;- clamp(campus_dem, lower = 0.5)\n\n# 3. Calculate focal neighborhood statistics (e.g. min/mean difference)\nfocal_min &lt;- focal(dry_land, w = matrix(1, 3, 3), fun = \"min\")\nsinks &lt;- dry_land - focal_min\n\n# 4. Extract candidates meeting depression criteria\nvernal_pools &lt;- sinks &gt; 0.15 # Minimum depth threshold",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 9: Vernal Pools (DEM)"
+    ]
+  },
+  {
+    "objectID": "maps/map_11.html",
+    "href": "maps/map_11.html",
+    "title": "Map 11: Dibblee Geologic Map",
+    "section": "",
+    "text": "Thomas Dibblee was a legendary California geologist renowned for mapping thousands of square miles of the state’s geology by hand. This plate works with the digitized Dibblee Goleta 7.5-minute geologic quadrangle map (DB0007.tif).\n\nPrimary Package: terra\nInput Layer: source_data/07gGoleta/DB0007.tif\nStatus: Work-in-progress (collar clipping and final layout formatting)",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 11: Dibblee Geologic Map"
+    ]
+  },
+  {
+    "objectID": "maps/map_11.html#overview",
+    "href": "maps/map_11.html#overview",
+    "title": "Map 11: Dibblee Geologic Map",
+    "section": "",
+    "text": "Thomas Dibblee was a legendary California geologist renowned for mapping thousands of square miles of the state’s geology by hand. This plate works with the digitized Dibblee Goleta 7.5-minute geologic quadrangle map (DB0007.tif).\n\nPrimary Package: terra\nInput Layer: source_data/07gGoleta/DB0007.tif\nStatus: Work-in-progress (collar clipping and final layout formatting)",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 11: Dibblee Geologic Map"
+    ]
+  },
+  {
+    "objectID": "maps/map_11.html#technical-workflow",
+    "href": "maps/map_11.html#technical-workflow",
+    "title": "Map 11: Dibblee Geologic Map",
+    "section": "Technical Workflow",
+    "text": "Technical Workflow\n\nRaster Rectification: Load the raw scanned and georeferenced quadrangle raster and apply rectify(..., method = \"bilinear\") to correct skew and distortion.\nCollar Definition: Traditional USGS/Dibblee paper maps contain bibliographic and legend collars outside the map neatline. The map corners are defined in geographic coordinates:\n\nNW Corner: 34° 30’ 00” N / 119° 52’ 30” W (34.500, -119.875)\nNE Corner: 34° 30’ 00” N / 119° 45’ 00” W (34.500, -119.750)\nSE Corner: 34° 22’ 30” N / 119° 45’ 00” W (34.375, -119.750)\nSW Corner: 34° 22’ 30” N / 119° 52’ 30” W (34.375, -119.875)\n\nReprojection & Cropping: Convert geographic bounds to UTM Zone 11N (EPSG:32611) and crop the neatline to eliminate white margin collars using crop().",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 11: Dibblee Geologic Map"
+    ]
+  },
+  {
+    "objectID": "maps/map_11.html#r-script-scriptsmap_11.r",
+    "href": "maps/map_11.html#r-script-scriptsmap_11.r",
+    "title": "Map 11: Dibblee Geologic Map",
+    "section": "R Script (scripts/map_11.r)",
+    "text": "R Script (scripts/map_11.r)\n\n\nShow R Code\n# map 11\n# look at a dibble\n\nlibrary(terra)\n\n# clean the environment and hidden objects\nrm(list=ls())\n\n# set map number\ncurrent_sheet &lt;- 11\n# set ggplot counter\ncurrent_ggplot &lt;- 0\n\ngg_labelmaker &lt;- function(plot_num){\n  gg_title &lt;- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text &lt;- paste(gg_title, collapse=\" \" )\n  print(plot_text)\n  current_ggplot &lt;&lt;- plot_num\n  return(plot_text)\n}\n\n# every ggtitle() or labs() should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\ndibblee_gol &lt;- rast(\"source_data/07gGoleta/DB0007.tif\")\ndibblee_gol &lt;- rectify(dibblee_gol, method=\"bilinear\")\ndibblee_gol\n\nplot(dibblee_gol)\nplotRGB(dibblee_gol)\n\n# oops, we lost this file somewhere\n#dibblee_gav &lt;- rast(\"source_data/16gSolvangGaviota/DB0016.tif\")\n#dibblee_gav &lt;- rectify(dibblee_gav, method=\"bilinear\")\n\n#plot(dibblee_gav)\n#plotRGB(dibblee_gav)\n#collar &lt;- read.delim(\"source_data/07gGoleta/DB0007.tif.txt\", sep=\"\\t\", header = FALSE)\n#str(collar)\n#collar_df &lt;- as.data.frame(collar)\n#str(collar_df)\n\n#collar_vect &lt;- vect(collar)\n## Jon is thinking this is a georeferencing table -- not a definition of the collar\n\n# Crop extent from lat/long on the map corners:\n# NW corner: 34° 30' 00\" N (34.500) / 119° 52' 30\" W (-119.875) \n# NE corner: 34° 30' 00\" N (34.500) / 119° 45' 00\" W (-119.750)\n# SE corner: 34° 22' 30\" N (34.375) / 119° 45' 00\" W (-119.750)\n# SW corner: 34° 22' 30\" N (34.375) / 119° 52' 30\" W (-119.875) \nll_ext &lt;- ext(-119.875, -119.750, 34.375, 34.500)\n\n# make a vector to reproject form lat/long to utm \nll_vec &lt;- as.polygons(ll_ext, crs=\"EPSG:4326\")\nutm_ext &lt;- ext(project(ll_vec, \"EPSG:32611\"))\n\n# do the crop\ncrop_dibblee_gol &lt;- crop(dibblee_gol, utm_ext)\nplotRGB(crop_dibblee_gol)",
+    "crumbs": [
+      "Atlas Maps",
+      "Map 11: Dibblee Geologic Map"
+    ]
+  }
+]

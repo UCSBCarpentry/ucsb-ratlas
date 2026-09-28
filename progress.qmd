@@ -1,0 +1,44 @@
+---
+title: "Project Progress"
+subtitle: "Evolution of atlas plates and workshop episodes"
+---
+
+::: {.lead}
+Tracking the visual outputs, cartographic decisions, and developmental milestones of the UCSB R-Atlas.
+:::
+
+## Aspect Ratio Guidelines
+All outputs from atlas map scripts are standardized to a **3 tall x 4 wide** (or **4 tall x 3 wide**) aspect ratio for consistent framing, except where multi-panel compositions require custom dimensions (such as Map 7).
+
+---
+
+## Plate Milestones
+
+### Map 1: Campus Overview
+![Map 1 Draft](final_output/map_01.png){fig-alt="Map 1 Draft" width="90%"}
+
+### Map 2: Trees and Torches
+![Map 2 Thematic Trees](final_output/map_02.png){fig-alt="Map 2 Trees" width="90%"}
+
+### Map 7: Atlas Page Insets (Maps 3, 4, 5, 6)
+The tryptic sequence zooms progressively from the Western United States into the Santa Barbara Channel and Campus:
+
+::: {layout-ncol=3}
+![Map 3: Western US](final_output/map_03.png)
+
+![Map 4: California](final_output/map_04.png)
+
+![Map 5: Bight of CA](final_output/map_05.png)
+:::
+
+Combined full-page layout:
+
+![Map 7: Multi-panel composite](final_output/map_07.png){fig-alt="Map 7 composite" width="100%"}
+
+### Map 8: PlanetScope Satellite Imagery
+![Map 8: Satellite snapshots](final_output/map_08.png){fig-alt="Map 8 PlanetScope" width="90%"}
+
+### Map 12: 12-Month NDVI Phenology Stack
+![Map 12: Monthly NDVI series](final_output/map_12.png){fig-alt="Map 12 NDVI Stack" width="90%"}
+
+![Map 12 Plot: Mean NDVI over time](final_output/plot_12.png){fig-alt="Plot 12 NDVI Curve" width="75%"}

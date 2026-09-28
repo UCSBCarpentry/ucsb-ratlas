@@ -1,0 +1,30 @@
+---
+title: "Map 2: Trees & Water"
+subtitle: "Stylized thematic plate of campus trees, hydrology, and bikeways"
+---
+
+## Rendered Map Plate
+
+![Map 2: Campus trees by height and species with bikeways and lagoon water](../final_output/map_02.png){fig-alt="Map 2 Trees and Water" width="100%"}
+
+---
+
+## Technical Summary
+
+* **Objective:** Create a stylized thematic atlas plate visualizing UCSB's extensive tree canopy classified by height and predominant species, juxtaposed with campus waterways and active transportation routes.
+* **Key Packages:** `sf`, `terra`, `tidyverse`, `scales`
+* **Data Sources:**
+  * Campus Tree Inventory (`source_data/trees/DTK_012116.shp`)
+  * Stream and lagoon network (`source_data/california_streams/streams_crop.shp`)
+  * Bike path centerlines (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
+  * Coastline boundary vector
+* **Notes:** Built with a custom dark aesthetic and explicit background colors in `ggsave` to ensure consistent rendering across light and dark display modes.
+
+---
+
+## R Script (`scripts/map_02.r`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_02.r")
+```

@@ -1,0 +1,49 @@
+---
+title: "Map 9: Vernal Pools Analysis (DEM)"
+subtitle: "Topographic depression analysis to identify campus vernal pools"
+---
+
+::: {.callout-note}
+### Plate in Development
+Map 9 is currently in the algorithmic design phase. This page outlines the analytical methodology, data requirements, and planned implementation.
+:::
+
+## Analytical Concept
+
+UCSB's coastal mesa and North Campus Open Space (NCOS) host rare coastal vernal pool ecosystems — shallow depressions underlain by impermeable clay or hardpan layers that fill during winter rains and dry up by summer.
+
+This analysis uses digital elevation models (DEM) to identify topographic sinks or micro-depressions that meet vernal pool hydrological criteria:
+
+1. **Elevation threshold:** Must sit above mean sea level ($z > 0\text{ m}$) to exclude tidal flats and lagoons.
+2. **Local depression detection:** Identify pixels whose elevation is strictly lower than their surrounding 8-connected neighbors (focal or sink detection).
+3. **Depression filling / thresholding:** Calculate depression depth using hydrological sink filling (`terra::focal()` or terrain fill algorithms) and filter out noise below minimum depth or area thresholds.
+4. **Vector polygon extraction:** Convert detected pools into vector polygons to overlay on campus infrastructure and habitat maps.
+
+---
+
+## Intended Data Inputs
+
+* **High-Resolution Campus DEM:** `source_data/campus_DEM/campus_DEM.tif`
+* **NCOS Habitat Ground Truth:** `source_data/NCOS_Shorebird_Foraging_Habitat/`
+* **Reference Imagery:** PlanetScope seasonal imagery to corroborate standing water presence.
+
+---
+
+## Planned Terra Workflow
+
+```r
+library(terra)
+
+# 1. Load elevation model
+campus_dem <- rast("source_data/campus_DEM/campus_DEM.tif")
+
+# 2. Filter to elevations above sea level
+dry_land <- clamp(campus_dem, lower = 0.5)
+
+# 3. Calculate focal neighborhood statistics (e.g. min/mean difference)
+focal_min <- focal(dry_land, w = matrix(1, 3, 3), fun = "min")
+sinks <- dry_land - focal_min
+
+# 4. Extract candidates meeting depression criteria
+vernal_pools <- sinks > 0.15 # Minimum depth threshold
+```

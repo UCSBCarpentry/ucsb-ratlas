@@ -1,0 +1,29 @@
+---
+title: "Map 5: Bight of California"
+subtitle: "Sub-regional locator panel showing the Santa Barbara Channel and Channel Islands"
+---
+
+## Rendered Map Plate
+
+![Map 5: Southern California Bight and Channel Islands](../final_output/map_05.png){fig-alt="Map 5 Bight of California" width="80%"}
+
+---
+
+## Technical Summary
+
+* **Objective:** Serve as Inset 3 of the Map 7 tryptic, transitioning from state-wide perspective to the immediate coastal geography of the Santa Barbara Channel and Channel Islands.
+* **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `sf`
+* **Data Sources:**
+  * Regional Coastal DEM
+  * Channel Islands and coastline vectors
+  * Populated places in Santa Barbara and Ventura counties
+* **Aspect Ratio:** 4 wide x 3 tall landscape orientation.
+
+---
+
+## R Script (`scripts/map_05.R`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_05.R")
+```

@@ -1,0 +1,119 @@
+---
+title: "UCSB R-Atlas"
+subtitle: "A geospatial R example atlas of the UC Santa Barbara campus"
+---
+
+::: {.lead}
+Welcome to the **UCSB R-Atlas**, a collection of publication-quality cartographic plates and geospatial workflows showcasing the University of California, Santa Barbara campus.
+:::
+
+This project uses local UCSB examples applied to all steps of the Carpentries' [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.org/r-raster-vector-geospatial/) curriculum.
+
+---
+
+## Atlas Map Plates
+
+Explore the 12 atlas maps and spatial analyses:
+
+:::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+[![](final_output/map_01.png)](maps/map_01.qmd)
+
+### [Map 1: Campus Overview](maps/map_01.qmd)
+A wide view of the campus featuring bathymetry, topography, hillshade, bike paths, buildings, and lagoon habitats.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+[![](final_output/map_02.png)](maps/map_02.qmd)
+
+### [Map 2: Trees & Water](maps/map_02.qmd)
+A stylized thematic map visualizing campus tree species and heights alongside water features and bikeways.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+[![](final_output/map_03.png)](maps/map_03.qmd)
+
+### [Map 3: Western US](maps/map_03.qmd)
+Regional locator inset showing elevation across the Western United States.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+[![](final_output/map_04.png)](maps/map_04.qmd)
+
+### [Map 4: California](maps/map_04.qmd)
+State-level locator map focusing on the California coastline and regional context.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+[![](final_output/map_05.png)](maps/map_05.qmd)
+
+### [Map 5: Bight of California](maps/map_05.qmd)
+Detailed sub-regional view of the Southern California Bight and Santa Barbara Channel.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+[![](final_output/map_06.png)](maps/map_06.qmd)
+
+### [Map 6: UCSB & Environs](maps/map_06.qmd)
+Wide base map providing context for UCSB, Isla Vista, and surrounding coastal environments.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+[![](final_output/map_07.png)](maps/map_07.qmd)
+
+### [Map 7: Atlas Page Layout](maps/map_07.qmd)
+Composite multi-inset atlas plate combining Maps 3, 4, 5, and 6 assembled using `magick`.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+[![](final_output/map_08.png)](maps/map_08.qmd)
+
+### [Map 8: Satellite Remote Sensing](maps/map_08.qmd)
+PlanetScope multi-spectral satellite imagery comparing campus across seasons.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### [Map 9: Vernal Pools Analysis](maps/map_09.qmd)
+Topographic depression analysis using DEMs to identify campus vernal pools (*in design*).
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### [Map 10: Paths & Creeks](maps/map_10.qmd)
+Vector intersection analysis locating where campus bike paths cross local waterways and creeks.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### [Map 11: Dibblee Geology](maps/map_11.qmd)
+Georeferencing and collar removal for the historic Dibblee Goleta quadrangle geologic map.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+[![](final_output/map_12.png)](maps/map_12.qmd)
+
+### [Map 12: 12-Month NDVI Stack](maps/map_12.qmd)
+Time-series raster analysis tracking vegetation phenology over a full calendar year.
+:::
+
+::::
+
+---
+
+## Getting Started
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/UCSBCarpentry/ucsb-ratlas.git
+   cd ucsb-ratlas
+   ```
+
+2. **Download source data:**
+   Run `scripts/data_prep_new.r` (or `scripts/data_prep.r`) to download the required dataset archive from Google Drive and unzip into `source_data/`.
+
+3. **Run map scripts:**
+   Execute `scripts/run_every_map.r` to render all atlas plates into `images/` and `final_output/`.
+
+4. **Learn more:**
+   - Explore our [Data Dictionary](datadictionary.qmd) for layers and CRS definitions.
+   - Read our [Progress Log](progress.qmd) for developmental notes.
+   - Visit [UCSB Carpentry](https://ucsbcarpentry.github.io).

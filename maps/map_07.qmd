@@ -1,0 +1,38 @@
+---
+title: "Map 7: Atlas Page Layout"
+subtitle: "Composite multi-inset atlas layout assembled with image processing"
+---
+
+## Rendered Map Plate
+
+![Map 7: Full multi-inset atlas page showing regional zoom sequence and campus base map](../final_output/map_07.png){fig-alt="Map 7 Composite Layout" width="100%"}
+
+---
+
+## Technical Summary
+
+* **Objective:** Synthesize individual cartographic components into a publication-ready atlas sheet. The top row forms a three-tier geographic zoom sequence (Western US &rarr; California &rarr; Bight of California), anchored below by the campus base map (Map 6).
+* **Key Packages:** `magick`
+* **Inputs:**
+  * `images/map3.png` (900 x 1200 px)
+  * `images/map4.png` (900 x 1200 px)
+  * `images/map5.png` (1200 x 900 px)
+  * `images/map6.1.png` (3600 x 1200 px)
+* **Outputs:**
+  * Top tryptic row: `final_output/map7_row_1.png`
+  * Complete atlas sheet: `final_output/map_07.png`
+
+---
+
+### Inset Sequence (Row 1 Tryptic)
+
+![Map 7 Row 1: Zoom-in tryptic combining Maps 3, 4, and 5](../final_output/map7_row_1.png){fig-alt="Map 7 Row 1" width="100%"}
+
+---
+
+## R Script (`scripts/map_07.r`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_07.r")
+```

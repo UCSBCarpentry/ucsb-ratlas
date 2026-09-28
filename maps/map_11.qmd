@@ -1,0 +1,33 @@
+---
+title: "Map 11: Dibblee Geologic Map"
+subtitle: "Historic Goleta quadrangle raster rectification, collar trimming, and reprojection"
+---
+
+## Overview
+
+Thomas Dibblee was a legendary California geologist renowned for mapping thousands of square miles of the state's geology by hand. This plate works with the digitized Dibblee Goleta 7.5-minute geologic quadrangle map (`DB0007.tif`).
+
+* **Primary Package:** `terra`
+* **Input Layer:** `source_data/07gGoleta/DB0007.tif`
+* **Status:** Work-in-progress (collar clipping and final layout formatting)
+
+---
+
+## Technical Workflow
+
+1. **Raster Rectification:** Load the raw scanned and georeferenced quadrangle raster and apply `rectify(..., method = "bilinear")` to correct skew and distortion.
+2. **Collar Definition:** Traditional USGS/Dibblee paper maps contain bibliographic and legend collars outside the map neatline. The map corners are defined in geographic coordinates:
+   * **NW Corner:** 34° 30' 00" N / 119° 52' 30" W (34.500, -119.875)
+   * **NE Corner:** 34° 30' 00" N / 119° 45' 00" W (34.500, -119.750)
+   * **SE Corner:** 34° 22' 30" N / 119° 45' 00" W (34.375, -119.750)
+   * **SW Corner:** 34° 22' 30" N / 119° 52' 30" W (34.375, -119.875)
+3. **Reprojection & Cropping:** Convert geographic bounds to UTM Zone 11N (EPSG:32611) and crop the neatline to eliminate white margin collars using `crop()`.
+
+---
+
+## R Script (`scripts/map_11.r`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_11.r")
+```

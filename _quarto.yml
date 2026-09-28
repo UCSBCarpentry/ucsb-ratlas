@@ -1,0 +1,80 @@
+project:
+  type: website
+  output-dir: docs
+  resources:
+    - .nojekyll
+  render:
+    - index.qmd
+    - datadictionary.qmd
+    - progress.qmd
+    - maps/index.qmd
+    - "maps/map_*.qmd"
+
+website:
+  title: "UCSB R-Atlas"
+  description: "A geospatial R example atlas of the UCSB campus"
+  site-url: "https://ucsbcarpentry.github.io/ucsb-ratlas/"
+  repo-url: "https://github.com/UCSBCarpentry/ucsb-ratlas"
+  repo-actions: [issue]
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Atlas Maps"
+        href: maps/index.qmd
+      - text: "Data Dictionary"
+        href: datadictionary.qmd
+      - text: "Progress"
+        href: progress.qmd
+    right:
+      - icon: github
+        href: https://github.com/UCSBCarpentry/ucsb-ratlas
+        aria-label: GitHub
+  sidebar:
+    - id: maps-sidebar
+      title: "Atlas Maps"
+      style: "docked"
+      search: true
+      contents:
+        - text: "Overview & Gallery"
+          href: maps/index.qmd
+        - text: "Map 1: Campus Overview"
+          href: maps/map_01.qmd
+        - text: "Map 2: Trees & Water"
+          href: maps/map_02.qmd
+        - text: "Map 3: Western US"
+          href: maps/map_03.qmd
+        - text: "Map 4: California"
+          href: maps/map_04.qmd
+        - text: "Map 5: Bight of California"
+          href: maps/map_05.qmd
+        - text: "Map 6: UCSB & Environs"
+          href: maps/map_06.qmd
+        - text: "Map 7: Atlas Page Layout"
+          href: maps/map_07.qmd
+        - text: "Map 8: Satellite Imagery"
+          href: maps/map_08.qmd
+        - text: "Map 9: Vernal Pools (DEM)"
+          href: maps/map_09.qmd
+        - text: "Map 10: Bike Paths & Creeks"
+          href: maps/map_10.qmd
+        - text: "Map 11: Dibblee Geologic Map"
+          href: maps/map_11.qmd
+        - text: "Map 12: 12-Month NDVI Stack"
+          href: maps/map_12.qmd
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-summary: "Show R Code"
+    code-tools: true
+    code-copy: true
+    smooth-scroll: true
+
+execute:
+  freeze: auto

@@ -1,0 +1,15 @@
+{
+  "hash": "48342f25d9dadd2e16bdaccc5f7ffd6a",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Map 10: Paths & Creeks Analysis\"\nsubtitle: \"Vector intersection analysis of campus bikeways and waterways\"\n---\n\n## Overview\n\nThis analysis performs a vector intersection between the campus bike path network and local stream/creek centerlines to locate all points where trails cross water features.\n\n* **Primary packages:** `terra`, `tidyverse`, `tidyterra`\n* **Inputs:** \n  * Bike paths shapefile (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)\n  * Stream network (`source_data/california_streams/streams_crop.shp`)\n* **Output:** `output_data/creek_bike_intersections.shp`\n\n---\n\n## Cartographic Workflow\n\n1. Read bike path and stream vector layers using `terra::vect()`.\n2. Reproject streams into the bike path Coordinate Reference System using `terra::project()`.\n3. Compute geometric point intersections using `terra::intersect()`.\n4. Export the resulting intersection points to an ESRI Shapefile.\n\n---\n\n## R Script (`scripts/map_10.r`)\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# map 10\nlibrary(terra)\nlibrary(tidyverse)\nlibrary(tidyterra)\n# clean the environment and hidden objects\nrm(list = ls())\n\n# set map number\ncurrent_sheet <- 10\n# set ggplot counter\ncurrent_ggplot <- 0\n\ngg_labelmaker <- function(plot_num) {\n  gg_title <- c(\"Map:\", current_sheet, \" ggplot:\", plot_num)\n  plot_text <- paste(gg_title, collapse = \" \")\n  print(plot_text)\n  current_ggplot <<- plot_num\n  return(plot_text)\n}\n\n# every ggtitle() or labs() should be:\n# ggtitle(gg_labelmaker(current_ggplot+1))\n# end automagic ggtitle           #######\n\n# ---------- 1. read layers ----------\n# bike_paths <- vect(\"\") # replace with updated bike-path file\nbike_paths <- vect(\"source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp\")\ncreeks <- vect(\"source_data/california_streams/streams_crop.shp\")\n\n# ---------- 2. common CRS ----------\ncreeks <- project(creeks, bike_paths)\n\n# plot creeks and paths together here to prove it\n\n# ---------- 3. intersection points ----------\ncreek_bike_pts <- terra::intersect(creeks, bike_paths)\nstr(creek_bike_pts)\n\n# let's put in another plot here to prove it\nplot(creek_bike_pts)\n\n\n# ---------- 4. write shapefile ----------\n#  Do we output a new point shapefile as a result?\nout_file <- \"output_data/creek_bike_intersections.shp\"\nwriteVector(creek_bike_pts, out_file, overwrite = TRUE)\n```\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

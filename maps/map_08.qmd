@@ -1,0 +1,30 @@
+---
+title: "Map 8: Satellite Remote Sensing"
+subtitle: "Multi-band PlanetScope satellite imagery and false-color composites"
+---
+
+## Rendered Map Plate
+
+![Map 8: Multi-spectral PlanetScope imagery across seasons](../final_output/map_08.png){fig-alt="Map 8 PlanetScope Satellite Imagery" width="100%"}
+
+---
+
+## Technical Summary
+
+* **Objective:** Explore multi-band raster manipulation using PlanetScope 4-band and 8-band high-resolution satellite scenes covering UCSB across multiple seasonal collections.
+* **Key Packages:** `terra` (pure raster workflow)
+* **Techniques Demonstrated:**
+  * Multi-band raster subsetting and indexing
+  * Natural color RGB compositing (`plotRGB` with linear stretch)
+  * False-color Infrared (CIR) compositing highlighting active photosynthetic vegetation
+  * Dynamic range scaling and histogram stretching
+* **Output:** `final_output/map_08.png`
+
+---
+
+## R Script (`scripts/map_08.r`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_08.r")
+```

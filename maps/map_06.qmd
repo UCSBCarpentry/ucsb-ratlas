@@ -1,0 +1,30 @@
+---
+title: "Map 6: UCSB & Environs"
+subtitle: "Wide base map providing local context for the campus and surrounding coastal community"
+---
+
+## Rendered Map Plate
+
+![Map 6: UCSB campus and coastal environs](../final_output/map_06.png){fig-alt="Map 6 UCSB & Environs" width="100%"}
+
+---
+
+## Technical Summary
+
+* **Objective:** Provide a broad, high-detail coastal base map of UCSB, Isla Vista, and the Pacific coastline, designed to sit as the bottom hero panel of the composite Map 7 atlas plate.
+* **Key Packages:** `terra`, `sf`, `ggplot2`, `dplyr`
+* **Data Sources:**
+  * Merged topo-bathy raster (`output_data/campus_bathotopo.tif`)
+  * Campus buildings and Isla Vista structures
+  * Bike path infrastructure network
+  * NCOS Shorebird Foraging Habitat polygons
+* **Aspect Ratio:** 12 inches wide x 9 inches tall (3600 x 2700 px at 300 ppi).
+
+---
+
+## R Script (`scripts/map_06.r`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_06.r")
+```

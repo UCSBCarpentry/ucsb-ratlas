@@ -1,0 +1,32 @@
+---
+title: "Map 1: Campus Overview"
+subtitle: "Wide view of campus featuring bathymetry, topography, hillshade, and campus infrastructure"
+---
+
+## Rendered Map Plate
+
+![Map 1: Wide campus overview showing topography, bathymetry, bikeways, and buildings](../final_output/map_01.png){fig-alt="Map 1 Campus Overview" width="100%"}
+
+---
+
+## Technical Summary
+
+* **Objective:** Produce a broad overview plate of the UCSB campus combining elevation, ocean bathymetry, hillshading, bike path networks, and building footprints.
+* **Key Packages:** `terra`, `sf`, `tidyverse`, `scales`
+* **Data Sources:**
+  * Campus DEM raster (`source_data/campus_DEM/campus_DEM.tif`)
+  * Coastal bathymetry raster (`source_data/campus_bath/HenleyGateEllwoodBeach.tif`)
+  * Campus buildings footprint shapefile (`source_data/campus_buildings/Campus_Buildings.shp`)
+  * Isla Vista building footprints (`source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp`)
+  * Bike path centerlines (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
+  * Lagoon & shorebird foraging habitat (`source_data/NCOS_Shorebird_Foraging_Habitat/`)
+* **Aspect Ratio:** Standard 3 tall x 4 wide.
+
+---
+
+## R Script (`scripts/map_01.r`)
+
+```{r}
+#| eval: false
+#| code: !expr readLines("../scripts/map_01.r")
+```
