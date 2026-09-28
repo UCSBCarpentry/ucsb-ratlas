@@ -54,14 +54,15 @@ colnames(zoom_3_hillshade_df)
 # let's make our ggplots shorter by saving
 # our theme:
 my_theme <- theme_minimal() +
-  theme(axis.title.x=element_blank(), 
-        axis.title.y=element_blank(), 
-        axis.text.x=element_blank(), 
-        axis.text.y=element_blank(), 
-        legend.position="none", 
-        panel.ontop=TRUE,
+  theme(axis.title.x = element_blank(), 
+        axis.title.y = element_blank(), 
+        axis.text.x = element_blank(), 
+        axis.text.y = element_blank(), 
+        axis.ticks = element_blank(),
+        legend.position = "none", 
+        panel.ontop = TRUE,
         panel.grid.major = element_line(color = "#FFFFFF33"),
-        panel.grid.minor = element_line(color = "#FFFFFF66"),
+        panel.grid.minor = element_blank(),
         panel.background = element_blank())
 
 
@@ -71,7 +72,7 @@ zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme(my_theme) +
+  my_theme +
   coord_sf() + 
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Campus hillshade")
 
@@ -85,7 +86,7 @@ zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
   scale_fill_viridis_c(guide="none") +
-  theme(my_theme) +
+  my_theme +
   coord_sf() + 
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "UCSB DEM")
 
@@ -95,11 +96,11 @@ zoom_3_plot
 zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none") +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme(my_theme) +
+  my_theme +
   coord_sf() + 
   ggtitle("Map 5: zm 3: UCSB & Surroundings", subtitle = gg_labelmaker(current_ggplot+1))
 
@@ -109,19 +110,11 @@ zoom_3_plot
 zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none") +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme_minimal() +
-  theme(axis.title.x=element_blank(), 
-        axis.title.y=element_blank(), 
-        axis.text.x=element_blank(), 
-        axis.text.y=element_blank(), 
-        legend.position="none", 
-        panel.ontop=TRUE,
-        panel.grid.major = element_line(color = "#FFFFFF33"),
-        panel.background = element_blank()) +
+  my_theme +
   coord_sf() + 
   ggtitle("Map 5: zm 3: no axis labels", subtitle = gg_labelmaker(current_ggplot+1))
 
@@ -131,19 +124,11 @@ zoom_3_plot
 zoom_3_plot <- ggplot() +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none") +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme_minimal() +
-  theme(axis.title.x=element_blank(), 
-        axis.title.y=element_blank(), 
-        axis.text.x=element_blank(), 
-        axis.text.y=element_blank(), 
-        legend.position="none", 
-        panel.ontop=TRUE,
-        panel.grid.major = element_line(color = "#FFFFFF33"),
-        panel.background = element_blank()) +
+  my_theme +
   coord_sf() + 
   ggtitle("UCSB Surroundings", subtitle = "on unceded land of the Chumash")
 
@@ -167,40 +152,31 @@ zoom_3_plot <- ggplot() +
   geom_raster(data = campus_bathotopo_df, aes(x=x, y=y)) +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none") +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme_minimal() +
-  theme(axis.title.x=element_blank(), 
-        axis.title.y=element_blank(), 
-        axis.text.x=element_blank(), 
-        axis.text.y=element_blank(), 
-        legend.position="none", 
-        panel.ontop=TRUE,
-        panel.grid.major = element_line(color = "#FFFFFF33"),
-        panel.background = element_blank()) +
+  my_theme +
   coord_sf() + 
   ggtitle("UCSB Surroundings", subtitle = "on unceded land of the Chumash")
 
 zoom_3_plot
 
 
-zoom_3_plot <-ggplot() +
-  geom_raster(data = campus_bathotopo, aes(x=x, y=y)) +
+zoom_3_plot <- ggplot() +
+  geom_raster(data = campus_bathotopo_df, aes(x=x, y=y)) +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none") +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
   scale_alpha(range = c(0.05, 0.5), guide="none") +
-  theme_minimal() +
-  theme(my_theme) +
+  my_theme +
   coord_sf() + 
   ggtitle("UCSB Surroundings", subtitle = "on unceded land of the Chumash")
 
 
 zoom_3_plot
 
-ggsave("images/map5.png", width = 4, height = 3, plot=last_plot())
-ggsave("final_output/map_05.png", width = 4, height = 3, plot=zoom_3_plot)
+ggsave("images/map5.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
+ggsave("final_output/map_05.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
