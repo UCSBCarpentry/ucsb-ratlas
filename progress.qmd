@@ -38,6 +38,9 @@ Combined full-page layout:
 ### Map 8: PlanetScope Satellite Imagery
 ![Map 8: Satellite snapshots](final_output/map_08.png){fig-alt="Map 8 PlanetScope" width="90%"}
 
+### Map 11: Dibblee Geologic Map
+![Map 11: Dibblee Geology of Greater Campus AOI](final_output/map_11.png){fig-alt="Map 11 Dibblee Map" width="90%"}
+
 ### Map 12: 12-Month NDVI Phenology Stack
 ![Map 12: Monthly NDVI series](final_output/map_12.png){fig-alt="Map 12 NDVI Stack" width="90%"}
 

@@ -21,7 +21,7 @@ The atlas consists of 12 planned plates and analytical workflows covering raster
 | [**Map 8**](map_08.qmd) | Satellite Remote Sensing | PlanetScope 4-band / 8-band multispectral seasonal imagery | Complete |
 | [**Map 9**](map_09.qmd) | Vernal Pools (DEM) | Landscape depression analysis using elevation neighbors | In Design |
 | [**Map 10**](map_10.qmd) | Bike Paths & Creeks | Vector intersection analysis (`terra::intersect`) of trails and waterways | Complete |
-| [**Map 11**](map_11.qmd) | Dibblee Geologic Map | Historic Goleta quadrangle raster rectification and collar removal | In Progress |
+| [**Map 11**](map_11.qmd) | Dibblee Geologic Map | Historic quadrangle raster rectification, mosaicking, and AOI cropping | Complete |
 | [**Map 12**](map_12.qmd) | 12-Month NDVI Stack | Multi-temporal raster stack, NDVI calculation, vegetation phenology curve | Complete |
 
 ---

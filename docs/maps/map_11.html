@@ -436,8 +436,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#technical-workflow" id="toc-technical-workflow" class="nav-link" data-scroll-target="#technical-workflow">Technical Workflow</a></li>
+  <li><a href="#rendered-map-plates" id="toc-rendered-map-plates" class="nav-link active" data-scroll-target="#rendered-map-plates">Rendered Map Plates</a>
+  <ul class="collapse">
+  <li><a href="#campus-geological-surface-aoi" id="toc-campus-geological-surface-aoi" class="nav-link" data-scroll-target="#campus-geological-surface-aoi">Campus Geological Surface (AOI)</a></li>
+  <li><a href="#standalone-aoi-clip" id="toc-standalone-aoi-clip" class="nav-link" data-scroll-target="#standalone-aoi-clip">Standalone AOI Clip</a></li>
+  </ul></li>
+  <li><a href="#technical-summary" id="toc-technical-summary" class="nav-link" data-scroll-target="#technical-summary">Technical Summary</a></li>
+  <li><a href="#cartographic-workflow" id="toc-cartographic-workflow" class="nav-link" data-scroll-target="#cartographic-workflow">Cartographic Workflow</a></li>
   <li><a href="#r-script-scriptsmap_11.r" id="toc-r-script-scriptsmap_11.r" class="nav-link" data-scroll-target="#r-script-scriptsmap_11.r">R Script (<code>scripts/map_11.r</code>)</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UCSBCarpentry/ucsb-ratlas/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -449,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">Map 11: Dibblee Geologic Map</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
-<p class="subtitle lead">Historic Goleta quadrangle raster rectification, collar trimming, and reprojection</p>
+<p class="subtitle lead">Historic quadrangle raster rectification, conjoining / mosaicking, and AOI cropping</p>
 </div>
 
 
@@ -466,28 +471,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>Thomas Dibblee was a legendary California geologist renowned for mapping thousands of square miles of the state’s geology by hand. This plate works with the digitized Dibblee Goleta 7.5-minute geologic quadrangle map (<code>DB0007.tif</code>).</p>
+<section id="rendered-map-plates" class="level2">
+<h2 class="anchored" data-anchor-id="rendered-map-plates">Rendered Map Plates</h2>
+<section id="campus-geological-surface-aoi" class="level3">
+<h3 class="anchored" data-anchor-id="campus-geological-surface-aoi">Campus Geological Surface (AOI)</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../final_output/map_11.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 11 Dibblee Geologic Map"></p>
+<figcaption>Map 11: Thomas Dibblee geologic map cropped to the Greater UCSB Campus AOI</figcaption>
+</figure>
+</div>
+</section>
+<section id="standalone-aoi-clip" class="level3">
+<h3 class="anchored" data-anchor-id="standalone-aoi-clip">Standalone AOI Clip</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../final_output/dibble_aoi.png" class="img-fluid figure-img" style="width:75.0%" alt="Dibblee AOI Map"></p>
+<figcaption>Dibblee AOI Clip</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+</section>
+<section id="technical-summary" class="level2">
+<h2 class="anchored" data-anchor-id="technical-summary">Technical Summary</h2>
 <ul>
-<li><strong>Primary Package:</strong> <code>terra</code></li>
-<li><strong>Input Layer:</strong> <code>source_data/07gGoleta/DB0007.tif</code></li>
-<li><strong>Status:</strong> Work-in-progress (collar clipping and final layout formatting)</li>
+<li><strong>Objective:</strong> Ingest historic digitized Dibblee geologic quadrangle sheets, rectify rotated affine grids into standard orthogonal space with <code>terra::rectify()</code>, support mosaicking / conjoining adjacent sheets with <code>terra::merge()</code>, and clip the geological data to the Greater UCSB study area.</li>
+<li><strong>Key Packages:</strong> <code>terra</code></li>
+<li><strong>Data Sources:</strong>
+<ul>
+<li>Goleta 7.5’ Geologic Quadrangle (<code>source_data/07gGoleta/DB0007.tif</code>)</li>
+<li>Solvang / Gaviota Quadrangle (<code>source_data/16gSolvangGaviota/DB0016.tif</code>, optional conjoined sheet)</li>
+<li>Study Area Boundary (<code>source_data/greater_UCSB-campus-aoi.geojson</code>)</li>
+</ul></li>
+<li><strong>Outputs:</strong>
+<ul>
+<li><code>images/map11.png</code> &amp; <code>final_output/map_11.png</code></li>
+<li><code>final_output/dibble_aoi.png</code></li>
+</ul></li>
 </ul>
 <hr>
 </section>
-<section id="technical-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="technical-workflow">Technical Workflow</h2>
+<section id="cartographic-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="cartographic-workflow">Cartographic Workflow</h2>
 <ol type="1">
-<li><strong>Raster Rectification:</strong> Load the raw scanned and georeferenced quadrangle raster and apply <code>rectify(..., method = "bilinear")</code> to correct skew and distortion.</li>
-<li><strong>Collar Definition:</strong> Traditional USGS/Dibblee paper maps contain bibliographic and legend collars outside the map neatline. The map corners are defined in geographic coordinates:
-<ul>
-<li><strong>NW Corner:</strong> 34° 30’ 00” N / 119° 52’ 30” W (34.500, -119.875)</li>
-<li><strong>NE Corner:</strong> 34° 30’ 00” N / 119° 45’ 00” W (34.500, -119.750)</li>
-<li><strong>SE Corner:</strong> 34° 22’ 30” N / 119° 45’ 00” W (34.375, -119.750)</li>
-<li><strong>SW Corner:</strong> 34° 22’ 30” N / 119° 52’ 30” W (34.375, -119.875)</li>
-</ul></li>
-<li><strong>Reprojection &amp; Cropping:</strong> Convert geographic bounds to UTM Zone 11N (EPSG:32611) and crop the neatline to eliminate white margin collars using <code>crop()</code>.</li>
+<li><strong>Affine Rectification:</strong> Scanned historical paper maps often contain non-orthogonal rotation and shear. <code>terra::rectify(..., method = "bilinear")</code> re-samples the rotated image onto a true north-up orthogonal grid.</li>
+<li><strong>Sheet Conjoining / Merging:</strong> Adjacent quadrangles (such as Goleta and western sheets) are seamlessly merged using <code>terra::merge()</code>.</li>
+<li><strong>Collar Trimming &amp; Neatline Cropping:</strong> Paper map margins contain bibliographic headers and legends outside the 7.5-minute boundary. Defining the lat/long corners and projecting them to the raster CRS allows clean extraction of the map neatline.</li>
+<li><strong>Study Area Extraction:</strong> The <code>greater_UCSB-campus-aoi.geojson</code> vector is projected into the raster’s native coordinate system (<code>NAD27 / UTM zone 11N</code>) and used to crop the final geological plate.</li>
 </ol>
 <hr>
 </section>
@@ -497,65 +528,94 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Show R Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># map 11</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># look at a dibble</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># clean the environment and hidden objects</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># set map number</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="dv">11</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># set ggplot counter</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>current_ggplot <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>gg_labelmaker <span class="ot">&lt;-</span> <span class="cf">function</span>(plot_num){</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  gg_title <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Map:"</span>, current_sheet, <span class="st">" ggplot:"</span>, plot_num)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  plot_text <span class="ot">&lt;-</span> <span class="fu">paste</span>(gg_title, <span class="at">collapse=</span><span class="st">" "</span> )</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(plot_text)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  current_ggplot <span class="ot">&lt;&lt;-</span> plot_num</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(plot_text)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># every ggtitle() or labs() should be:</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ggtitle(gg_labelmaker(current_ggplot+1))</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># end automagic ggtitle           #######</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>dibblee_gol <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/07gGoleta/DB0007.tif"</span>)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>dibblee_gol <span class="ot">&lt;-</span> <span class="fu">rectify</span>(dibblee_gol, <span class="at">method=</span><span class="st">"bilinear"</span>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>dibblee_gol</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dibblee_gol)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(dibblee_gol)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># oops, we lost this file somewhere</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#dibblee_gav &lt;- rast("source_data/16gSolvangGaviota/DB0016.tif")</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#dibblee_gav &lt;- rectify(dibblee_gav, method="bilinear")</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(dibblee_gav)</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#plotRGB(dibblee_gav)</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#collar &lt;- read.delim("source_data/07gGoleta/DB0007.tif.txt", sep="\t", header = FALSE)</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">#str(collar)</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co">#collar_df &lt;- as.data.frame(collar)</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">#str(collar_df)</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co">#collar_vect &lt;- vect(collar)</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Jon is thinking this is a georeferencing table -- not a definition of the collar</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Crop extent from lat/long on the map corners:</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># NW corner: 34° 30' 00" N (34.500) / 119° 52' 30" W (-119.875) </span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co"># NE corner: 34° 30' 00" N (34.500) / 119° 45' 00" W (-119.750)</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># SE corner: 34° 22' 30" N (34.375) / 119° 45' 00" W (-119.750)</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># SW corner: 34° 22' 30" N (34.375) / 119° 52' 30" W (-119.875) </span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>ll_ext <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="sc">-</span><span class="fl">119.875</span>, <span class="sc">-</span><span class="fl">119.750</span>, <span class="fl">34.375</span>, <span class="fl">34.500</span>)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># make a vector to reproject form lat/long to utm </span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>ll_vec <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(ll_ext, <span class="at">crs=</span><span class="st">"EPSG:4326"</span>)</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>utm_ext <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="fu">project</span>(ll_vec, <span class="st">"EPSG:32611"</span>))</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co"># do the crop</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>crop_dibblee_gol <span class="ot">&lt;-</span> <span class="fu">crop</span>(dibblee_gol, utm_ext)</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(crop_dibblee_gol)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at a Dibblee geologic map:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Raster rectification, mosaicking / conjoining quadrangles, collar trimming, and AOI cropping</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># clean the environment and hidden objects</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># set map number</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="dv">11</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># set ggplot counter</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>current_ggplot <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>gg_labelmaker <span class="ot">&lt;-</span> <span class="cf">function</span>(plot_num) {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  gg_title <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Map:"</span>, current_sheet, <span class="st">" ggplot:"</span>, plot_num)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  plot_text <span class="ot">&lt;-</span> <span class="fu">paste</span>(gg_title, <span class="at">collapse =</span> <span class="st">" "</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(plot_text)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  current_ggplot <span class="ot">&lt;&lt;-</span> plot_num</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(plot_text)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># every ggtitle() or labs() should be:</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># ggtitle(gg_labelmaker(current_ggplot+1))</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># end automagic ggtitle           #######</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure output directories exist</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"images"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"final_output"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 1. Ingest &amp; Rectify Goleta Quadrangle ----------</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Scanned paper maps possess non-orthogonal affine orientation.</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># We rectify the rotated raster into standard north-up coordinates:</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>dibblee_gol <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/07gGoleta/DB0007.tif"</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>dibblee_gol <span class="ot">&lt;-</span> <span class="fu">rectify</span>(dibblee_gol, <span class="at">method =</span> <span class="st">"bilinear"</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>dibblee_gol</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 2. Ingest Adjacent Quadrangle &amp; Conjoin ----------</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for adjacent quadrangle (Solvang/Gaviota DB0016)</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>gav_file <span class="ot">&lt;-</span> <span class="st">"source_data/16gSolvangGaviota/DB0016.tif"</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(gav_file)) {</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Loading and rectifying Solvang/Gaviota quadrangle...</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  dibblee_gav <span class="ot">&lt;-</span> <span class="fu">rast</span>(gav_file)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  dibblee_gav <span class="ot">&lt;-</span> <span class="fu">rectify</span>(dibblee_gav, <span class="at">method =</span> <span class="st">"bilinear"</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Conjoin (merge) adjacent sheets into a single continuous raster</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  dibblee_merged <span class="ot">&lt;-</span> <span class="fu">merge</span>(dibblee_gol, dibblee_gav)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Adjacent quadrangle file not found; proceeding with Goleta quadrangle.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  dibblee_merged <span class="ot">&lt;-</span> dibblee_gol</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 3. Crop to Greater Campus AOI ----------</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>greater_campus <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/greater_UCSB-campus-aoi.geojson"</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>greater_campus_proj <span class="ot">&lt;-</span> <span class="fu">project</span>(greater_campus, <span class="fu">crs</span>(dibblee_merged))</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>crop_dibblee_aoi <span class="ot">&lt;-</span> <span class="fu">crop</span>(dibblee_merged, greater_campus_proj)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 4. Also Compute Quad Neatline Crop (Collar Trimming) ----------</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Quadrangle corners in NAD27 / geographic coordinates:</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co"># NW: 34° 30' 00" N / 119° 52' 30" W</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co"># NE: 34° 30' 00" N / 119° 45' 00" W</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co"># SE: 34° 22' 30" N / 119° 45' 00" W</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co"># SW: 34° 22' 30" N / 119° 52' 30" W</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>ll_ext <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="sc">-</span><span class="fl">119.875</span>, <span class="sc">-</span><span class="fl">119.750</span>, <span class="fl">34.375</span>, <span class="fl">34.500</span>)</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>ll_vec <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(ll_ext, <span class="at">crs =</span> <span class="st">"EPSG:4326"</span>)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>utm_ext <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="fu">project</span>(ll_vec, <span class="fu">crs</span>(dibblee_gol)))</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>crop_dibblee_gol <span class="ot">&lt;-</span> <span class="fu">crop</span>(dibblee_gol, utm_ext)</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 5. Save Output Maps ----------</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Save AOI plate to images and final_output</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"images/map11.png"</span>, <span class="at">width =</span> <span class="dv">1600</span>, <span class="at">height =</span> <span class="dv">1200</span>, <span class="at">res =</span> <span class="dv">150</span>)</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(crop_dibblee_aoi)</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(greater_campus_proj, <span class="at">border =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Dibblee Geologic Map - Greater UCSB Campus AOI"</span>,</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>      <span class="at">sub =</span> <span class="st">"Source: Thomas Dibblee Geologic Quadrangle Series (DB0007)"</span>)</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy to final_output</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="fu">file.copy</span>(<span class="st">"images/map11.png"</span>, <span class="st">"final_output/map_11.png"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Also save standalone AOI map</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"final_output/dibble_aoi.png"</span>, <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">800</span>, <span class="at">res =</span> <span class="dv">150</span>)</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(crop_dibblee_aoi)</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(greater_campus_proj, <span class="at">border =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Map 11 outputs generated:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">" - images/map11.png</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">" - final_output/map_11.png</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">" - final_output/dibble_aoi.png</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
@@ -1031,37 +1091,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Map 11: Dibblee Geologic Map"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Historic Goleta quadrangle raster rectification, collar trimming, and reprojection"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Historic quadrangle raster rectification, conjoining / mosaicking, and AOI cropping"</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rendered Map Plates</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>Thomas Dibblee was a legendary California geologist renowned for mapping thousands of square miles of the state's geology by hand. This plate works with the digitized Dibblee Goleta 7.5-minute geologic quadrangle map (<span class="in">`DB0007.tif`</span>).</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Primary Package:** <span class="in">`terra`</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Input Layer:** <span class="in">`source_data/07gGoleta/DB0007.tif`</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Status:** Work-in-progress (collar clipping and final layout formatting)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### Campus Geological Surface (AOI)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 11: Thomas Dibblee geologic map cropped to the Greater UCSB Campus AOI](../final_output/map_11.png)</span>{fig-alt="Map 11 Dibblee Geologic Map" width="100%"}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### Standalone AOI Clip</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="al">![Dibblee AOI Clip](../final_output/dibble_aoi.png)</span>{fig-alt="Dibblee AOI Map" width="75%"}</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Workflow</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Summary</span></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Raster Rectification:** Load the raw scanned and georeferenced quadrangle raster and apply <span class="in">`rectify(..., method = "bilinear")`</span> to correct skew and distortion.</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Collar Definition:** Traditional USGS/Dibblee paper maps contain bibliographic and legend collars outside the map neatline. The map corners are defined in geographic coordinates:</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ss">   * </span>**NW Corner:** 34° 30' 00" N / 119° 52' 30" W (34.500, -119.875)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">   * </span>**NE Corner:** 34° 30' 00" N / 119° 45' 00" W (34.500, -119.750)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">   * </span>**SE Corner:** 34° 22' 30" N / 119° 45' 00" W (34.375, -119.750)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">   * </span>**SW Corner:** 34° 22' 30" N / 119° 52' 30" W (34.375, -119.875)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Reprojection &amp; Cropping:** Convert geographic bounds to UTM Zone 11N (EPSG:32611) and crop the neatline to eliminate white margin collars using <span class="in">`crop()`</span>.</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Objective:** Ingest historic digitized Dibblee geologic quadrangle sheets, rectify rotated affine grids into standard orthogonal space with <span class="in">`terra::rectify()`</span>, support mosaicking / conjoining adjacent sheets with <span class="in">`terra::merge()`</span>, and clip the geological data to the Greater UCSB study area.</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Key Packages:** <span class="in">`terra`</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Data Sources:**</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Goleta 7.5' Geologic Quadrangle (<span class="in">`source_data/07gGoleta/DB0007.tif`</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Solvang / Gaviota Quadrangle (<span class="in">`source_data/16gSolvangGaviota/DB0016.tif`</span>, optional conjoined sheet)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Study Area Boundary (<span class="in">`source_data/greater_UCSB-campus-aoi.geojson`</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Outputs:**</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map11.png`</span> &amp; <span class="in">`final_output/map_11.png`</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`final_output/dibble_aoi.png`</span></span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Script (`scripts/map_11.r`)</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_11.r")</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cartographic Workflow</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Affine Rectification:** Scanned historical paper maps often contain non-orthogonal rotation and shear. <span class="in">`terra::rectify(..., method = "bilinear")`</span> re-samples the rotated image onto a true north-up orthogonal grid.</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Sheet Conjoining / Merging:** Adjacent quadrangles (such as Goleta and western sheets) are seamlessly merged using <span class="in">`terra::merge()`</span>.</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Collar Trimming &amp; Neatline Cropping:** Paper map margins contain bibliographic headers and legends outside the 7.5-minute boundary. Defining the lat/long corners and projecting them to the raster CRS allows clean extraction of the map neatline.</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Study Area Extraction:** The <span class="in">`greater_UCSB-campus-aoi.geojson`</span> vector is projected into the raster's native coordinate system (<span class="in">`NAD27 / UTM zone 11N`</span>) and used to crop the final geological plate.</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Script (`scripts/map_11.r`)</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_11.r")</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

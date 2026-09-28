@@ -84,8 +84,10 @@ Vector intersection analysis locating where campus bike paths cross local waterw
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+[![](final_output/map_11.png)](maps/map_11.qmd)
+
 ### [Map 11: Dibblee Geology](maps/map_11.qmd)
-Georeferencing and collar removal for the historic Dibblee Goleta quadrangle geologic map.
+Georeferencing, quadrangle mosaicking, and AOI cropping for the historic Dibblee geologic map.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
