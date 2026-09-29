@@ -21,6 +21,7 @@ The atlas consists of 12 planned plates and analytical workflows covering raster
 | [**Map 8**](map_08.qmd) | Satellite Remote Sensing | PlanetScope 4-band / 8-band multispectral seasonal imagery | Complete |
 | [**Map 9**](map_09.qmd) | Vernal Pools (DEM) | Landscape depression analysis using elevation neighbors | In Design |
 | [**Map 10**](map_10.qmd) | Bike Paths & Creeks | Vector intersection analysis (`terra::intersect`) of trails and waterways | Complete |
+| [**Map 10.5**](map_10_5.qmd) | Missing NCOS Trail | Data provenance analysis of post-2018 NCOS trail & bridge omission | Complete |
 | [**Map 11**](map_11.qmd) | Dibblee Geologic Map | Historic quadrangle raster rectification, mosaicking, and AOI cropping | Complete |
 | [**Map 12**](map_12.qmd) | 12-Month NDVI Stack | Multi-temporal raster stack, NDVI calculation, vegetation phenology curve | Complete |
 
@@ -49,6 +50,27 @@ Stylized tree species and heights along coastal slough waters.
 
 #### [Map 7: Composite Atlas Plate](map_07.qmd)
 4-inset layout showcasing progressive geographic scale.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+[![](../final_output/map_10.png)](map_10.qmd)
+
+#### [Map 10: Paths & Creeks](map_10.qmd)
+Vector intersection analysis mapping bike path stream crossings.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+[![](../final_output/map_10_5.png)](map_10_5.qmd)
+
+#### [Map 10.5: Missing NCOS Trail](map_10_5.qmd)
+Investigating temporal blind spots in campus bikeway data.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+[![](../final_output/map_11.png)](map_11.qmd)
+
+#### [Map 11: Dibblee Geology](map_11.qmd)
+Rectified and cropped historic geologic quadrangle map.
 :::
 
 ::: {.g-col-12 .g-col-md-6}

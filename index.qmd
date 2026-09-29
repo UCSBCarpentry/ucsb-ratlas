@@ -79,8 +79,17 @@ Topographic depression analysis using DEMs to identify campus vernal pools (*in 
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+[![](final_output/map_10.png)](maps/map_10.qmd)
+
 ### [Map 10: Paths & Creeks](maps/map_10.qmd)
 Vector intersection analysis locating where campus bike paths cross local waterways and creeks.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+[![](final_output/map_10_5.png)](maps/map_10_5.qmd)
+
+### [Map 10.5: Data Provenance & NCOS](maps/map_10_5.qmd)
+Investigating data blind spots: why the restored NCOS trail and Devereux Creek bridge were missing in the 2016 dataset.
 :::
 
 ::: {.g-col-12 .g-col-md-4}

@@ -58,6 +58,8 @@ website:
           href: maps/map_09.qmd
         - text: "Map 10: Bike Paths & Creeks"
           href: maps/map_10.qmd
+        - text: "Map 10.5: Missing NCOS Trail"
+          href: maps/map_10_5.qmd
         - text: "Map 11: Dibblee Geologic Map"
           href: maps/map_11.qmd
         - text: "Map 12: 12-Month NDVI Stack"

@@ -61,6 +61,13 @@ Items from the Carpentry Google Drive are downloaded as a single compressed arch
 * Bike paths (`bikelanescollapsedv8.shp`) & California streams (`streams_crop.shp`).
 * Intersection points computed via `terra::intersect()`, saved as `output_data/creek_bike_intersections.shp`.
 
+### Map 10.5: NCOS Trail Data Provenance
+* Study Area bounding box: `scripts/ncos.geojson`.
+* Wetland habitat ground truth: `source_data/NCOS_Shorebird_Foraging_Habitat/`.
+* Legacy bikeways: `bikelanescollapsedv8.shp` (2016 ICM).
+* Full stream network: `source_data/california_streams/California_Streams.shp`.
+* Actual bridge crossing export: `output_data/ncos_creek_crossing_actual.shp`.
+
 ### Map 11: Dibblee Geologic Quadrangle
 * Georeferenced geologic quadrangle map of Goleta (`source_data/07gGoleta/DB0007.tif`).
 * Rectified using `terra::rectify()`.

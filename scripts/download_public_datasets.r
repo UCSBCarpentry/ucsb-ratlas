@@ -1,5 +1,7 @@
 # datasets retrieved from public, canonical sources
 # for the rAtlas of UCSB
+# this is more for record keeping than running.
+# we have everything in a google drive triggered by data_prep.r
 
 # bathymetry data #############################
 curl_download("https://pubs.usgs.gov/ds/781/OffshoreCoalOilPoint/data/Bathymetry_OffshoreCoalOilPoint.zip", 

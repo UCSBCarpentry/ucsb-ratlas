@@ -38,6 +38,12 @@ Combined full-page layout:
 ### Map 8: PlanetScope Satellite Imagery
 ![Map 8: Satellite snapshots](final_output/map_08.png){fig-alt="Map 8 PlanetScope" width="90%"}
 
+### Map 10: Bike Paths Crossing Waterways
+![Map 10: Stream and Trail Crossings](final_output/map_10.png){fig-alt="Map 10 Bike Paths Crossing Streams" width="90%"}
+
+### Map 10.5: Data Provenance & The Missing NCOS Trail
+![Map 10.5: Missing NCOS Trail](final_output/map_10_5.png){fig-alt="Map 10.5 Missing NCOS Trail" width="90%"}
+
 ### Map 11: Dibblee Geologic Map
 ![Map 11: Dibblee Geology of Greater Campus AOI](final_output/map_11.png){fig-alt="Map 11 Dibblee Map" width="90%"}
 

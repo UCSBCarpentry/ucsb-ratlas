@@ -3,24 +3,35 @@ title: "Map 10: Paths & Creeks Analysis"
 subtitle: "Vector intersection analysis of campus bikeways and waterways"
 ---
 
-## Overview
+## Rendered Map Plate
 
-This analysis performs a vector intersection between the campus bike path network and local stream/creek centerlines to locate all points where trails cross water features.
+![Map 10: Geometric intersection points where campus bike paths cross local waterways](../final_output/map_10.png){fig-alt="Map 10 Bike Paths Crossing Creeks" width="100%"}
 
-* **Primary packages:** `terra`, `tidyverse`, `tidyterra`
-* **Inputs:** 
-  * Bike paths shapefile (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
+---
+
+## Technical Summary
+
+* **Objective:** Perform a spatial topological intersection between the campus bike path network and local stream/creek centerlines to locate and map all trail/water crossing points.
+* **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `sf`
+* **Data Sources:**
+  * Bike path centerlines (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
   * Stream network (`source_data/california_streams/streams_crop.shp`)
-* **Output:** `output_data/creek_bike_intersections.shp`
+  * Campus buildings footprint (`source_data/campus_buildings/Campus_Buildings.shp`)
+  * Isla Vista building structures (`source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp`)
+  * Shorebird foraging habitat / lagoon wetlands (`source_data/NCOS_Shorebird_Foraging_Habitat/`)
+* **Outputs:**
+  * Vector Shapefile: `output_data/creek_bike_intersections.shp`
+  * Publication Map: `images/map10.png` and `final_output/map_10.png` (12x9 in, 300 dpi)
 
 ---
 
 ## Cartographic Workflow
 
-1. Read bike path and stream vector layers using `terra::vect()`.
-2. Reproject streams into the bike path Coordinate Reference System using `terra::project()`.
-3. Compute geometric point intersections using `terra::intersect()`.
-4. Export the resulting intersection points to an ESRI Shapefile.
+1. **Ingest Vector Data:** Load bike paths, streams, building footprints, and wetland habitats using `terra::vect()`.
+2. **Align Coordinate Systems:** Transform all layers to the bike path Coordinate Reference System (`NAD83 / California zone 5 (ftUS)`).
+3. **Geometric Intersection:** Execute `terra::intersect(creeks, bike_paths)` to calculate the exact coordinate points where line geometries cross. Disaggregate multi-point features with `disagg()`.
+4. **Vector Export:** Write the intersection points to an ESRI Shapefile using `writeVector()`.
+5. **Cartographic Plate:** Render a composite map with highlighted crossing points (red circles), trail lines, waterways, and built environment context.
 
 ---
 

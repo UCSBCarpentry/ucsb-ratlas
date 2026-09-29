@@ -371,6 +371,7 @@ window.Quarto = {
   <li><a href="#maps-3-4-5-6-progressive-zoom-series" id="toc-maps-3-4-5-6-progressive-zoom-series" class="nav-link" data-scroll-target="#maps-3-4-5-6-progressive-zoom-series">Maps 3, 4, 5 &amp; 6: Progressive Zoom Series</a></li>
   <li><a href="#map-8-planetscope-satellite-imagery" id="toc-map-8-planetscope-satellite-imagery" class="nav-link" data-scroll-target="#map-8-planetscope-satellite-imagery">Map 8: PlanetScope Satellite Imagery</a></li>
   <li><a href="#map-10-vector-intersections" id="toc-map-10-vector-intersections" class="nav-link" data-scroll-target="#map-10-vector-intersections">Map 10: Vector Intersections</a></li>
+  <li><a href="#map-10.5-ncos-trail-data-provenance" id="toc-map-10.5-ncos-trail-data-provenance" class="nav-link" data-scroll-target="#map-10.5-ncos-trail-data-provenance">Map 10.5: NCOS Trail Data Provenance</a></li>
   <li><a href="#map-11-dibblee-geologic-quadrangle" id="toc-map-11-dibblee-geologic-quadrangle" class="nav-link" data-scroll-target="#map-11-dibblee-geologic-quadrangle">Map 11: Dibblee Geologic Quadrangle</a></li>
   <li><a href="#map-12-12-month-ndvi-phenology-stack" id="toc-map-12-12-month-ndvi-phenology-stack" class="nav-link" data-scroll-target="#map-12-12-month-ndvi-phenology-stack">Map 12: 12-Month NDVI Phenology Stack</a></li>
   </ul></li>
@@ -511,6 +512,16 @@ Note
 <ul>
 <li>Bike paths (<code>bikelanescollapsedv8.shp</code>) &amp; California streams (<code>streams_crop.shp</code>).</li>
 <li>Intersection points computed via <code>terra::intersect()</code>, saved as <code>output_data/creek_bike_intersections.shp</code>.</li>
+</ul>
+</section>
+<section id="map-10.5-ncos-trail-data-provenance" class="level3">
+<h3 class="anchored" data-anchor-id="map-10.5-ncos-trail-data-provenance">Map 10.5: NCOS Trail Data Provenance</h3>
+<ul>
+<li>Study Area bounding box: <code>scripts/ncos.geojson</code>.</li>
+<li>Wetland habitat ground truth: <code>source_data/NCOS_Shorebird_Foraging_Habitat/</code>.</li>
+<li>Legacy bikeways: <code>bikelanescollapsedv8.shp</code> (2016 ICM).</li>
+<li>Full stream network: <code>source_data/california_streams/California_Streams.shp</code>.</li>
+<li>Actual bridge crossing export: <code>output_data/ncos_creek_crossing_actual.shp</code>.</li>
 </ul>
 </section>
 <section id="map-11-dibblee-geologic-quadrangle" class="level3">
@@ -1062,15 +1073,22 @@ Note
 <span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Bike paths (<span class="in">`bikelanescollapsedv8.shp`</span>) &amp; California streams (<span class="in">`streams_crop.shp`</span>).</span>
 <span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Intersection points computed via <span class="in">`terra::intersect()`</span>, saved as <span class="in">`output_data/creek_bike_intersections.shp`</span>.</span>
 <span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 11: Dibblee Geologic Quadrangle</span></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Georeferenced geologic quadrangle map of Goleta (<span class="in">`source_data/07gGoleta/DB0007.tif`</span>).</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Rectified using <span class="in">`terra::rectify()`</span>.</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 12: 12-Month NDVI Phenology Stack</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Monthly PlanetScope imagery clipped to UCSB campus.</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Normalized Difference Vegetation Index:</span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$$</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Outputs 12-month raster time series and mean NDVI seasonal profile plot.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 10.5: NCOS Trail Data Provenance</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Study Area bounding box: <span class="in">`scripts/ncos.geojson`</span>.</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Wetland habitat ground truth: <span class="in">`source_data/NCOS_Shorebird_Foraging_Habitat/`</span>.</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Legacy bikeways: <span class="in">`bikelanescollapsedv8.shp`</span> (2016 ICM).</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Full stream network: <span class="in">`source_data/california_streams/California_Streams.shp`</span>.</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Actual bridge crossing export: <span class="in">`output_data/ncos_creek_crossing_actual.shp`</span>.</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 11: Dibblee Geologic Quadrangle</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Georeferenced geologic quadrangle map of Goleta (<span class="in">`source_data/07gGoleta/DB0007.tif`</span>).</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Rectified using <span class="in">`terra::rectify()`</span>.</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 12: 12-Month NDVI Phenology Stack</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Monthly PlanetScope imagery clipped to UCSB campus.</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Normalized Difference Vegetation Index:</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$$</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Outputs 12-month raster time series and mean NDVI seasonal profile plot.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

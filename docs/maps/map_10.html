@@ -416,6 +416,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../maps/map_10_5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Map 10.5: Missing NCOS Trail</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../maps/map_11.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Map 11: Dibblee Geologic Map</span></a>
   </div>
@@ -436,7 +442,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#rendered-map-plate" id="toc-rendered-map-plate" class="nav-link active" data-scroll-target="#rendered-map-plate">Rendered Map Plate</a></li>
+  <li><a href="#technical-summary" id="toc-technical-summary" class="nav-link" data-scroll-target="#technical-summary">Technical Summary</a></li>
   <li><a href="#cartographic-workflow" id="toc-cartographic-workflow" class="nav-link" data-scroll-target="#cartographic-workflow">Cartographic Workflow</a></li>
   <li><a href="#r-script-scriptsmap_10.r" id="toc-r-script-scriptsmap_10.r" class="nav-link" data-scroll-target="#r-script-scriptsmap_10.r">R Script (<code>scripts/map_10.r</code>)</a></li>
   </ul>
@@ -466,27 +473,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This analysis performs a vector intersection between the campus bike path network and local stream/creek centerlines to locate all points where trails cross water features.</p>
+<section id="rendered-map-plate" class="level2">
+<h2 class="anchored" data-anchor-id="rendered-map-plate">Rendered Map Plate</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../final_output/map_10.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 10 Bike Paths Crossing Creeks"></p>
+<figcaption>Map 10: Geometric intersection points where campus bike paths cross local waterways</figcaption>
+</figure>
+</div>
+<hr>
+</section>
+<section id="technical-summary" class="level2">
+<h2 class="anchored" data-anchor-id="technical-summary">Technical Summary</h2>
 <ul>
-<li><strong>Primary packages:</strong> <code>terra</code>, <code>tidyverse</code>, <code>tidyterra</code></li>
-<li><strong>Inputs:</strong>
+<li><strong>Objective:</strong> Perform a spatial topological intersection between the campus bike path network and local stream/creek centerlines to locate and map all trail/water crossing points.</li>
+<li><strong>Key Packages:</strong> <code>terra</code>, <code>tidyverse</code>, <code>tidyterra</code>, <code>sf</code></li>
+<li><strong>Data Sources:</strong>
 <ul>
-<li>Bike paths shapefile (<code>source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp</code>)</li>
+<li>Bike path centerlines (<code>source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp</code>)</li>
 <li>Stream network (<code>source_data/california_streams/streams_crop.shp</code>)</li>
+<li>Campus buildings footprint (<code>source_data/campus_buildings/Campus_Buildings.shp</code>)</li>
+<li>Isla Vista building structures (<code>source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp</code>)</li>
+<li>Shorebird foraging habitat / lagoon wetlands (<code>source_data/NCOS_Shorebird_Foraging_Habitat/</code>)</li>
 </ul></li>
-<li><strong>Output:</strong> <code>output_data/creek_bike_intersections.shp</code></li>
+<li><strong>Outputs:</strong>
+<ul>
+<li>Vector Shapefile: <code>output_data/creek_bike_intersections.shp</code></li>
+<li>Publication Map: <code>images/map10.png</code> and <code>final_output/map_10.png</code> (12x9 in, 300 dpi)</li>
+</ul></li>
 </ul>
 <hr>
 </section>
 <section id="cartographic-workflow" class="level2">
 <h2 class="anchored" data-anchor-id="cartographic-workflow">Cartographic Workflow</h2>
 <ol type="1">
-<li>Read bike path and stream vector layers using <code>terra::vect()</code>.</li>
-<li>Reproject streams into the bike path Coordinate Reference System using <code>terra::project()</code>.</li>
-<li>Compute geometric point intersections using <code>terra::intersect()</code>.</li>
-<li>Export the resulting intersection points to an ESRI Shapefile.</li>
+<li><strong>Ingest Vector Data:</strong> Load bike paths, streams, building footprints, and wetland habitats using <code>terra::vect()</code>.</li>
+<li><strong>Align Coordinate Systems:</strong> Transform all layers to the bike path Coordinate Reference System (<code>NAD83 / California zone 5 (ftUS)</code>).</li>
+<li><strong>Geometric Intersection:</strong> Execute <code>terra::intersect(creeks, bike_paths)</code> to calculate the exact coordinate points where line geometries cross. Disaggregate multi-point features with <code>disagg()</code>.</li>
+<li><strong>Vector Export:</strong> Write the intersection points to an ESRI Shapefile using <code>writeVector()</code>.</li>
+<li><strong>Cartographic Plate:</strong> Render a composite map with highlighted crossing points (red circles), trail lines, waterways, and built environment context.</li>
 </ol>
 <hr>
 </section>
@@ -495,52 +520,112 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Show R Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># map 10</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Map 10: Vector Intersection Analysis - Bike Paths Crossing Creeks</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyterra)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># clean the environment and hidden objects</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set map number</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># set ggplot counter</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>current_ggplot <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>gg_labelmaker <span class="ot">&lt;-</span> <span class="cf">function</span>(plot_num) {</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  gg_title <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Map:"</span>, current_sheet, <span class="st">" ggplot:"</span>, plot_num)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  plot_text <span class="ot">&lt;-</span> <span class="fu">paste</span>(gg_title, <span class="at">collapse =</span> <span class="st">" "</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(plot_text)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  current_ggplot <span class="ot">&lt;&lt;-</span> plot_num</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(plot_text)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># every ggtitle() or labs() should be:</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ggtitle(gg_labelmaker(current_ggplot+1))</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># end automagic ggtitle           #######</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 1. read layers ----------</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># bike_paths &lt;- vect("") # replace with updated bike-path file</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>bike_paths <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp"</span>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>creeks <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/california_streams/streams_crop.shp"</span>)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 2. common CRS ----------</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>creeks <span class="ot">&lt;-</span> <span class="fu">project</span>(creeks, bike_paths)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># plot creeks and paths together here to prove it</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean the environment and hidden objects</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Set map number</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Set ggplot counter</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>current_ggplot <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>gg_labelmaker <span class="ot">&lt;-</span> <span class="cf">function</span>(plot_num) {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  gg_title <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Map:"</span>, current_sheet, <span class="st">" ggplot:"</span>, plot_num)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  plot_text <span class="ot">&lt;-</span> <span class="fu">paste</span>(gg_title, <span class="at">collapse =</span> <span class="st">" "</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(plot_text)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  current_ggplot <span class="ot">&lt;&lt;-</span> plot_num</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(plot_text)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure output directories exist</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"images"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"final_output"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"output_data"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 1. Read Vector Layers ----------</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>bike_paths <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>creeks <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/california_streams/streams_crop.shp"</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>buildings <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/campus_buildings/Campus_Buildings.shp"</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>iv_bldg <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp"</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>habitat <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"source_data/NCOS_Shorebird_Foraging_Habitat/NCOS_Shorebird_Foraging_Habitat.shp"</span>)</span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 3. intersection points ----------</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>creek_bike_pts <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">intersect</span>(creeks, bike_paths)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(creek_bike_pts)</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># let's put in another plot here to prove it</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(creek_bike_pts)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 2. Align to Common CRS ----------</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>target_crs <span class="ot">&lt;-</span> <span class="fu">crs</span>(bike_paths)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>creeks <span class="ot">&lt;-</span> <span class="fu">project</span>(creeks, target_crs)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>buildings <span class="ot">&lt;-</span> <span class="fu">project</span>(buildings, target_crs)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>iv_bldg <span class="ot">&lt;-</span> <span class="fu">project</span>(iv_bldg, target_crs)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>habitat <span class="ot">&lt;-</span> <span class="fu">project</span>(habitat, target_crs)</span>
 <span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 4. write shapefile ----------</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co">#  Do we output a new point shapefile as a result?</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">&lt;-</span> <span class="st">"output_data/creek_bike_intersections.shp"</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(creek_bike_pts, out_file, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 3. Perform Intersection Analysis ----------</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute geometric intersection between stream lines and bike path networks</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>creek_bike_pts <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">intersect</span>(creeks, bike_paths)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>creek_bike_pts_disagg <span class="ot">&lt;-</span> <span class="fu">disagg</span>(creek_bike_pts)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Intersection analysis complete: found"</span>, <span class="fu">length</span>(creek_bike_pts_disagg), <span class="st">"crossing points.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 4. Export Resulting Vector Points ----------</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">&lt;-</span> <span class="st">"output_data/creek_bike_intersections.shp"</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(creek_bike_pts, out_file, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Exported crossing points to:"</span>, out_file, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 5. Construct Cartographic Layout ----------</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>map10_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Habitat and context polygons</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> habitat, <span class="fu">aes</span>(<span class="at">fill =</span> <span class="st">"Lagoon / Wetlands"</span>), <span class="at">color =</span> <span class="st">"#81C784"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> iv_bldg, <span class="at">fill =</span> <span class="st">"#E0E0E080"</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> buildings, <span class="fu">aes</span>(<span class="at">fill =</span> <span class="st">"Campus Buildings"</span>), <span class="at">color =</span> <span class="st">"#9E9E9E"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Linear networks</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> creeks, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Streams / Creeks"</span>), <span class="at">linewidth =</span> <span class="fl">1.3</span>) <span class="sc">+</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> bike_paths, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Bike Paths"</span>), <span class="at">linewidth =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Highlighted intersection points</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spatvector</span>(<span class="at">data =</span> creek_bike_pts_disagg, <span class="fu">aes</span>(<span class="at">fill =</span> <span class="st">"Stream Crossings"</span>), <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">stroke =</span> <span class="fl">1.3</span>) <span class="sc">+</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Scales &amp; aesthetics</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Linear Networks"</span>,</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Streams / Creeks"</span> <span class="ot">=</span> <span class="st">"#0288D1"</span>, <span class="st">"Bike Paths"</span> <span class="ot">=</span> <span class="st">"#263238"</span>),</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">linewidth =</span> <span class="dv">2</span>), <span class="at">order =</span> <span class="dv">1</span>)</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Features &amp; Analysis"</span>,</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Stream Crossings"</span> <span class="ot">=</span> <span class="st">"#D50000"</span>, <span class="st">"Campus Buildings"</span> <span class="ot">=</span> <span class="st">"#BDBDBD"</span>, <span class="st">"Lagoon / Wetlands"</span> <span class="ot">=</span> <span class="st">"#C8E6C9"</span>),</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">shape =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">22</span>), <span class="at">size =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">4</span>), <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"#757575"</span>, <span class="st">"#81C784"</span>)), <span class="at">order =</span> <span class="dv">2</span>)</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"gray25"</span>),</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"gray50"</span>),</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="fl">0.6</span>),</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.box =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.9</span>, <span class="st">"cm"</span>),</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.spacing.x =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>)</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Map 10: Campus Bike Paths Crossing Waterways"</span>,</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Geometric intersection analysis (terra::intersect) between active bikeways and stream networks"</span>,</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"rAtlas Map 10 | UCSB Carpentry"</span></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- 6. Save Publication Outputs ----------</span></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"images/map10.png"</span>, <span class="at">plot =</span> map10_plot, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">9</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"final_output/map_10.png"</span>, <span class="at">plot =</span> map10_plot, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">9</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Map 10 saved to:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">" - images/map10.png</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">" - final_output/map_10.png</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
@@ -1019,33 +1104,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Vector intersection analysis of campus bikeways and waterways"</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rendered Map Plate</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>This analysis performs a vector intersection between the campus bike path network and local stream/creek centerlines to locate all points where trails cross water features.</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 10: Geometric intersection points where campus bike paths cross local waterways](../final_output/map_10.png)</span>{fig-alt="Map 10 Bike Paths Crossing Creeks" width="100%"}</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Primary packages:** <span class="in">`terra`</span>, <span class="in">`tidyverse`</span>, <span class="in">`tidyterra`</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Inputs:** </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Bike paths shapefile (<span class="in">`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Stream network (<span class="in">`source_data/california_streams/streams_crop.shp`</span>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Output:** <span class="in">`output_data/creek_bike_intersections.shp`</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cartographic Workflow</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Read bike path and stream vector layers using <span class="in">`terra::vect()`</span>.</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Reproject streams into the bike path Coordinate Reference System using <span class="in">`terra::project()`</span>.</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Compute geometric point intersections using <span class="in">`terra::intersect()`</span>.</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Export the resulting intersection points to an ESRI Shapefile.</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Script (`scripts/map_10.r`)</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_10.r")</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Summary</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Objective:** Perform a spatial topological intersection between the campus bike path network and local stream/creek centerlines to locate and map all trail/water crossing points.</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Key Packages:** <span class="in">`terra`</span>, <span class="in">`tidyverse`</span>, <span class="in">`tidyterra`</span>, <span class="in">`sf`</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Data Sources:**</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Bike path centerlines (<span class="in">`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Stream network (<span class="in">`source_data/california_streams/streams_crop.shp`</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Campus buildings footprint (<span class="in">`source_data/campus_buildings/Campus_Buildings.shp`</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Isla Vista building structures (<span class="in">`source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp`</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Shorebird foraging habitat / lagoon wetlands (<span class="in">`source_data/NCOS_Shorebird_Foraging_Habitat/`</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Outputs:**</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Vector Shapefile: <span class="in">`output_data/creek_bike_intersections.shp`</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Publication Map: <span class="in">`images/map10.png`</span> and <span class="in">`final_output/map_10.png`</span> (12x9 in, 300 dpi)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cartographic Workflow</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Ingest Vector Data:** Load bike paths, streams, building footprints, and wetland habitats using <span class="in">`terra::vect()`</span>.</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Align Coordinate Systems:** Transform all layers to the bike path Coordinate Reference System (<span class="in">`NAD83 / California zone 5 (ftUS)`</span>).</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Geometric Intersection:** Execute <span class="in">`terra::intersect(creeks, bike_paths)`</span> to calculate the exact coordinate points where line geometries cross. Disaggregate multi-point features with <span class="in">`disagg()`</span>.</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Vector Export:** Write the intersection points to an ESRI Shapefile using <span class="in">`writeVector()`</span>.</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Cartographic Plate:** Render a composite map with highlighted crossing points (red circles), trail lines, waterways, and built environment context.</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Script (`scripts/map_10.r`)</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_10.r")</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
