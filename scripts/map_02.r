@@ -450,9 +450,9 @@ map2_gg6 <- ggplot() +
   geom_spatvector(data = subset(trees_filt, trees_filt$Tree_Type != "Other"), aes(colour = Tree_Type), alpha = 0.8, size = 1.2) +
   scale_colour_manual(
     name = "Tree Type",
-    values = tree_colors
+    values = tree_colors,
+    guide = guide_legend(override.aes = list(size = 9), order = 1)
   ) +
-  guides(colour = guide_legend(override.aes = list(size = 5))) + # Make legend points larger
   new_scale_color() + # Reset color scale for the layers below
   geom_spatvector(data = streams_crop, aes(colour = "Streams"), linewidth = 2, alpha = 0.6) +
   geom_spatvector(data = bikes_lines, aes(colour = "Bike Paths"), linewidth = 1) +
@@ -464,7 +464,8 @@ map2_gg6 <- ggplot() +
       "Bike Paths" = "black",
       "Streams" = "cadetblue3",
       "Ocean" = "dodgerblue"
-    )
+    ),
+    guide = guide_legend(override.aes = list(linewidth = 3), order = 2)
   ) +
   theme_minimal() +
   labs(
@@ -474,20 +475,23 @@ map2_gg6 <- ggplot() +
     x = NULL, y = NULL
   ) +
   theme(
-    plot.title = element_text(hjust = 0.5, size = 20),
-    plot.subtitle = element_text(hjust = 0.5, size = 14),
+    plot.title = element_text(hjust = 0.5, size = 22, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5, size = 16),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
     panel.grid = element_blank(),
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5),
     legend.position = "bottom",
-    legend.box = "horizontal"
+    legend.box = "horizontal",
+    legend.title = element_text(size = 20, face = "bold"),
+    legend.text = element_text(size = 17),
+    legend.key.size = unit(1.4, "cm"),
+    legend.spacing.x = unit(0.5, "cm")
   ) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  annotation_scale(location = "br", width_hint = 0.1) +
-  annotation_north_arrow(
-    location = "tr", which_north = "true",
-    style = north_arrow_fancy_orienteering
-  )
+  annotation_scale(location = "br", width_hint = 0.1)
 
 map2_gg6
 

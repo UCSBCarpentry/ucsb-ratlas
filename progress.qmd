@@ -26,9 +26,9 @@ The tryptic sequence zooms progressively from the Western United States into the
 ::: {layout-ncol=3}
 ![Map 3: Western US](final_output/map_03.png)
 
-![Map 4: California](final_output/map_04.png)
+![Map 4: Bight of CA](final_output/map_04.png)
 
-![Map 5: Bight of CA](final_output/map_05.png)
+![Map 5: Extended Campus](final_output/map_05.png)
 :::
 
 Combined full-page layout:

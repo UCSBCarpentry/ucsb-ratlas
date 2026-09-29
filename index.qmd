@@ -41,15 +41,15 @@ Regional locator inset showing elevation across the Western United States.
 ::: {.g-col-12 .g-col-md-4}
 [![](final_output/map_04.png)](maps/map_04.qmd)
 
-### [Map 4: California](maps/map_04.qmd)
-State-level locator map focusing on the California coastline and regional context.
+### [Map 4: The Bight of California](maps/map_04.qmd)
+Sub-regional locator map focusing on the Southern California Bight, Channel Islands, and campus extent.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
 [![](final_output/map_05.png)](maps/map_05.qmd)
 
-### [Map 5: Bight of California](maps/map_05.qmd)
-Detailed sub-regional view of the Southern California Bight and Santa Barbara Channel.
+### [Map 5: Extended Campus](maps/map_05.qmd)
+Detailed locator view of the greater campus area showing topography, bathymetry, and hillshading.
 :::
 
 ::: {.g-col-12 .g-col-md-6}

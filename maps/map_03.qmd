@@ -5,18 +5,24 @@ subtitle: "Regional locator inset showing topography across the Western United S
 
 ## Rendered Map Plate
 
-![Map 3: Western United States regional elevation model](../final_output/map_03.png){fig-alt="Map 3 Western US" width="80%"}
+![Map 3: Western United States regional elevation model with whole degree graticule and populated places](../final_output/map_03.png){fig-alt="Map 3 Western US" width="80%"}
 
 ---
 
 ## Technical Summary
 
 * **Objective:** Serve as the widest regional locator panel (Inset 1 of the Map 7 tryptic), establishing continental context for Southern California.
-* **Key Packages:** `terra`, `tidyverse`, `tidyterra`
+* **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `geojsonsf`
 * **Data Sources:**
-  * Western United States 90-meter Digital Elevation Model
-  * Continental border and state line vector polygons
-* **Aspect Ratio:** 3 tall x 4 wide portrait orientation.
+  * Western United States 90-meter Digital Elevation Model (`source_data/dem90_hf/dem90_hf.tif`)
+  * Global shaded relief hillshade (`source_data/global_raster/GRAY_HR_SR_OB.tif`)
+  * California Populated Places vector (`source_data/tl_2023_06_place/`)
+  * Southern California locator box (`source_data/socal_aoi.geojson`)
+* **Styling Decisions:**
+  * Portrait 3 wide x 4 tall aspect ratio (`width = 3, height = 4`).
+  * Axes labeled in whole degrees (e.g. 125°W, 120°W, 115°W and 32°N, 36°N, 40°N, 44°N).
+  * Populated places vector overlay rendered with subtle transparency.
+  * Red outline delineates the next zoom extent (Map 4).
 
 ---
 

@@ -391,49 +391,38 @@ ggplot() +
   ggtitle("Map 4: zm 2: The Bight of California", subtitle = gg_labelmaker(current_ggplot + 1))
 
 # and a final one for saving
-ggplot() +
+zoom_3_extent_proj <- project(zoom_3_extent, crs(zoom_2_cropped))
+
+zoom_2_final_plot <- ggplot() +
   geom_raster(
     data = zoom_2_DEM_df,
     aes(x = x, y = y, fill = dem90_hf)
   ) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none") +
   geom_raster(
     data = zoom_2_hillshade_df,
     aes(x = x, y = y, alpha = GRAY_HR_SR_OB)
   ) +
   scale_alpha(range = c(0.05, 0.5), guide = "none") +
-  geom_spatvector(data = zoom_2_places, fill = "NA", color = "#EEEEEE33") +
-  geom_spatvector(data = zoom_3_extent, color = "red", fill = NA) +
+  geom_spatvector(data = zoom_2_places, fill = "NA", color = "#EEEEEE40", linewidth = 0.25) +
+  geom_spatvector(data = zoom_3_extent_proj, color = "red", fill = NA, linewidth = 1.2) +
   theme_minimal() +
   theme(
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
     legend.position = "none",
     panel.ontop = TRUE,
     panel.grid.major = element_line(color = "#FFFFFF33"),
     panel.background = element_blank()
   ) +
-  coord_sf() +
+  coord_sf(expand = FALSE) +
   ggtitle("On the Bight of California",
-    subtitle = "this still needs work"
+    subtitle = "Point Conception to the Mexican Border"
   )
 
-ggsave("images/map4.png", width = 4, height = 3, plot = last_plot(), bg = "white")
+zoom_2_final_plot
 
-
-# do we still need this zoom 2 hillshade?
-# we now turn zoom 2 DEM into a hillshade of the area to match:
-# hillshades are made of slopes and aspects
-zoom_2_slope <- terrain(zoom_2_cropped, "slope", unit = "radians")
-plot(zoom_2_slope)
-
-zoom_2_aspect <- terrain(zoom_2_cropped, "aspect", unit = "radians")
-plot(zoom_2_aspect)
-zoom_2_hillshade <- shade(zoom_2_slope, zoom_2_aspect,
-  angle = 15,
-  direction = 270,
-  normalize = TRUE
-)
-
-
-ggsave("images/map_04.png", width = 3, height = 4, plot = last_plot(), bg = "white")
+ggsave("images/map4.png", width = 3, height = 4, plot = zoom_2_final_plot, bg = "white")
+ggsave("images/map_04.png", width = 3, height = 4, plot = zoom_2_final_plot, bg = "white")
+ggsave("final_output/map_04.png", width = 3, height = 4, plot = zoom_2_final_plot, bg = "white")

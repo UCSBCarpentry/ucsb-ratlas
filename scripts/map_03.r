@@ -239,85 +239,44 @@ ggsave("images/map3.2.png", width = 3, height = 4, plot = last_plot(), bg = "whi
 # which is census data
 # for the sake of a nice vizualization
 places <- vect("source_data/tl_2023_06_place/tl_2023_06_place.shp")
-plot(places)
-
-zoom_1_overlay_places <- ggplot() +
-  geom_raster(
-    data = zoom_1_dem_df,
-    aes(x = x, y = y, fill = dem90_hf)
-  ) +
-  scale_fill_viridis_c() +
-  geom_raster(
-    data = zoom_1_hillshade_df,
-    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)
-  ) +
-  scale_alpha(range = c(0.05, 0.3), guide = "none") +
-  geom_spatvector(data = places, fill = "NA") +
-  geom_spatvector(data = zoom_2_crop_extent, color = "red", lwd = 1.5, fill = NA) +
-  my_theme +
-  coord_sf() +
-  ggtitle("Western US", subtitle = gg_labelmaker(current_ggplot + 1))
-
-zoom_1_overlay_places
-
-ggplot() +
-  geom_raster(
-    data = zoom_1_dem_df,
-    aes(x = x, y = y, fill = dem90_hf)
-  ) +
-  scale_fill_viridis_c() +
-  geom_raster(
-    data = zoom_1_hillshade_df,
-    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)
-  ) +
-  scale_alpha(range = c(0.05, 0.3), guide = "none") +
-  geom_spatvector(data = places, fill = "NA") +
-  geom_spatvector(data = zoom_2_crop_extent, color = "red", lwd = 1.5, fill = NA) +
-  my_theme +
-  coord_sf() +
-  ggtitle("Western US", subtitle = gg_labelmaker(current_ggplot + 1))
-
-ggplot() +
-  geom_raster(
-    data = zoom_1_dem_df,
-    aes(x = x, y = y, fill = dem90_hf)
-  ) +
-  scale_fill_viridis_c() +
-  geom_raster(
-    data = zoom_1_hillshade_df,
-    aes(x = x, y = y, alpha = GRAY_HR_SR_OB)
-  ) +
-  scale_alpha(range = c(0.05, 0.3), guide = "none") +
-  geom_spatvector(data = places, fill = "NA", color = "#EEEEEE33") +
-  geom_spatvector(data = zoom_2_crop_extent, color = "red", lwd = 1, fill = NA) +
-  my_theme +
-  coord_sf() +
-  ggtitle("Western US", subtitle = gg_labelmaker(current_ggplot + 1))
-
+places <- project(places, crs(zoom_1_dem))
+places <- crop(places, zoom_1_hillshade)
+places_simple <- simplifyGeom(places, tolerance = 0.005)
 
 # now one to save
-ggplot() +
+zoom_1_final_plot <- ggplot() +
   geom_raster(
     data = zoom_1_dem_df,
     aes(x = x, y = y, fill = dem90_hf)
   ) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(guide = "none") +
   geom_raster(
     data = zoom_1_hillshade_df,
     aes(x = x, y = y, alpha = GRAY_HR_SR_OB)
   ) +
   scale_alpha(range = c(0.05, 0.3), guide = "none") +
-  geom_spatvector(data = places, fill = "NA", color = "#EEEEEE33") +
+  geom_spatvector(data = places_simple, fill = "NA", color = "#EEEEEE50", linewidth = 0.2) +
   geom_spatvector(data = zoom_2_crop_extent, color = "red", lwd = 1, fill = NA) +
-  my_theme +
-  coord_sf() +
+  scale_x_continuous(breaks = seq(-125, -115, by = 5), labels = function(x) paste0(abs(x), "°W")) +
+  scale_y_continuous(breaks = seq(32, 44, by = 4), labels = function(y) paste0(y, "°N")) +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_text(size = 8, color = "gray20"),
+    axis.ticks = element_line(color = "gray40", linewidth = 0.3),
+    legend.position = "none",
+    panel.ontop = TRUE,
+    panel.grid.major = element_line(color = "#FFFFFF44", linetype = "dashed"),
+    panel.background = element_blank()
+  ) +
+  coord_sf(expand = FALSE) +
   ggtitle("The Western United States",
     subtitle = "on California's south-central coast"
   )
 
+zoom_1_final_plot
 
 #######################################################################################
 
 
-ggsave("images/map3.png", width = 3, height = 4, plot = last_plot(), bg = "white")
-ggsave("final_output/map_03.png", width = 3, height = 4, plot = last_plot(), bg = "white")
+ggsave("images/map3.png", width = 3, height = 4, plot = zoom_1_final_plot, bg = "white")
+ggsave("final_output/map_03.png", width = 3, height = 4, plot = zoom_1_final_plot, bg = "white")

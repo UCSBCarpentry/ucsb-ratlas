@@ -1,23 +1,27 @@
 ---
-title: "Map 5: Bight of California"
-subtitle: "Sub-regional locator panel showing the Santa Barbara Channel and Channel Islands"
+title: "Map 5: Extended Campus"
+subtitle: "Sub-regional locator panel showing greater campus topography, bathymetry, and hillshading"
 ---
 
 ## Rendered Map Plate
 
-![Map 5: Southern California Bight and Channel Islands](../final_output/map_05.png){fig-alt="Map 5 Bight of California" width="80%"}
+![Map 5: Greater campus topography, bathymetry, and hillshading](../final_output/map_05.png){fig-alt="Map 5 Extended Campus" width="85%"}
 
 ---
 
 ## Technical Summary
 
-* **Objective:** Serve as Inset 3 of the Map 7 tryptic, transitioning from state-wide perspective to the immediate coastal geography of the Santa Barbara Channel and Channel Islands.
+* **Objective:** Serve as Inset 3 of the Map 7 tryptic (Zoom 3), transitioning from the regional Bight of California into the immediate coastal context of the UCSB campus and Goleta Slough.
 * **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `sf`
 * **Data Sources:**
-  * Regional Coastal DEM
-  * Channel Islands and coastline vectors
-  * Populated places in Santa Barbara and Ventura counties
-* **Aspect Ratio:** 4 wide x 3 tall landscape orientation.
+  * Campus DEM (`source_data/campus_DEM.tif`)
+  * Campus hillshade (`source_data/campus_hillshade.tif`)
+  * Merged campus topo-bathymetry (`output_data/campus_bathotopo.tif`)
+* **Styling Decisions:**
+  * 4 wide x 3 tall landscape aspect ratio (`width = 4, height = 3`) matching the Map 7 row 1 layout.
+  * Axis labels, coordinate text, and tick marks removed.
+  * Legend omitted (`guide = "none"`, `legend.position = "none"`).
+  * White background set explicitly in `ggsave` for consistent rendering.
 
 ---
 

@@ -44,9 +44,9 @@ website:
           href: maps/map_02.qmd
         - text: "Map 3: Western US"
           href: maps/map_03.qmd
-        - text: "Map 4: California"
+        - text: "Map 4: The Bight of California"
           href: maps/map_04.qmd
-        - text: "Map 5: Bight of California"
+        - text: "Map 5: Extended Campus"
           href: maps/map_05.qmd
         - text: "Map 6: UCSB & Environs"
           href: maps/map_06.qmd

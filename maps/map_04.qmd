@@ -1,23 +1,27 @@
 ---
-title: "Map 4: California Coast"
-subtitle: "State-level regional locator inset highlighting the coastline and populated centers"
+title: "Map 4: The Bight of California"
+subtitle: "Sub-regional locator panel showing the Southern California Bight and Channel Islands"
 ---
 
 ## Rendered Map Plate
 
-![Map 4: California coastline and regional elevation](../final_output/map_04.png){fig-alt="Map 4 California Coast" width="80%"}
+![Map 4: Southern California Bight elevation, ocean hillshade, populated places, and UCSB extent](../final_output/map_04.png){fig-alt="Map 4 The Bight of California" width="80%"}
 
 ---
 
 ## Technical Summary
 
-* **Objective:** Serve as the middle locator panel (Inset 2 of the Map 7 tryptic), bridging continental context down to the California state scale.
-* **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `sf`
+* **Objective:** Serve as the middle locator panel (Inset 2 of the Map 7 tryptic), focusing from the Western US down to the Southern California Bight (Point Conception to the Mexican border), with a red locator box indicating the UCSB campus extent.
+* **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `sf`, `geojsonsf`
 * **Data Sources:**
-  * California subsetted DEM
-  * California Populated Places vector points
-  * Coastline and state boundary features
-* **Aspect Ratio:** 3 tall x 4 wide portrait orientation.
+  * 90m Western US DEM cropped to Southern California AOI (`source_data/socal_aoi.geojson`)
+  * Global shaded relief ocean hillshade (`source_data/global_raster/GRAY_HR_SR_OB.tif`)
+  * California Populated Places vector (`source_data/tl_2023_06_place/`)
+  * Campus DEM bounding extent box (`zoom_3_extent`)
+* **Styling Decisions:**
+  * Portrait 3 wide x 4 tall aspect ratio (`width = 3, height = 4`) matching the Map 7 row 1 layout.
+  * Axis degree markings, coordinate labels, and legends removed for clean inset display.
+  * White background set explicitly in `ggsave` to ensure consistent presentation across light and dark display modes.
 
 ---
 
