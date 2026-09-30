@@ -58,19 +58,25 @@ Items from the Carpentry Google Drive are downloaded as a single compressed arch
 * Used for natural color (RGB) and false-color infrared visualization.
 
 ### Map 10: Vector Intersections
-* Bike paths (`bikelanescollapsedv8.shp`) & California streams (`streams_crop.shp`).
+* Bike paths (`bikelanescollapsedv8.shp`, 2016 ICM) & California streams (`streams_crop.shp`).
 * Intersection points computed via `terra::intersect()`, saved as `output_data/creek_bike_intersections.shp`.
 
-### Map 10.5: NCOS Trail Data Provenance
-* Study Area bounding box: `scripts/ncos.geojson`.
-* Wetland habitat ground truth: `source_data/NCOS_Shorebird_Foraging_Habitat/`.
-* Legacy bikeways: `bikelanescollapsedv8.shp` (2016 ICM).
-* Full stream network: `source_data/california_streams/California_Streams.shp`.
-* Actual bridge crossing export: `output_data/ncos_creek_crossing_actual.shp`.
+### Map 10.5: NCOS Trail Data Provenance & Infrastructure Comparison
+* **Legacy Campus Bikeways:** `source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp` — Captured from UCSB Interactive Campus Map (ICM) via ArcGIS Online circa 2016–2017. Terminates at Whittier Drive prior to NCOS restoration.
+* **Modern NCOS Multi-Use Trails:** `source_data/ncos_trails/ncos_multiuse_trails.geojson` — Derived from [UCSB CCBER NCOS Public Access & Trail Map](https://www.ccber.ucsb.edu/ncos) (constructed 2018–2021). Cross-validated against CIRGIS 2020 1-foot orthophotography (`source_data/cirgis_1ft/w_campus_1ft.tif`) and OpenStreetMap (`highway=cycleway` / `path`).
+* **Study Area Bounding Box:** `scripts/ncos.geojson`.
+* **Restored Wetland Ground Truth:** `source_data/NCOS_Shorebird_Foraging_Habitat/`.
+* **Full Stream Network:** `source_data/california_streams/California_Streams.shp`.
+* **Actual Bridge Crossing Export:** `output_data/ncos_creek_crossing_actual.shp` (Devereux Creek timber bridge at 34.4204° N, 119.8770° W).
 
 ### Map 11: Dibblee Geologic Quadrangle
-* Georeferenced geologic quadrangle map of Goleta (`source_data/07gGoleta/DB0007.tif`).
-* Rectified using `terra::rectify()`.
+* Western Quadrangle: Dos Pueblos Canyon 7.5' geologic quadrangle (`source_data/09gDosPueblos/DB0009.tif`, DF-09).
+* Eastern Quadrangle: Goleta 7.5' geologic quadrangle (`source_data/07gGoleta/DB0007.tif`, DF-07).
+* Spliced Dividing Meridian: Longitude $-119^\circ 52' 30''\text{ W}$ ($-119.875^\circ\text{ W}$).
+* Campus Area of Interest: `source_data/greater_UCSB-campus-aoi.geojson` (straddles both sheets).
+* Intermediate Full-Extent GeoTIFF with AOI: `output_data/dibblee_both_tiffs_full_extent_with_aoi.tif`.
+* Diagnostic Multi-Sheet Plate: `final_output/map11_both_tiffs_full_extent_aoi.png`.
+* Rectified and spliced using `terra::rectify(..., method = "bilinear")` and `terra::merge()`.
 
 ### Map 12: 12-Month NDVI Phenology Stack
 * Monthly PlanetScope imagery clipped to UCSB campus.

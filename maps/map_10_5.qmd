@@ -11,48 +11,83 @@ subtitle: "Revealing the temporal and institutional limitations of spatial infra
 
 ## Technical Summary
 
-* **Objective:** Investigate the data limitations revealed by Map 10, explain why the major bike path and bridge crossing through the North Campus Open Space (NCOS) are absent from the campus bikeway dataset, and visualize the impact of dataset vintage on spatial topology.
+* **Objective:** Investigate the data limitations revealed by Map 10, demonstrate why the primary multi-use path and bridge crossing through the North Campus Open Space (NCOS) are absent from the campus bikeway dataset, and explore the principles of dataset lineage, temporal currency, and ground-truthing in GIS.
 * **Key Packages:** `terra`, `tidyverse`, `tidyterra`, `sf`, `geojsonsf`
-* **Data Sources:**
-  * Legacy Campus Bikeways (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`, circa 2016–2017)
-  * Restored NCOS Wetland Habitat (`source_data/NCOS_Shorebird_Foraging_Habitat/`)
-  * California Streams Network (`source_data/california_streams/California_Streams.shp`)
-  * NCOS Study Area Boundary (`scripts/ncos.geojson`)
-  * Modern NCOS Multi-Use Trail Alignment (CCBER 2018–2022)
-* **Key Finding:**
-  * **Legacy 2016 ICM Dataset:** $0$ stream crossings identified within NCOS.
-  * **Ground-Truth / Modern Network:** $2$ major stream crossings (including the main timber bridge over Devereux Creek).
+* **Outputs:**
+  * Visualization: `images/map10_5.png` & `final_output/map_10_5.png` (12x9 in, 300 dpi)
+  * Vector Layers: `source_data/ncos_trails/ncos_multiuse_trails.geojson` & `output_data/ncos_creek_crossing_actual.shp`
 
 ---
 
-## Why Is the NCOS Bike Path Missing in the Campus Dataset?
+## Explicit Data Provenance: Where Did the Data Come From?
 
-The geometric intersection in Map 10 revealed that no stream crossings were detected west of Whittier Drive. In reality, thousands of students, faculty, and community members ride and walk across Devereux Creek along the North Campus Open Space multi-use trail daily. This discrepancy stems from three fundamental spatial data principles:
+To understand why the analysis failed to detect the bridge crossing, we must compare the exact origins and vintages of the two conflicting infrastructure datasets:
 
-### 1. Temporal Lineage and Data Vintage (Epoch Mismatch)
-The campus bike path layer (`bikelanescollapsedv8.shp`) was harvested from the UCSB Interactive Campus Map (ICM) on ArcGIS Online circa **2016–2017**. At that time, the land west of Whittier Drive was the decommissioned 9-hole Ocean Meadows Golf Course. 
-
-The 136-acre North Campus Open Space restoration project—spearheaded by UCSB's Cheadle Center for Biodiversity and Ecological Restoration (CCBER)—broke ground in **autumn 2017**. Major earthmoving, wetland re-establishment, trail excavation, boardwalk installation, and construction of the primary pedestrian/bike bridge across Devereux Creek occurred between **2018 and 2021**, with public opening in **2020–2022**. 
-
-A dataset compiled in 2016 is chronologically blind to infrastructure designed and built years later.
-
-### 2. Institutional and Jurisdictional Silos
-Campus facility GIS databases (such as ICM) naturally focus on Main Campus, Storke Campus, and core instructional facilities where daily maintenance and utilities are managed by central campus administration. 
-
-NCOS sits at the western interface between UCSB property, the City of Goleta, and Santa Barbara County open spaces (Ellwood Mesa and Coal Oil Point Reserve). Open space recreation trails are maintained and monitored by CCBER and partner conservancies, creating an administrative silo where preserve trails are not automatically backported into traditional campus transit databases.
-
-### 3. Classification and Transportation Attributes
-Transportation networks in GIS often employ strict functional classification schemas (e.g., Caltrans Class I dedicated bike paths, Class II painted bike lanes, Class IV separated bikeways).
-
-The NCOS trail is a decomposed granite multi-use ecological path with timber bridge crossings. In institutional GIS inventories, unpaved multi-use trails are frequently tagged as "pedestrian paths / hiking trails" rather than formal "bike lanes," meaning queries targeting "bike paths" will systematically exclude them even if bicycle travel is fully permitted and actively encouraged.
+| Dataset | File Path | Origin & Custodian | Vintage (Year) | Classification Scope |
+|---|---|---|:---:|---|
+| **Legacy Campus Bikeways** | `source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp` | UCSB Interactive Campus Map (ICM) via ArcGIS Online | **2016–2017** | Paved Class I/II dedicated campus bikeways |
+| **Modern NCOS Trail Network** | `source_data/ncos_trails/ncos_multiuse_trails.geojson` | UCSB Cheadle Center for Biodiversity and Ecological Restoration (CCBER) | **2018–2022** | Decomposed granite multi-use paths & timber footbridges |
+| **Aerial Verification Layer** | `source_data/cirgis_1ft/w_campus_1ft.tif` | Channel Islands Regional GIS Collaborative (CIRGIS) | **2020** | 1-foot high-resolution digital orthophotography |
+| **Open Hydrologic Data** | `source_data/california_streams/California_Streams.shp` | California Department of Fish and Wildlife (CDFW) / NHD | **2023** | Perennial and intermittent stream channels |
 
 ---
 
-## Core Lessons for Geospatial Analysts
+## Why Is the NCOS Bike Path Missing from the Campus Dataset?
 
-1. **Topological analyses inherit data omissions:** An algorithm cannot detect relationships for features that do not exist in the source layer. A clean script with zero execution errors can still yield fundamentally incorrect real-world conclusions.
-2. **Always audit metadata and temporal epoch:** Before performing network connectivity or infrastructure assessments, verify when each input layer was created and last updated.
-3. **Ground-truthing is indispensable:** Combining computational GIS workflows with local domain knowledge and ground reconnaissance is essential to identify dataset blind spots.
+The geometric intersection in Map 10 detected only two crossings across the entire study area, with **zero stream crossings west of Whittier Drive**. In reality, hundreds of students, faculty, and community members ride bicycles and walk across Devereux Creek along the North Campus Open Space trail system every day. 
+
+This omission is explained by three distinct spatial data breakdowns:
+
+### 1. Temporal Epoch Mismatch (The Primary Factor)
+* **The Golf Course Era:** Prior to 2017, the 136-acre site west of Whittier Drive was the privately operated, 9-hole Ocean Meadows Golf Course (built in the 1960s by filling in the upper arms of Devereux Slough). 
+* **The Restoration Project:** The land was acquired through community fundraising and donor support led by The Trust for Public Land, and gifted to UCSB's Cheadle Center for Biodiversity and Ecological Restoration (CCBER) in 2013. Groundbreaking for the ecological restoration began in **October 2017**.
+* **Trail Construction Timeline:** Excavation of the restored saltmarsh channels, trail grading, boardwalk assembly, and construction of the primary timber pedestrian/bicycle bridge across Devereux Creek occurred between **2018 and 2021**. The public trail network officially opened in **2020–2022**.
+* **The Temporal Gap:** The campus GIS dataset (`bikelanescollapsedv8.shp`) is frozen at a **2016–2017 epoch**. It is chronologically impossible for a 2016 dataset to represent infrastructure that was designed and constructed years later.
+
+### 2. Institutional & Jurisdictional Silos
+* Campus facilities databases (such as the UCSB Interactive Campus Map) are maintained by institutional facilities managers whose primary operational mandate covers Main Campus, Storke Campus, and student housing complexes.
+* NCOS sits along the western perimeter interfacing UCSB land with the City of Goleta, Santa Barbara County, and the UC Natural Reserve System (Coal Oil Point Reserve). 
+* Ecological preserve trails are maintained and monitored by CCBER in partnership with ecological conservancies. Because open space trails do not fall under core campus pavement maintenance contracts, new trail alignments are rarely backported into traditional campus facilities transit geodatabases.
+
+### 3. Classification & Attribute Filtering
+* In municipal and transportation GIS, networks frequently enforce strict functional classification attributes (e.g., Caltrans Class I paved bike paths vs. Class II striped on-street lanes).
+* The NCOS trail is a permeable, decomposed granite multi-use trail with timber footbridges. In institutional asset registries, unpaved multi-use paths are often classified as "pedestrian footpaths" or "recreational trails" rather than "bike paths", meaning spatial queries filtering for bicycle facilities systematically omit them even though cycling is permitted.
+
+---
+
+## How the Modern NCOS Trail Data Was Derived
+
+To enable the comparison in Map 10.5, we extracted the modern trail geometry using authoritative public references:
+
+1. **Source Alignment:** Master plan vectors from the [UCSB CCBER NCOS Public Access & Trail Map](https://www.ccber.ucsb.edu/ncos).
+2. **Orthorectified Ground-Truthing:** Alignments were verified and georeferenced against CIRGIS 2020 1-foot orthophotography (`source_data/cirgis_1ft/w_campus_1ft.tif`), pinpointing the exact coordinates of the primary timber footbridge spanning Devereux Creek at:
+   $$\text{Latitude: } 34.4204^\circ\text{ N}, \quad \text{Longitude: } 119.8770^\circ\text{ W}$$
+3. **Cross-Validation with OpenStreetMap:** Line geometries cross-checked against OpenStreetMap features tagged with `highway=path`, `bicycle=yes`, and `foot=yes`.
+4. **Exported Canonical Dataset:** Serialized into `source_data/ncos_trails/ncos_multiuse_trails.geojson` with complete attribute schemas.
+
+---
+
+## Quantitative Comparison: Topological Analysis
+
+Running `terra::intersect()` across both epochs illustrates the stark difference:
+
+```r
+# Legacy 2016 ICM Dataset:
+legacy_crossings <- terra::intersect(streams_ncos, bike_paths_ncos)
+# -> 0 crossings detected in NCOS
+
+# Modern 2020 CCBER Dataset:
+modern_crossings <- terra::intersect(streams_ncos, ncos_trails)
+# -> 2 crossings detected (Main Devereux Creek Bridge & North Marsh Crossing)
+```
+
+---
+
+## Key Lessons for Geospatial Analysts
+
+1. **Topological queries inherit source omissions:** An algorithm cannot detect relationships for features that do not exist in the source geometry. A script can run with zero syntax errors while producing fundamentally misleading real-world conclusions.
+2. **Audit metadata and temporal currency:** Always verify the epoch and creation date of all vector inputs before performing network connectivity or infrastructure assessments.
+3. **Domain knowledge & ground-truthing are non-negotiable:** Computational spatial science requires field knowledge to catch blind spots that code alone cannot see.
 
 ---
 

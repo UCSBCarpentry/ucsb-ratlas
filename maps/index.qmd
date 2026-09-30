@@ -22,7 +22,7 @@ The atlas consists of 12 planned plates and analytical workflows covering raster
 | [**Map 9**](map_09.qmd) | Vernal Pools (DEM) | Landscape depression analysis using elevation neighbors | In Design |
 | [**Map 10**](map_10.qmd) | Bike Paths & Creeks | Vector intersection analysis (`terra::intersect`) of trails and waterways | Complete |
 | [**Map 10.5**](map_10_5.qmd) | Missing NCOS Trail | Data provenance analysis of post-2018 NCOS trail & bridge omission | Complete |
-| [**Map 11**](map_11.qmd) | Dibblee Geologic Map | Historic quadrangle raster rectification, mosaicking, and AOI cropping | Complete |
+| [**Map 11**](map_11.qmd) | Spliced Dibblee Geology | Splicing adjacent sheets (Dos Pueblos Canyon & Goleta) across the campus AOI | Complete |
 | [**Map 12**](map_12.qmd) | 12-Month NDVI Stack | Multi-temporal raster stack, NDVI calculation, vegetation phenology curve | Complete |
 
 ---

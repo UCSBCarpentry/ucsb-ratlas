@@ -44,8 +44,10 @@ Combined full-page layout:
 ### Map 10.5: Data Provenance & The Missing NCOS Trail
 ![Map 10.5: Missing NCOS Trail](final_output/map_10_5.png){fig-alt="Map 10.5 Missing NCOS Trail" width="90%"}
 
-### Map 11: Dibblee Geologic Map
-![Map 11: Dibblee Geology of Greater Campus AOI](final_output/map_11.png){fig-alt="Map 11 Dibblee Map" width="90%"}
+### Map 11: Spliced Dibblee Geologic Map
+![Map 11: Diagnostic Full Extent of Both Sheets](final_output/map11_both_tiffs_full_extent_aoi.png){fig-alt="Both Dibblee Sheets Full Extent" width="90%"}
+
+![Map 11: Spliced Campus Geology](final_output/map_11.png){fig-alt="Map 11 Spliced Dibblee Map" width="90%"}
 
 ### Map 12: 12-Month NDVI Phenology Stack
 ![Map 12: Monthly NDVI series](final_output/map_12.png){fig-alt="Map 12 NDVI Stack" width="90%"}
