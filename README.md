@@ -8,18 +8,24 @@ editor_options:
 
 ### A geospatial R example atlas of the UCSB campus
 
-A repo that uses local UCSB examples applied to all of the steps of the
-Carpentries' Intro to Raster and Vector Data workshop.
+This atlas started as an effort to mimic all of the steps of the
+Carpentries' Intro to Raster and Vector Data workshop using data local to UCSB.
 
-Scripts run parallel to the episodes (ep_01.r ep_02.r ... ep_13.r) and
-create maps 'suitable for publication' (map01.r, map02.r, ... map12.r)
+In the years hence, that lesson got stagnant, and Dutch Bicycle Carpentry was under
+a lot more active development.
+
+And then AI happened. 
+
+Now this is an atlas heavily edited by Gemini. 
+
+One set of scripts runs parallel to the old Geospatial Data Carpentry episodes (ep_01.r ep_02.r ... ep_13.r) . Those episode scripts were backwards designed from maps that we were calling  'suitable for publication' (map01.r, map02.r, ... map12.r)
 as laid out in Maps 1 thru 12 below.
 
-The goals are to produce nice atlas pages of campus that use all of the
-techniques covered in the Intro to GeoSpatial R Carpentry lesson.
+The goals were to produce nice atlas pages of campus that use all of the
+techniques covered in the Intro to GeoSpatial R Carpentry lesson. Now it's a lot more free-form
 
-We have created a [Data Dictionary](datadictionary.md) to help us keep
-track of object names and files.
+We created a [Data Dictionary](datadictionary.md) to help us keep
+track of object names and files. Gemini still needs to update that.
 
 ## Getting Started
 
