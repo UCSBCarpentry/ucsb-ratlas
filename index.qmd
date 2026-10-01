@@ -22,7 +22,7 @@ Explore our 12 atlas maps and spatial analyses:
 
 [![](final_output/map_01.png)](maps/map_01.qmd)
 
-A wide view of the campus featuring bathymetry, topography, hillshade, bike paths, buildings, and lagoon habitats.
+A wide view of campus including NCOS.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
@@ -30,7 +30,8 @@ A wide view of the campus featuring bathymetry, topography, hillshade, bike path
 
 [![](final_output/map_02.png)](maps/map_02.qmd)
 
-A stylized thematic map visualizing campus tree species and heights alongside water features and bikeways.
+A stylized thematic map visualizing campus tree and their heights alongside water features and bikeways.
+Needs NCOS bike paths in gray, same weight as current campus bike paths
 :::
 
 ::: {.g-col-12 .g-col-md-4}
@@ -39,6 +40,7 @@ A stylized thematic map visualizing campus tree species and heights alongside wa
 [![](final_output/map_03.png)](maps/map_03.qmd)
 
 Regional locator inset showing elevation across the Western United States.
+Subtitle needs to be shorter
 :::
 
 ::: {.g-col-12 .g-col-md-4}
@@ -47,6 +49,7 @@ Regional locator inset showing elevation across the Western United States.
 [![](final_output/map_04.png)](maps/map_04.qmd)
 
 Sub-regional locator map focusing on the Southern California Bight, Channel Islands, and campus extent.
+Subtitle needs to be shorter
 :::
 
 ::: {.g-col-12 .g-col-md-4}
@@ -55,6 +58,7 @@ Sub-regional locator map focusing on the Southern California Bight, Channel Isla
 [![](final_output/map_05.png)](maps/map_05.qmd)
 
 Detailed locator view of the greater campus area showing topography, bathymetry, and hillshading.
+Subtitle needs to be taken off. Rasters need adjusting. Add buildings and bike paths.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
@@ -62,11 +66,11 @@ Detailed locator view of the greater campus area showing topography, bathymetry,
 
 [![](final_output/map_06.png)](maps/map_06.qmd)
 
-Wide base map providing context for UCSB, Isla Vista, and surrounding coastal environments.
+Should be changed to be just the main campus, using the same viz as map 1
 :::
 
 ::: {.g-col-12 .g-col-md-6}
-### [Map 7: Atlas Page Layout](maps/map_07.qmd)
+### [Map 7: Zoom in foursome](maps/map_07.qmd)
 
 [![](final_output/map_07.png)](maps/map_07.qmd)
 
@@ -79,6 +83,7 @@ Composite multi-inset atlas plate combining Maps 3, 4, 5, and 6 assembled using 
 [![](final_output/map_08.png)](maps/map_08.qmd)
 
 PlanetScope multi-spectral satellite imagery comparing campus across seasons.
+Change titles on final plate
 :::
 
 ::: {.g-col-12 .g-col-md-6}
