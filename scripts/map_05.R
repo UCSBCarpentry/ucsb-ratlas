@@ -148,48 +148,43 @@ ggsave("images/map5.5.png", width = 4, height = 3, plot = zoom_3_plot, bg = "whi
 
 
 
-# zoom 3 needs water, 
-# add in topo_batho
-campus_bathotopo <- rast("output_data/campus_bathotopo.tif")
-campus_bathotopo_df <- as.data.frame(campus_bathotopo, xy=TRUE)
+# zoom 3 needs water, bathymetry raster, buildings and bike paths
+campus_bath <- rast("output_data/campus_bath_epsg2874.tif")
+campus_bath_df <- as.data.frame(campus_bath, xy=TRUE) %>%
+  rename(bathymetry = Bathymetry_2m_OffshoreCoalOilPoint)
 
+# vector layers: buildings and bike paths
+buildings <- st_read("source_data/campus_buildings/Campus_Buildings.shp")
+iv_buildings <- st_read("source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp")
+bikeways <- st_read("source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp")
+ncos_trails <- st_read("source_data/ncos_trails/ncos_multiuse_trails.geojson")
 
-# there's an overlay problem here.
+camp_crs <- crs(campus_DEM)
+buildings <- st_transform(buildings, camp_crs)
+iv_buildings <- st_transform(iv_buildings, camp_crs)
+bikeways <- st_transform(bikeways, camp_crs)
+ncos_trails <- st_transform(ncos_trails, camp_crs)
 
-
-
-
-# now add campus_bathotopo_df to the ggplot:
+# add bathymetry, hillshade, buildings and bike paths to the ggplot:
 zoom_3_plot <- ggplot() +
-  geom_raster(data = campus_bathotopo_df, aes(x=x, y=y)) +
   geom_raster(data = zoom_3_DEM_df,
               aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
-  scale_fill_viridis_c(guide = "none") +
+  geom_raster(data = campus_bath_df,
+              aes(x=x, y=y, fill=bathymetry)) +
+  scale_fill_viridis_c(na.value = "NA", guide = "none") +
   geom_raster(data = zoom_3_hillshade_df,
               aes(x=x, y=y, alpha=hillshade)) +
-  scale_alpha(range = c(0.05, 0.5), guide="none") +
+  scale_alpha(range = c(0.05, 0.4), guide="none") +
+  geom_sf(data = iv_buildings, color = alpha("gray70", 0.2), fill = NA, linewidth = 0.15) +
+  geom_sf(data = buildings, color = "pink", fill = alpha("pink", 0.4), linewidth = 0.2) +
+  geom_sf(data = bikeways, color = "#00abff", linewidth = 0.4) +
+  geom_sf(data = ncos_trails, color = "#00abff", linewidth = 0.4) +
   my_theme +
-  coord_sf() + 
-  ggtitle("UCSB Surroundings", subtitle = "on unceded land of the Chumash")
+  coord_sf(expand = FALSE) + 
+  ggtitle("UCSB Surroundings")
 
 zoom_3_plot
 ggsave("images/map5.6.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
-
-
-zoom_3_plot <- ggplot() +
-  geom_raster(data = campus_bathotopo_df, aes(x=x, y=y)) +
-  geom_raster(data = zoom_3_DEM_df,
-              aes(x=x, y=y, fill=greatercampusDEM_1_1)) +
-  scale_fill_viridis_c(guide = "none") +
-  geom_raster(data = zoom_3_hillshade_df,
-              aes(x=x, y=y, alpha=hillshade)) +
-  scale_alpha(range = c(0.05, 0.5), guide="none") +
-  my_theme +
-  coord_sf() + 
-  ggtitle("UCSB Surroundings", subtitle = "on unceded land of the Chumash")
-
-
-zoom_3_plot
 
 ggsave("images/map5.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
 ggsave("final_output/map_05.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")

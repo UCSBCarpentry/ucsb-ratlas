@@ -48,7 +48,7 @@ website:
           href: maps/map_04.qmd
         - text: "Map 5: Extended Campus"
           href: maps/map_05.qmd
-        - text: "Map 6: UCSB & Environs"
+        - text: "Map 6: UCSB Main Campus"
           href: maps/map_06.qmd
         - text: "Map 7: Atlas Page Layout"
           href: maps/map_07.qmd

@@ -47,6 +47,8 @@ streams <- vect("source_data/california_streams/California_Streams.shp")
 coastline <- vect("source_data/pacific_ocean-shapefile/3853-s3_2002_s3_reg_pacific_ocean_lines.shp")
 # IV buildings
 iv_buildings <- st_read("source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp")
+# NCOS multi-use trails
+ncos_trails <- vect("source_data/ncos_trails/ncos_multiuse_trails.geojson")
 
 # Let's take a quick first look at our data and find out their projections
 plot(trees)
@@ -79,6 +81,7 @@ crs(coastline, describe = TRUE)
 # get the crs from that SpatVector
 bikes_proj <- project(bikes, trees)
 coastline_proj <- project(coastline, trees)
+ncos_proj <- project(ncos_trails, trees)
 
 
 ## Challenge: Do we need to reproject the streams data?
@@ -142,6 +145,7 @@ new_ext <- ext(
 bikes_crop <- crop(bikes_proj, new_ext)
 streams_crop <- crop(streams, new_ext)
 coastline_crop <- crop(coastline_proj, new_ext)
+ncos_crop <- crop(ncos_proj, new_ext)
 iv_crop_poly <- st_as_sf(as.polygons(new_ext))
 # iv_buildings <- st_crop(iv_buildings, iv_crop_poly)
 
@@ -266,6 +270,7 @@ biked_df
 # individual LINESTRINGs. For that, we can use the `disagg` terra function, which
 # separates multi-objects into single objects
 bikes_lines <- disagg(bikes_crop)
+ncos_lines <- disagg(ncos_crop)
 
 # Trying again the same plot to check the differences
 ggplot() +
@@ -375,12 +380,14 @@ map2_gg5 <- ggplot() +
   new_scale_color() +
   geom_spatvector(data = streams_crop, aes(colour = "Streams"), , linewidth = 2, alpha = 0.6) +
   geom_spatvector(data = bikes_lines, aes(colour = "Bike Paths"), linewidth = 1) +
+  geom_spatvector(data = ncos_lines, aes(colour = "NCOS Bike Paths"), linewidth = 1) +
   geom_spatvector(data = coastline_crop, aes(colour = "Ocean"), linewidth = 1, fill = "dodgerblue") +
   geom_sf(data = iv_buildings, color = alpha("gray60", 0.2), fill = NA) +
   scale_colour_manual(
     name = "Legend",
     values = c(
       "Bike Paths" = "black",
+      "NCOS Bike Paths" = "gray50",
       "Streams" = "cadetblue3",
       "Ocean" = "dodgerblue"
     )
@@ -456,12 +463,14 @@ map2_gg6 <- ggplot() +
   new_scale_color() + # Reset color scale for the layers below
   geom_spatvector(data = streams_crop, aes(colour = "Streams"), linewidth = 2, alpha = 0.6) +
   geom_spatvector(data = bikes_lines, aes(colour = "Bike Paths"), linewidth = 1) +
+  geom_spatvector(data = ncos_lines, aes(colour = "NCOS Bike Paths"), linewidth = 1) +
   geom_spatvector(data = coastline_crop, aes(colour = "Ocean"), linewidth = 1, fill = "dodgerblue") +
   geom_sf(data = iv_buildings, color = alpha("gray60", 0.2), fill = NA) +
   scale_colour_manual(
     name = "Legend",
     values = c(
       "Bike Paths" = "black",
+      "NCOS Bike Paths" = "gray50",
       "Streams" = "cadetblue3",
       "Ocean" = "dodgerblue"
     ),

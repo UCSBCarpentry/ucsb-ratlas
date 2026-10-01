@@ -247,6 +247,7 @@ zoom_1_final_plot <- ggplot() +
   scale_y_continuous(breaks = seq(32, 44, by = 4), labels = function(y) paste0(y, "°N")) +
   theme(
     plot.title = element_text(size = 9.5, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 8, hjust = 0.5),
     axis.title = element_blank(),
     axis.text = element_text(size = 8, color = "gray20"),
     axis.ticks = element_line(color = "gray40", linewidth = 0.3),
@@ -256,7 +257,10 @@ zoom_1_final_plot <- ggplot() +
     panel.background = element_blank()
   ) +
   coord_sf(expand = FALSE) +
-  ggtitle("UCSB is located on the Pacific coast of California.")
+  labs(
+    title = "Pacific Coast of California",
+    subtitle = "Western United States"
+  )
 
 zoom_1_final_plot
 

@@ -30,8 +30,7 @@ A wide view of campus including NCOS.
 
 [![](final_output/map_02.png)](maps/map_02.qmd)
 
-A stylized thematic map visualizing campus tree and their heights alongside water features and bikeways.
-Needs NCOS bike paths in gray, same weight as current campus bike paths
+A stylized thematic map visualizing campus tree types alongside water features, bikeways, and NCOS trails.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
@@ -39,8 +38,7 @@ Needs NCOS bike paths in gray, same weight as current campus bike paths
 
 [![](final_output/map_03.png)](maps/map_03.qmd)
 
-Regional locator inset showing elevation across the Western United States.
-Subtitle needs to be shorter
+Regional locator inset of the Western US.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
@@ -48,8 +46,7 @@ Subtitle needs to be shorter
 
 [![](final_output/map_04.png)](maps/map_04.qmd)
 
-Sub-regional locator map focusing on the Southern California Bight, Channel Islands, and campus extent.
-Subtitle needs to be shorter
+Regional locator for the Southern California Bight.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
@@ -57,16 +54,15 @@ Subtitle needs to be shorter
 
 [![](final_output/map_05.png)](maps/map_05.qmd)
 
-Detailed locator view of the greater campus area showing topography, bathymetry, and hillshading.
-Subtitle needs to be taken off. Rasters need adjusting. Add buildings and bike paths.
+Detailed locator view of the greater campus area showing topography, bathymetry, buildings, and bikeways.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
-### [Map 6: UCSB & Environs](maps/map_06.qmd)
+### [Map 6: UCSB Main Campus](maps/map_06.qmd)
 
 [![](final_output/map_06.png)](maps/map_06.qmd)
 
-Should be changed to be just the main campus, using the same viz as map 1
+Detailed base map focused on the main campus, using the same visualization style as Map 1.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
@@ -82,8 +78,7 @@ Composite multi-inset atlas plate combining Maps 3, 4, 5, and 6 assembled using 
 
 [![](final_output/map_08.png)](maps/map_08.qmd)
 
-PlanetScope multi-spectral satellite imagery comparing campus across seasons.
-Change titles on final plate
+PlanetScope multi-spectral satellite imagery comparing campus across seasons and spectral band composites.
 :::
 
 ::: {.g-col-12 .g-col-md-6}

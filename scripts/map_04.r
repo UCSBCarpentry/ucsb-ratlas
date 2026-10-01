@@ -418,7 +418,7 @@ zoom_2_final_plot <- ggplot() +
   ) +
   coord_sf(expand = FALSE) +
   ggtitle("On the Bight of California",
-    subtitle = "Point Conception to the Mexican Border"
+    subtitle = "Point Conception to Mexico"
   )
 
 zoom_2_final_plot

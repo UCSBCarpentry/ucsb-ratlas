@@ -17,6 +17,7 @@ subtitle: "Stylized thematic plate of campus trees, hydrology, and bikeways"
   * Campus Tree Inventory (`source_data/Treekeeper_012116/DTK_012116.shp`)
   * Stream and lagoon network (`source_data/california_streams/California_Streams.shp`)
   * Bike path centerlines (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
+  * NCOS Multi-use Trails (`source_data/ncos_trails/ncos_multiuse_trails.geojson`)
   * Coastline boundary vector (`source_data/pacific_ocean-shapefile/3853-s3_2002_s3_reg_pacific_ocean_lines.shp`)
   * Isla Vista building footprints (`source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp`)
 * **Cartographic Decisions:**

@@ -16,7 +16,7 @@ The atlas consists of 12 planned plates and analytical workflows covering raster
 | [**Map 3**](map_03.qmd) | Western US Locator | Continental elevation model, whole degree graticule, populated places layer | Complete |
 | [**Map 4**](map_04.qmd) | The Bight of California | Sub-regional Southern California Bight, ocean hillshade, campus locator box | Complete |
 | [**Map 5**](map_05.qmd) | Extended Campus | Greater campus DEM, batho-topo, hillshade, clean legendless presentation | Complete |
-| [**Map 6**](map_06.qmd) | UCSB & Environs | Wide base map linking regional geometry to campus boundaries | Complete |
+| [**Map 6**](map_06.qmd) | UCSB Main Campus | Focused base map of main campus using Map 1 visualization | Complete |
 | [**Map 7**](map_07.qmd) | Atlas Page Layout | Multi-panel layout combining Maps 3, 4, 5 & 6 using `magick` | Complete |
 | [**Map 8**](map_08.qmd) | Satellite Remote Sensing | PlanetScope 4-band / 8-band multispectral seasonal imagery | Complete |
 | [**Map 9**](map_09.qmd) | Vernal Pools (DEM) | Landscape depression analysis using elevation neighbors | In Design |

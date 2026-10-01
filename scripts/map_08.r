@@ -95,52 +95,52 @@ par(mfrow = c(2,2))
 #  natural color
 natural <- plotRGB(planet_scene, stretch = "hist",
         r = 4, g = 3, b = 2,
-        main = "natural color")
+        main = "Natural Color (Bands 4, 3, 2)")
 
 
 #  false-color IR
 false_color_ir <- plotRGB(planet_scene, stretch = "hist",
         r = 8, g = 3, b = 2,
-        main = "false color infrared")
+        main = "False-Color Infrared (Bands 8, 3, 2)")
 
 #  yellow = green
 yellow_green <- plotRGB(planet_scene, stretch = "hist",
         r = 7, g = 5, b = 1,
-        main = "yellow = green")
+        main = "Red Edge & Yellow (Bands 7, 5, 1)")
 
 #  pretty 7,4,1
 pretty_741 <- plotRGB(planet_scene, stretch = "hist",
         r = 7, g = 4, b = 1,
-        main = "pretty")
+        main = "Coastal & Aquatic (Bands 7, 4, 1)")
 
 
 
 # save the image
 # i realize this is repetitive 
 # open device
-png("final_output/map_08.png")
-par(mfrow = c(2,2))
+png("final_output/map_08.png", width = 1600, height = 1200, res = 150)
+par(mfrow = c(2,2), mar = c(2, 2, 3, 1))
 
 #  natural color
 natural <- plotRGB(planet_scene, stretch = "hist",
                    r = 4, g = 3, b = 2,
-                   main = "natural color")
+                   main = "Natural Color (Bands 4, 3, 2)")
 
 
 #  false-color IR
 false_color_ir <- plotRGB(planet_scene, stretch = "hist",
                           r = 8, g = 3, b = 2,
-                          main = "false color infrared")
+                          main = "False-Color Infrared (Bands 8, 3, 2)")
 
 #  yellow = green
 yellow_green <- plotRGB(planet_scene, stretch = "hist",
                         r = 7, g = 5, b = 1,
-                        main = "yellow = green")
+                        main = "Red Edge & Yellow (Bands 7, 5, 1)")
 
-#  pretty 7,4,1
+#  coastal/aquatic 7,4,1
 pretty_741 <- plotRGB(planet_scene, stretch = "hist",
                       r = 7, g = 4, b = 1,
-                      main = "pretty")
+                      main = "Coastal & Aquatic (Bands 7, 4, 1)")
 
 
 

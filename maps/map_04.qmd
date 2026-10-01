@@ -1,6 +1,6 @@
 ---
 title: "Map 4: The Bight of California"
-subtitle: "Sub-regional locator panel showing the Southern California Bight and Channel Islands"
+subtitle: "Regional locator for the Southern California Bight"
 ---
 
 ## Rendered Map Plate
@@ -62,7 +62,7 @@ To retain topographic visibility beneath urban centers:
 1. Populated place fills are made transparent (`fill = NA, color = "#EEEEEE40"`), with thin outlines (`linewidth = 0.25`).
 2. The greater campus bounding box (`zoom_3_extent`) is reprojected and traced with a vivid red rectangle (`linewidth = 1.2`).
 3. Axis coordinates and tick marks are eliminated (`axis.text = element_blank()`, `axis.ticks = element_blank()`).
-4. An informative subtitle anchors the geographic boundaries: *"Point Conception to the Mexican Border"*.
+4. An informative subtitle anchors the geographic boundaries: *"Point Conception to Mexico"*.
 
 ```r
 # Finalizing transparent vectors and red zoom 3 extent
@@ -75,7 +75,7 @@ zoom_2_final_plot <- ggplot() +
   geom_spatvector(data = zoom_3_extent_proj, color = "red", fill = NA, linewidth = 1.2) +
   theme_minimal() +
   coord_sf(expand = FALSE) +
-  ggtitle("On the Bight of California", subtitle = "Point Conception to the Mexican Border")
+  ggtitle("On the Bight of California", subtitle = "Point Conception to Mexico")
 ```
 
 ![Final Zoom 2 Output Panel](../images/map_04.png){fig-alt="Map 4 Final Inset" width="80%"}

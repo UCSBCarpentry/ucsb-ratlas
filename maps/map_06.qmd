@@ -1,27 +1,27 @@
 ---
-title: "Map 6: UCSB & Environs"
-subtitle: "Wide base map providing local context for the campus and surrounding coastal community"
+title: "Map 6: UCSB Main Campus"
+subtitle: "Detailed base map of the UCSB main campus using the visualization style of Map 1"
 ---
 
 ## Rendered Map Plate
 
-![Map 6: UCSB campus and coastal environs](../final_output/map_06.png){fig-alt="Map 6 UCSB & Environs" width="100%"}
+![Map 6: UCSB main campus base map](../final_output/map_06.png){fig-alt="Map 6 UCSB Main Campus" width="100%"}
 
 ---
 
 ## Technical Summary
 
-* **Objective:** Provide a broad, high-detail coastal base map of UCSB, Isla Vista, and the Pacific coastline, designed to sit as the bottom hero panel of the composite Map 7 atlas plate.
+* **Objective:** Provide a focused, high-detail coastal base map of UCSB's main campus, designed using the visualization style of Map 1 and optimized to sit as the bottom hero panel of the composite Map 7 atlas plate.
 * **Key Packages:** `terra`, `sf`, `ggplot2`, `dplyr`
 * **Data Sources:**
-  * Merged topo-bathy raster (`output_data/campus_bathotopo.tif`)
   * Campus DEM (`source_data/campus_DEM.tif`)
-  * Campus bathymetry (`source_data/SB_bath.tif`)
+  * Campus bathymetry (`output_data/campus_bath_epsg2874.tif`)
   * Campus hillshade (`source_data/campus_hillshade.tif`)
   * Campus buildings footprint (`source_data/campus_buildings/Campus_Buildings.shp`)
   * Isla Vista building structures (`source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp`)
   * Bike path centerlines (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
   * NCOS Shorebird Foraging Habitat polygons (`source_data/NCOS_Shorebird_Foraging_Habitat/`)
+  * NCOS Multi-use Trails (`source_data/ncos_trails/ncos_multiuse_trails.geojson`)
 * **Aspect Ratio:** 12 inches wide x 4 inches tall (3600 x 1200 px at 300 ppi) matching the Map 7 row 2 hero slot.
 
 ---
@@ -59,34 +59,52 @@ ggplot() +
   coord_sf()
 ```
 
-### Step 3: Cropping Rasters to Batho-Topo Extents & Panoramic Layout
+### Step 3: Cropping Rasters to Main Campus Extents & Map 1 Visualization
 
-The digital elevation model, bathymetry, and hillshade rasters are tightly cropped to the exact footprint of `campus_bathotopo.tif`:
+The digital elevation model, bathymetry, and hillshade rasters are tightly cropped to the main campus bounding extent:
 
 ```r
-# Crop all 3 raster inputs to the batho-topo bounding extent
-campus_bathotopo_extent <- ext(campus_bathotopo)
-campus_DEM_crop <- crop(campus_DEM, campus_bathotopo_extent)
-campus_bath_crop <- crop(campus_bath, campus_bathotopo_extent)
-campus_hillshade_crop <- crop(campus_hillshade, campus_bathotopo_extent)
+# Crop all 3 raster inputs to the main campus bounding extent
+main_campus_extent <- ext(5998500, 6008500, 1973500, 1982500)
+campus_DEM_crop <- crop(campus_DEM, main_campus_extent)
+campus_bath_crop <- crop(campus_bath, main_campus_extent)
+campus_hillshade_crop <- crop(campus_hillshade, main_campus_extent)
 ```
 
-Finally, the raster surfaces and vector layers are composited into a 3:1 aspect ratio panoramic layout (12 inches wide by 4 inches tall) optimized for stacking beneath the Map 7 row 1 tryptic.
+Finally, the raster surfaces and vector layers are composited into a panoramic layout matching the visualization style of Map 1:
 
 ```r
-# Render panoramic coastal base map
-ggplot() +
+# Render main campus base map with Map 1 styling
+final_map6 <- ggplot() +
   geom_raster(data = campus_DEM_df, aes(x = x, y = y, fill = elevation)) +
-  geom_sf(data = buildings, color = "hotpink") +
-  geom_sf(data = bikeways, color = "yellow") +
   geom_raster(data = campus_hillshade_df, aes(x = x, y = y, alpha = hillshade), show.legend = FALSE) +
   geom_raster(data = campus_bath_df, aes(x = x, y = y, fill = bathymetry)) +
-  scale_fill_viridis_c(na.value = "NA") +
-  theme(rAtlas_theme) +
-  coord_sf()
+  scale_fill_viridis_c(na.value = "NA", guide = guide_legend("bathymetry / elevation (US ft)")) +
+  scale_alpha(range = c(0.05, 0.4), guide = "none") +
+  geom_sf(data = iv_buildings, color = alpha("light gray", 0.15), fill = NA) +
+  geom_sf(data = buildings, color = "pink", fill = alpha("pink", 0.3)) +
+  geom_sf(data = habitat, color = alpha("darkorchid1", 0.3), fill = alpha("darkorchid1", 0.1)) +
+  geom_sf(data = bikeways, color = "#00abff", linewidth = 0.8) +
+  geom_sf(data = ncos_trails, color = "#00abff", linewidth = 0.8) +
+  coord_sf(
+    xlim = c(main_campus_extent$xmin, main_campus_extent$xmax),
+    ylim = c(main_campus_extent$ymin, main_campus_extent$ymax),
+    expand = FALSE
+  ) +
+  labs(
+    title = "Map 6: UCSB Main Campus",
+    subtitle = "Main campus buildings, environs, bikepaths",
+    caption = "rAtlas Map 6"
+  ) +
+  rAtlas_theme +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 13, hjust = 0.5),
+    legend.position = "bottom"
+  )
 ```
 
-![Intermediate Output: Panoramic base map saved to images/map6.1.png](../images/map6.1.png){fig-alt="Map 6 Panoramic Output" width="100%"}
+![Intermediate Output: Main campus base map saved to images/map6.1.png](../images/map6.1.png){fig-alt="Map 6 Panoramic Output" width="100%"}
 
 ---
 

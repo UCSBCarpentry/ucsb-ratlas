@@ -66,16 +66,16 @@ png("final_output/map_08.png", width = 1200, height = 1200, res = 150)
 par(mfrow = c(2, 2))
 
 # 1. Natural Color
-plotRGB(planet_scene, stretch = "hist", r = 4, g = 3, b = 2, main = "Natural Color (RGB)")
+plotRGB(planet_scene, stretch = "hist", r = 4, g = 3, b = 2, main = "Natural Color (Bands 4, 3, 2)")
 
 # 2. False-Color Infrared (CIR)
-plotRGB(planet_scene, stretch = "hist", r = 8, g = 3, b = 2, main = "False-Color Infrared (CIR)")
+plotRGB(planet_scene, stretch = "hist", r = 8, g = 3, b = 2, main = "False-Color Infrared (Bands 8, 3, 2)")
 
 # 3. Yellow = Green
-plotRGB(planet_scene, stretch = "hist", r = 7, g = 5, b = 1, main = "Yellow = Green")
+plotRGB(planet_scene, stretch = "hist", r = 7, g = 5, b = 1, main = "Red Edge & Yellow (Bands 7, 5, 1)")
 
 # 4. High-Contrast Composite
-plotRGB(planet_scene, stretch = "hist", r = 7, g = 4, b = 1, main = "Pretty (7, 4, 1)")
+plotRGB(planet_scene, stretch = "hist", r = 7, g = 4, b = 1, main = "Coastal & Aquatic (Bands 7, 4, 1)")
 
 dev.off()
 ```

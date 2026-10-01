@@ -416,7 +416,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../maps/map_06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Map 6: UCSB &amp; Environs</span></a>
+ <span class="menu-text">Map 6: UCSB Main Campus</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -575,16 +575,16 @@ window.Quarto = {
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Natural Color</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">4</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Natural Color (RGB)"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">4</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Natural Color (Bands 4, 3, 2)"</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. False-Color Infrared (CIR)</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">8</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"False-Color Infrared (CIR)"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">8</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"False-Color Infrared (Bands 8, 3, 2)"</span>)</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Yellow = Green</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">5</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Yellow = Green"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">5</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Red Edge &amp; Yellow (Bands 7, 5, 1)"</span>)</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. High-Contrast Composite</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Pretty (7, 4, 1)"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Coastal &amp; Aquatic (Bands 7, 4, 1)"</span>)</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="quarto-figure quarto-figure-center">
@@ -879,52 +879,52 @@ window.Quarto = {
 <span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a><span class="co">#  natural color</span></span>
 <span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>natural <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>        <span class="at">r =</span> <span class="dv">4</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>,</span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"natural color"</span>)</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Natural Color (Bands 4, 3, 2)"</span>)</span>
 <span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a><span class="co">#  false-color IR</span></span>
 <span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>false_color_ir <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>        <span class="at">r =</span> <span class="dv">8</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>,</span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"false color infrared"</span>)</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"False-Color Infrared (Bands 8, 3, 2)"</span>)</span>
 <span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a><span class="co">#  yellow = green</span></span>
 <span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>yellow_green <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>        <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">5</span>, <span class="at">b =</span> <span class="dv">1</span>,</span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"yellow = green"</span>)</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Red Edge &amp; Yellow (Bands 7, 5, 1)"</span>)</span>
 <span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a><span class="co">#  pretty 7,4,1</span></span>
 <span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>pretty_741 <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>        <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">1</span>,</span>
-<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"pretty"</span>)</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Coastal &amp; Aquatic (Bands 7, 4, 1)"</span>)</span>
 <span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a><span class="co"># save the image</span></span>
 <span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a><span class="co"># i realize this is repetitive </span></span>
 <span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="co"># open device</span></span>
-<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"final_output/map_08.png"</span>)</span>
-<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"final_output/map_08.png"</span>, <span class="at">width =</span> <span class="dv">1600</span>, <span class="at">height =</span> <span class="dv">1200</span>, <span class="at">res =</span> <span class="dv">150</span>)</span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span>
 <span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a><span class="co">#  natural color</span></span>
 <span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>natural <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>                   <span class="at">r =</span> <span class="dv">4</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>,</span>
-<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>                   <span class="at">main =</span> <span class="st">"natural color"</span>)</span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>                   <span class="at">main =</span> <span class="st">"Natural Color (Bands 4, 3, 2)"</span>)</span>
 <span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a><span class="co">#  false-color IR</span></span>
 <span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>false_color_ir <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>                          <span class="at">r =</span> <span class="dv">8</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>,</span>
-<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>                          <span class="at">main =</span> <span class="st">"false color infrared"</span>)</span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>                          <span class="at">main =</span> <span class="st">"False-Color Infrared (Bands 8, 3, 2)"</span>)</span>
 <span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a><span class="co">#  yellow = green</span></span>
 <span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>yellow_green <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>                        <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">5</span>, <span class="at">b =</span> <span class="dv">1</span>,</span>
-<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>                        <span class="at">main =</span> <span class="st">"yellow = green"</span>)</span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>                        <span class="at">main =</span> <span class="st">"Red Edge &amp; Yellow (Bands 7, 5, 1)"</span>)</span>
 <span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a><span class="co">#  pretty 7,4,1</span></span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a><span class="co">#  coastal/aquatic 7,4,1</span></span>
 <span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>pretty_741 <span class="ot">&lt;-</span> <span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>,</span>
 <span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>                      <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">1</span>,</span>
-<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>                      <span class="at">main =</span> <span class="st">"pretty"</span>)</span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>                      <span class="at">main =</span> <span class="st">"Coastal &amp; Aquatic (Bands 7, 4, 1)"</span>)</span>
 <span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a></span>
@@ -1474,16 +1474,16 @@ window.Quarto = {
 <span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Natural Color</span></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">4</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Natural Color (RGB)"</span>)</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">4</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"Natural Color (Bands 4, 3, 2)"</span>)</span>
 <span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. False-Color Infrared (CIR)</span></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">8</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"False-Color Infrared (CIR)"</span>)</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">8</span>, <span class="at">g =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">"False-Color Infrared (Bands 8, 3, 2)"</span>)</span>
 <span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Yellow = Green</span></span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">5</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Yellow = Green"</span>)</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">5</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Red Edge &amp; Yellow (Bands 7, 5, 1)"</span>)</span>
 <span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. High-Contrast Composite</span></span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Pretty (7, 4, 1)"</span>)</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a><span class="fu">plotRGB</span>(planet_scene, <span class="at">stretch =</span> <span class="st">"hist"</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">g =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Coastal &amp; Aquatic (Bands 7, 4, 1)"</span>)</span>
 <span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
 <span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
