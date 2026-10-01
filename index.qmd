@@ -18,91 +18,104 @@ Explore the 12 atlas maps and spatial analyses:
 :::: {.grid}
 
 ::: {.g-col-12 .g-col-md-6}
+### [Map 1: Campus Overview](maps/map_01.qmd)
+
 [![](final_output/map_01.png)](maps/map_01.qmd)
 
-### [Map 1: Campus Overview](maps/map_01.qmd)
 A wide view of the campus featuring bathymetry, topography, hillshade, bike paths, buildings, and lagoon habitats.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
+### [Map 2: Trees & Water](maps/map_02.qmd)
+
 [![](final_output/map_02.png)](maps/map_02.qmd)
 
-### [Map 2: Trees & Water](maps/map_02.qmd)
 A stylized thematic map visualizing campus tree species and heights alongside water features and bikeways.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+### [Map 3: Western US](maps/map_03.qmd)
+
 [![](final_output/map_03.png)](maps/map_03.qmd)
 
-### [Map 3: Western US](maps/map_03.qmd)
 Regional locator inset showing elevation across the Western United States.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+### [Map 4: The Bight of California](maps/map_04.qmd)
+
 [![](final_output/map_04.png)](maps/map_04.qmd)
 
-### [Map 4: The Bight of California](maps/map_04.qmd)
 Sub-regional locator map focusing on the Southern California Bight, Channel Islands, and campus extent.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+### [Map 5: Extended Campus](maps/map_05.qmd)
+
 [![](final_output/map_05.png)](maps/map_05.qmd)
 
-### [Map 5: Extended Campus](maps/map_05.qmd)
 Detailed locator view of the greater campus area showing topography, bathymetry, and hillshading.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
+### [Map 6: UCSB & Environs](maps/map_06.qmd)
+
 [![](final_output/map_06.png)](maps/map_06.qmd)
 
-### [Map 6: UCSB & Environs](maps/map_06.qmd)
 Wide base map providing context for UCSB, Isla Vista, and surrounding coastal environments.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
+### [Map 7: Atlas Page Layout](maps/map_07.qmd)
+
 [![](final_output/map_07.png)](maps/map_07.qmd)
 
-### [Map 7: Atlas Page Layout](maps/map_07.qmd)
 Composite multi-inset atlas plate combining Maps 3, 4, 5, and 6 assembled using `magick`.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
+### [Map 8: Satellite Remote Sensing](maps/map_08.qmd)
+
 [![](final_output/map_08.png)](maps/map_08.qmd)
 
-### [Map 8: Satellite Remote Sensing](maps/map_08.qmd)
 PlanetScope multi-spectral satellite imagery comparing campus across seasons.
 :::
 
 ::: {.g-col-12 .g-col-md-6}
 ### [Map 9: Vernal Pools Analysis](maps/map_09.qmd)
+
 Topographic depression analysis using DEMs to identify campus vernal pools (*in design*).
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+### [Map 10: Paths & Creeks](maps/map_10.qmd)
+
 [![](final_output/map_10.png)](maps/map_10.qmd)
 
-### [Map 10: Paths & Creeks](maps/map_10.qmd)
 Vector intersection analysis locating where campus bike paths cross local waterways and creeks.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+### [Map 10.5: Data Provenance & NCOS](maps/map_10_5.qmd)
+
 [![](final_output/map_10_5.png)](maps/map_10_5.qmd)
 
-### [Map 10.5: Data Provenance & NCOS](maps/map_10_5.qmd)
 Investigating data blind spots: why the restored NCOS trail and Devereux Creek bridge were missing in the 2016 dataset.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+### [Map 11: Dibblee Geology](maps/map_11.qmd)
+
 [![](final_output/map_11.png)](maps/map_11.qmd)
 
-### [Map 11: Dibblee Geology](maps/map_11.qmd)
 Georeferencing, quadrangle mosaicking, and AOI cropping for the historic Dibblee geologic map.
 :::
 
 ::: {.g-col-12 .g-col-md-4}
+### [Map 12: 12-Month NDVI Stack](maps/map_12.qmd)
+
 [![](final_output/map_12.png)](maps/map_12.qmd)
 
-### [Map 12: 12-Month NDVI Stack](maps/map_12.qmd)
 Time-series raster analysis tracking vegetation phenology over a full calendar year.
 :::
 
