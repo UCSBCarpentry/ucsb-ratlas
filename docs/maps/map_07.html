@@ -443,11 +443,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#rendered-map-plate" id="toc-rendered-map-plate" class="nav-link active" data-scroll-target="#rendered-map-plate">Rendered Map Plate</a></li>
-  <li><a href="#technical-summary" id="toc-technical-summary" class="nav-link" data-scroll-target="#technical-summary">Technical Summary</a>
+  <li><a href="#technical-summary" id="toc-technical-summary" class="nav-link" data-scroll-target="#technical-summary">Technical Summary</a></li>
+  <li><a href="#step-by-step-cartographic-workflow-intermediate-outputs" id="toc-step-by-step-cartographic-workflow-intermediate-outputs" class="nav-link" data-scroll-target="#step-by-step-cartographic-workflow-intermediate-outputs">Step-by-Step Cartographic Workflow &amp; Intermediate Outputs</a>
   <ul class="collapse">
-  <li><a href="#inset-sequence-row-1-tryptic" id="toc-inset-sequence-row-1-tryptic" class="nav-link" data-scroll-target="#inset-sequence-row-1-tryptic">Inset Sequence (Row 1 Tryptic)</a></li>
+  <li><a href="#step-1-ingesting-component-map-plates" id="toc-step-1-ingesting-component-map-plates" class="nav-link" data-scroll-target="#step-1-ingesting-component-map-plates">Step 1: Ingesting Component Map Plates</a></li>
+  <li><a href="#step-2-assembling-row-1-inset-tryptic" id="toc-step-2-assembling-row-1-inset-tryptic" class="nav-link" data-scroll-target="#step-2-assembling-row-1-inset-tryptic">Step 2: Assembling Row 1 Inset Tryptic</a></li>
+  <li><a href="#step-3-vertical-stacking-sheet-annotation" id="toc-step-3-vertical-stacking-sheet-annotation" class="nav-link" data-scroll-target="#step-3-vertical-stacking-sheet-annotation">Step 3: Vertical Stacking &amp; Sheet Annotation</a></li>
   </ul></li>
-  <li><a href="#r-script-scriptsmap_07.r" id="toc-r-script-scriptsmap_07.r" class="nav-link" data-scroll-target="#r-script-scriptsmap_07.r">R Script (<code>scripts/map_07.r</code>)</a></li>
+  <li><a href="#full-r-script-scriptsmap_07.r" id="toc-full-r-script-scriptsmap_07.r" class="nav-link" data-scroll-target="#full-r-script-scriptsmap_07.r">Full R Script (<code>scripts/map_07.r</code>)</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UCSBCarpentry/ucsb-ratlas/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -488,103 +491,173 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="technical-summary" class="level2">
 <h2 class="anchored" data-anchor-id="technical-summary">Technical Summary</h2>
 <ul>
-<li><strong>Objective:</strong> Synthesize individual cartographic components into a publication-ready atlas sheet. The top row forms a three-tier geographic zoom sequence (Western US → California → Bight of California), anchored below by the campus base map (Map 6).</li>
+<li><strong>Objective:</strong> Synthesize individual cartographic components into a publication-ready atlas sheet. The top row forms a three-tier geographic zoom sequence (Western US → Bight of California → Extended Campus), anchored below by the panoramic campus base map (Map 6).</li>
 <li><strong>Key Packages:</strong> <code>magick</code></li>
 <li><strong>Inputs:</strong>
 <ul>
-<li><code>images/map3.png</code> (900 x 1200 px)</li>
-<li><code>images/map4.png</code> (900 x 1200 px)</li>
-<li><code>images/map5.png</code> (1200 x 900 px)</li>
-<li><code>images/map6.1.png</code> (3600 x 1200 px)</li>
+<li><code>images/map3.png</code> (900 x 1200 px, 3x4 in portrait)</li>
+<li><code>images/map4.png</code> (900 x 1200 px, 3x4 in portrait)</li>
+<li><code>images/map5.png</code> (1200 x 900 px, 4x3 in landscape)</li>
+<li><code>images/map6.1.png</code> (3600 x 1200 px, 12x4 in panorama)</li>
 </ul></li>
 <li><strong>Outputs:</strong>
 <ul>
-<li>Top tryptic row: <code>final_output/map7_row_1.png</code></li>
-<li>Complete atlas sheet: <code>final_output/map_07.png</code></li>
+<li>Top tryptic row: <code>final_output/map7_row_1.png</code> (4800 x 1200 px)</li>
+<li>Complete atlas sheet: <code>final_output/map_07.png</code> (4800 x 2400 px)</li>
 </ul></li>
 </ul>
 <hr>
-<section id="inset-sequence-row-1-tryptic" class="level3">
-<h3 class="anchored" data-anchor-id="inset-sequence-row-1-tryptic">Inset Sequence (Row 1 Tryptic)</h3>
+</section>
+<section id="step-by-step-cartographic-workflow-intermediate-outputs" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step-cartographic-workflow-intermediate-outputs">Step-by-Step Cartographic Workflow &amp; Intermediate Outputs</h2>
+<p>The script <code>scripts/map_07.r</code> demonstrates how programmatic image montage workflows in <code>magick</code> can assemble multi-scale atlas plates that exceed standard <code>ggplot</code> facet capabilities.</p>
+<section id="step-1-ingesting-component-map-plates" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-ingesting-component-map-plates">Step 1: Ingesting Component Map Plates</h3>
+<p>Four separately compiled graphics are ingested into memory via <code>image_read()</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the component plates</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>map3 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map3.png"</span>)   <span class="co"># Inset 1: Western US (3x4 in)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>map4 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map4.png"</span>)   <span class="co"># Inset 2: Bight of California (3x4 in)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>map5 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map5.png"</span>)   <span class="co"># Inset 3: Extended Campus (4x3 in)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>map6 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map6.1.png"</span>) <span class="co"># Bottom Hero: Panoramic Campus (12x4 in)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="grid">
+<div class="g-col-12 g-col-md-4">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../final_output/map7_row_1.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 7 Row 1"></p>
-<figcaption>Map 7 Row 1: Zoom-in tryptic combining Maps 3, 4, and 5</figcaption>
+<p><img src="../images/map3.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 3 Inset"></p>
+<figcaption>Input Tile 1: Map 3</figcaption>
 </figure>
 </div>
+</div>
+<div class="g-col-12 g-col-md-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/map4.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 4 Inset"></p>
+<figcaption>Input Tile 2: Map 4</figcaption>
+</figure>
+</div>
+</div>
+<div class="g-col-12 g-col-md-4">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/map5.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 5 Inset"></p>
+<figcaption>Input Tile 3: Map 5</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-assembling-row-1-inset-tryptic" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-assembling-row-1-inset-tryptic">Step 2: Assembling Row 1 Inset Tryptic</h3>
+<p>Using <code>image_montage()</code>, Maps 3, 4, and 5 are combined horizontally across a <code>3x1</code> grid with centered gravity. Each tile cell is assigned <code>1600x1200px</code> to maintain consistent vertical alignment across both portrait and landscape inputs.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intermediate montage: 3-panel zoom sequence</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>map7_row1 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">image =</span> <span class="fu">c</span>(map3, map4, map5),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tile =</span> <span class="st">"3x1"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="st">"1600x1200"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">gravity =</span> <span class="st">"center"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map7_row1, <span class="st">"final_output/map7_row_1.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../final_output/map7_row_1.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 7 Row 1 Tryptic"></p>
+<figcaption>Intermediate Output: Row 1 Zoom-In Tryptic combining Maps 3, 4, and 5</figcaption>
+</figure>
+</div>
+</section>
+<section id="step-3-vertical-stacking-sheet-annotation" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-vertical-stacking-sheet-annotation">Step 3: Vertical Stacking &amp; Sheet Annotation</h3>
+<p>Finally, the top tryptic row (<code>map7_row1</code>) and the bottom panoramic base map (<code>map6</code>) are stacked vertically across a <code>1x2</code> montage grid. The finished plate is stamped with the atlas sheet title using <code>image_annotate()</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stack row 1 and row 2 into final 2-tier atlas plate</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>map7 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">image =</span> <span class="fu">c</span>(map7_row1, map6),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tile =</span> <span class="st">"1x2"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="st">"4800x1200"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>map_7_titled <span class="ot">&lt;-</span> <span class="fu">image_annotate</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  map7, </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Map 7: Where is UCSB?"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">14</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">location =</span> <span class="st">"+0+0"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map_7_titled, <span class="st">"final_output/map_07.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
-<section id="r-script-scriptsmap_07.r" class="level2">
-<h2 class="anchored" data-anchor-id="r-script-scriptsmap_07.r">R Script (<code>scripts/map_07.r</code>)</h2>
+<section id="full-r-script-scriptsmap_07.r" class="level2">
+<h2 class="anchored" data-anchor-id="full-r-script-scriptsmap_07.r">Full R Script (<code>scripts/map_07.r</code>)</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Show R Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Map 7</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the  layout page with 4 maps on it</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># maps 3 - 4 - 5 zoom in tryptic</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># and map 6, which is a version of map 1</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># clean the environment and hidden objects</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load magick package, which allows to make a montage of images</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># set map number</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># set ggplot counter</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>current_ggplot <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># We'll be doing a 12inx9in image, which at 300 PPI is 3600x2700 pixels</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Load maps 3, 4, 5, and 6 using the magick::image_read function</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>map3 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map3.png"</span>) <span class="co"># 3x4 inches = 900x1200 pixels</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>map4 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map4.png"</span>) <span class="co"># 3x4 in = 900x1200 px</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>map5 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map5.png"</span>) <span class="co"># 4x3 in = 1200x900 px</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>map6 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map6.1.png"</span>) <span class="co"># 12x9 in = 3600x1200 px</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map3.png"</span>)</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map4.png"</span>)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map5.png"</span>)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map6.1.png"</span>)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># There are multiple ways to use the magick package to append images,</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># you could use image_append(), image_montage(), or image_composite()</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's first make row number 1 or our atlas page, which combines maps 3, 4, and 5"</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># This will have a geometry of 4800x1200px (12x4 inches), so each tile is 1600x1200</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>map7_row1 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(<span class="at">image =</span> <span class="fu">c</span>(map3, map4, map5),</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">tile =</span> <span class="st">"3x1"</span>,</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>              <span class="at">geometry =</span> <span class="st">"1600x1200"</span>,</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>              <span class="at">gravity =</span> <span class="st">"center"</span>)</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>map7_row1</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># save that</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map7_row1, <span class="st">"final_output/map7_row_1.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># output it</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"final_output/map7_row_1.png"</span>)</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>map7 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(<span class="at">image =</span> <span class="fu">c</span>(map7_row1, map6),</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tile =</span> <span class="st">"1x2"</span>,</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>                      <span class="at">geometry =</span> <span class="st">"4800x1200"</span>)</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>map7</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>map_7_titled <span class="ot">&lt;-</span> <span class="fu">image_annotate</span>(map7, <span class="st">"Map 7: Where is UCSB?"</span>,</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>                       <span class="at">size =</span> <span class="dv">14</span>,</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>                       <span class="at">location =</span> <span class="st">"+0+0"</span>)</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co">#save your output</span></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map_7_titled, <span class="st">"final_output/map_07.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Map 7</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the  layout page with 4 maps on it</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># maps 3 - 4 - 5 zoom in tryptic</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># and map 6, which is a version of map 1</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># clean the environment and hidden objects</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load magick package, which allows to make a montage of images</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># set map number</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># set ggplot counter</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>current_ggplot <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># We'll be doing a 12inx9in image, which at 300 PPI is 3600x2700 pixels</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Load maps 3, 4, 5, and 6 using the magick::image_read function</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>map3 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map3.png"</span>) <span class="co"># 3x4 inches = 900x1200 pixels</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>map4 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map4.png"</span>) <span class="co"># 3x4 in = 900x1200 px</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>map5 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map5.png"</span>) <span class="co"># 4x3 in = 1200x900 px</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>map6 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map6.1.png"</span>) <span class="co"># 12x9 in = 3600x1200 px</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map3.png"</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map4.png"</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map5.png"</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"images/map6.1.png"</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># There are multiple ways to use the magick package to append images,</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># you could use image_append(), image_montage(), or image_composite()</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's first make row number 1 or our atlas page, which combines maps 3, 4, and 5"</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co"># This will have a geometry of 4800x1200px (12x4 inches), so each tile is 1600x1200</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>map7_row1 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(<span class="at">image =</span> <span class="fu">c</span>(map3, map4, map5),</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">tile =</span> <span class="st">"3x1"</span>,</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>              <span class="at">geometry =</span> <span class="st">"1600x1200"</span>,</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>              <span class="at">gravity =</span> <span class="st">"center"</span>)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>map7_row1</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co"># save that</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map7_row1, <span class="st">"final_output/map7_row_1.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co"># output it</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="fu">image_read</span>(<span class="st">"final_output/map7_row_1.png"</span>)</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>map7 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(<span class="at">image =</span> <span class="fu">c</span>(map7_row1, map6),</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tile =</span> <span class="st">"1x2"</span>,</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>                      <span class="at">geometry =</span> <span class="st">"4800x1200"</span>)</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>map7</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>map_7_titled <span class="ot">&lt;-</span> <span class="fu">image_annotate</span>(map7, <span class="st">"Map 7: Where is UCSB?"</span>,</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>                       <span class="at">size =</span> <span class="dv">14</span>,</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>                       <span class="at">location =</span> <span class="st">"+0+0"</span>)</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co">#save your output</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map_7_titled, <span class="st">"final_output/map_07.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
@@ -1058,44 +1131,110 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Map 7: Atlas Page Layout"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Composite multi-inset atlas layout assembled with image processing"</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rendered Map Plate</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 7: Full multi-inset atlas page showing regional zoom sequence and campus base map](../final_output/map_07.png)</span>{fig-alt="Map 7 Composite Layout" width="100%"}</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Summary</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Objective:** Synthesize individual cartographic components into a publication-ready atlas sheet. The top row forms a three-tier geographic zoom sequence (Western US <span class="dv">&amp;rarr;</span> California <span class="dv">&amp;rarr;</span> Bight of California), anchored below by the campus base map (Map 6).</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Key Packages:** <span class="in">`magick`</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Inputs:**</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map3.png`</span> (900 x 1200 px)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map4.png`</span> (900 x 1200 px)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map5.png`</span> (1200 x 900 px)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map6.1.png`</span> (3600 x 1200 px)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Outputs:**</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Top tryptic row: <span class="in">`final_output/map7_row_1.png`</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Complete atlas sheet: <span class="in">`final_output/map_07.png`</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">### Inset Sequence (Row 1 Tryptic)</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 7 Row 1: Zoom-in tryptic combining Maps 3, 4, and 5](../final_output/map7_row_1.png)</span>{fig-alt="Map 7 Row 1" width="100%"}</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Script (`scripts/map_07.r`)</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_07.r")</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Map 7: Atlas Page Layout"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Composite multi-inset atlas layout assembled with image processing"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rendered Map Plate</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 7: Full multi-inset atlas page showing regional zoom sequence and campus base map](../final_output/map_07.png)</span>{fig-alt="Map 7 Composite Layout" width="100%"}</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Summary</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Objective:** Synthesize individual cartographic components into a publication-ready atlas sheet. The top row forms a three-tier geographic zoom sequence (Western US <span class="dv">&amp;rarr;</span> Bight of California <span class="dv">&amp;rarr;</span> Extended Campus), anchored below by the panoramic campus base map (Map 6).</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Key Packages:** <span class="in">`magick`</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Inputs:**</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map3.png`</span> (900 x 1200 px, 3x4 in portrait)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map4.png`</span> (900 x 1200 px, 3x4 in portrait)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map5.png`</span> (1200 x 900 px, 4x3 in landscape)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span><span class="in">`images/map6.1.png`</span> (3600 x 1200 px, 12x4 in panorama)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Outputs:**</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Top tryptic row: <span class="in">`final_output/map7_row_1.png`</span> (4800 x 1200 px)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Complete atlas sheet: <span class="in">`final_output/map_07.png`</span> (4800 x 2400 px)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Step-by-Step Cartographic Workflow &amp; Intermediate Outputs</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>The script <span class="in">`scripts/map_07.r`</span> demonstrates how programmatic image montage workflows in <span class="in">`magick`</span> can assemble multi-scale atlas plates that exceed standard <span class="in">`ggplot`</span> facet capabilities.</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 1: Ingesting Component Map Plates</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>Four separately compiled graphics are ingested into memory via <span class="in">`image_read()`</span>:</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the component plates</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>map3 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map3.png"</span>)   <span class="co"># Inset 1: Western US (3x4 in)</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>map4 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map4.png"</span>)   <span class="co"># Inset 2: Bight of California (3x4 in)</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>map5 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map5.png"</span>)   <span class="co"># Inset 3: Extended Campus (4x3 in)</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>map6 <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="st">"images/map6.1.png"</span>) <span class="co"># Bottom Hero: Panoramic Campus (12x4 in)</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>::: {.grid}</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>::: {.g-col-12 .g-col-md-4}</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="al">![Input Tile 1: Map 3](../images/map3.png)</span>{fig-alt="Map 3 Inset" width="100%"}</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>::: {.g-col-12 .g-col-md-4}</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="al">![Input Tile 2: Map 4](../images/map4.png)</span>{fig-alt="Map 4 Inset" width="100%"}</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>::: {.g-col-12 .g-col-md-4}</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="al">![Input Tile 3: Map 5](../images/map5.png)</span>{fig-alt="Map 5 Inset" width="100%"}</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 2: Assembling Row 1 Inset Tryptic</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>Using <span class="in">`image_montage()`</span>, Maps 3, 4, and 5 are combined horizontally across a <span class="in">`3x1`</span> grid with centered gravity. Each tile cell is assigned <span class="in">`1600x1200px`</span> to maintain consistent vertical alignment across both portrait and landscape inputs.</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Intermediate montage: 3-panel zoom sequence</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>map7_row1 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">image =</span> <span class="fu">c</span>(map3, map4, map5),</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">tile =</span> <span class="st">"3x1"</span>,</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="st">"1600x1200"</span>,</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">gravity =</span> <span class="st">"center"</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map7_row1, <span class="st">"final_output/map7_row_1.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="al">![Intermediate Output: Row 1 Zoom-In Tryptic combining Maps 3, 4, and 5](../final_output/map7_row_1.png)</span>{fig-alt="Map 7 Row 1 Tryptic" width="100%"}</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 3: Vertical Stacking &amp; Sheet Annotation</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>Finally, the top tryptic row (<span class="in">`map7_row1`</span>) and the bottom panoramic base map (<span class="in">`map6`</span>) are stacked vertically across a <span class="in">`1x2`</span> montage grid. The finished plate is stamped with the atlas sheet title using <span class="in">`image_annotate()`</span>.</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Stack row 1 and row 2 into final 2-tier atlas plate</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>map7 <span class="ot">&lt;-</span> <span class="fu">image_montage</span>(</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">image =</span> <span class="fu">c</span>(map7_row1, map6),</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">tile =</span> <span class="st">"1x2"</span>,</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="st">"4800x1200"</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>map_7_titled <span class="ot">&lt;-</span> <span class="fu">image_annotate</span>(</span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>  map7, </span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Map 7: Where is UCSB?"</span>,</span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">14</span>,</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>  <span class="at">location =</span> <span class="st">"+0+0"</span></span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a><span class="fu">image_write</span>(map_7_titled, <span class="st">"final_output/map_07.png"</span>, <span class="at">format =</span> <span class="st">"png"</span>)</span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a><span class="fu">## Full R Script (`scripts/map_07.r`)</span></span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_07.r")</span></span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -15,14 +15,82 @@ subtitle: "Wide base map providing local context for the campus and surrounding 
 * **Key Packages:** `terra`, `sf`, `ggplot2`, `dplyr`
 * **Data Sources:**
   * Merged topo-bathy raster (`output_data/campus_bathotopo.tif`)
-  * Campus buildings and Isla Vista structures
-  * Bike path infrastructure network
-  * NCOS Shorebird Foraging Habitat polygons
-* **Aspect Ratio:** 12 inches wide x 9 inches tall (3600 x 2700 px at 300 ppi).
+  * Campus DEM (`source_data/campus_DEM.tif`)
+  * Campus bathymetry (`source_data/SB_bath.tif`)
+  * Campus hillshade (`source_data/campus_hillshade.tif`)
+  * Campus buildings footprint (`source_data/campus_buildings/Campus_Buildings.shp`)
+  * Isla Vista building structures (`source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp`)
+  * Bike path centerlines (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
+  * NCOS Shorebird Foraging Habitat polygons (`source_data/NCOS_Shorebird_Foraging_Habitat/`)
+* **Aspect Ratio:** 12 inches wide x 4 inches tall (3600 x 1200 px at 300 ppi) matching the Map 7 row 2 hero slot.
 
 ---
 
-## R Script (`scripts/map_06.r`)
+## Step-by-Step Cartographic Workflow & Intermediate Outputs
+
+The script `scripts/map_06.r` tightens the geographic extents of Map 1 to create an ultra-wide panoramic foundation map.
+
+### Step 1: Ingesting Vectors & Harmonizing Projections
+
+The vector layers for buildings, bikeways, habitats, and Isla Vista structures are reprojected using `st_transform` to match the native projection of `campus_DEM.tif` (`EPSG:2874 - NAD83 / California zone 5 (ftUS)`).
+
+```r
+# Align vector layers to DEM CRS
+campus_projection <- crs(campus_DEM)
+campus_bath <- project(campus_bath, campus_projection)
+campus_hillshade <- project(campus_hillshade, campus_projection)
+buildings <- st_transform(buildings, campus_projection)
+bikeways <- st_transform(bikeways, campus_projection)
+habitat <- st_transform(habitat, campus_projection)
+```
+
+### Step 2: Intermediate Plot — Vector Alignment & Minimalist Graticule
+
+Before adding the heavy raster stack, the script validates vector positions using a test plot styled with the custom `rAtlas_theme`.
+
+```r
+# Intermediate vector layer test plot
+ggplot() +
+  geom_sf(data = habitat) +
+  geom_sf(data = buildings) +
+  geom_sf(data = iv_buildings) +
+  geom_sf(data = bikeways) +
+  theme(rAtlas_theme) +
+  coord_sf()
+```
+
+### Step 3: Cropping Rasters to Batho-Topo Extents & Panoramic Layout
+
+The digital elevation model, bathymetry, and hillshade rasters are tightly cropped to the exact footprint of `campus_bathotopo.tif`:
+
+```r
+# Crop all 3 raster inputs to the batho-topo bounding extent
+campus_bathotopo_extent <- ext(campus_bathotopo)
+campus_DEM_crop <- crop(campus_DEM, campus_bathotopo_extent)
+campus_bath_crop <- crop(campus_bath, campus_bathotopo_extent)
+campus_hillshade_crop <- crop(campus_hillshade, campus_bathotopo_extent)
+```
+
+Finally, the raster surfaces and vector layers are composited into a 3:1 aspect ratio panoramic layout (12 inches wide by 4 inches tall) optimized for stacking beneath the Map 7 row 1 tryptic.
+
+```r
+# Render panoramic coastal base map
+ggplot() +
+  geom_raster(data = campus_DEM_df, aes(x = x, y = y, fill = elevation)) +
+  geom_sf(data = buildings, color = "hotpink") +
+  geom_sf(data = bikeways, color = "yellow") +
+  geom_raster(data = campus_hillshade_df, aes(x = x, y = y, alpha = hillshade), show.legend = FALSE) +
+  geom_raster(data = campus_bath_df, aes(x = x, y = y, fill = bathymetry)) +
+  scale_fill_viridis_c(na.value = "NA") +
+  theme(rAtlas_theme) +
+  coord_sf()
+```
+
+![Intermediate Output: Panoramic base map saved to images/map6.1.png](../images/map6.1.png){fig-alt="Map 6 Panoramic Output" width="100%"}
+
+---
+
+## Full R Script (`scripts/map_06.r`)
 
 ```{r}
 #| eval: false

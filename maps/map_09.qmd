@@ -4,46 +4,119 @@ subtitle: "Topographic depression analysis to identify campus vernal pools"
 ---
 
 ::: {.callout-note}
-### Plate in Development
-Map 9 is currently in the algorithmic design phase. This page outlines the analytical methodology, data requirements, and planned implementation.
+### Plate in Algorithmic Prototyping
+Map 9 is currently in active algorithmic design. Below is the analytical methodology, step-by-step mathematical model, intermediate conceptual diagnostic, and planned script implementation.
 :::
 
-## Analytical Concept
+## Rendered Map Plate (Design Prototype Placeholder)
 
-UCSB's coastal mesa and North Campus Open Space (NCOS) host rare coastal vernal pool ecosystems — shallow depressions underlain by impermeable clay or hardpan layers that fill during winter rains and dry up by summer.
-
-This analysis uses digital elevation models (DEM) to identify topographic sinks or micro-depressions that meet vernal pool hydrological criteria:
-
-1. **Elevation threshold:** Must sit above mean sea level ($z > 0\text{ m}$) to exclude tidal flats and lagoons.
-2. **Local depression detection:** Identify pixels whose elevation is strictly lower than their surrounding 8-connected neighbors (focal or sink detection).
-3. **Depression filling / thresholding:** Calculate depression depth using hydrological sink filling (`terra::focal()` or terrain fill algorithms) and filter out noise below minimum depth or area thresholds.
-4. **Vector polygon extraction:** Convert detected pools into vector polygons to overlay on campus infrastructure and habitat maps.
+![Map 9 Placeholder: Conceptual schematic of focal depression extraction and vernal pool candidate detection](../images/map_09_placeholder.svg){fig-alt="Map 9 Vernal Pool Placeholder Schematic" width="100%"}
 
 ---
 
-## Intended Data Inputs
+## Technical Summary
 
-* **High-Resolution Campus DEM:** `source_data/campus_DEM/campus_DEM.tif`
-* **NCOS Habitat Ground Truth:** `source_data/NCOS_Shorebird_Foraging_Habitat/`
-* **Reference Imagery:** PlanetScope seasonal imagery to corroborate standing water presence.
+* **Objective:** Detect and delineate potential coastal vernal pools and seasonal micro-wetlands across the UCSB Mesa, North Campus Open Space (NCOS), and West Campus bluffs by modeling local topographic depressions in high-resolution elevation data.
+* **Key Packages:** `terra`, `sf`, `tidyverse`
+* **Data Sources:**
+  * High-Resolution Campus Digital Elevation Model (`source_data/campus_DEM.tif`)
+  * Restored NCOS wetlands ground truth (`source_data/NCOS_Shorebird_Foraging_Habitat/`)
+  * PlanetScope high-resolution wet-season imagery (for spectral water verification)
+* **Output Artifacts (Planned):**
+  * Hydrological sinks raster: `output_data/campus_vernal_pool_sinks.tif`
+  * Delineated vernal pool polygons: `output_data/vernal_pool_candidates.shp`
+  * Rendered plate: `final_output/map_09.png`
 
 ---
 
-## Planned Terra Workflow
+## Step-by-Step Analytical Workflow & Methodology
+
+Coastal vernal pools form where shallow depressions on ancient marine terraces sit above impermeable clay subsoil layers. The detection algorithm models these features using neighborhood focal metrics:
+
+### Step 1: Terrain Ingestion & Lowland Tide Masking
+
+Because vernal pools are exclusively perched freshwater depressions, the analysis first eliminates tidally influenced lowlands (such as Goleta Slough and Devereux Slough) by clamping elevations below the spring tide threshold ($z \le 1.5\text{ m}$ NAVD88).
 
 ```r
 library(terra)
 
-# 1. Load elevation model
-campus_dem <- rast("source_data/campus_DEM/campus_DEM.tif")
+# 1. Ingest campus elevation model (units in feet or meters)
+campus_dem <- rast("source_data/campus_DEM.tif")
 
-# 2. Filter to elevations above sea level
-dry_land <- clamp(campus_dem, lower = 0.5)
+# 2. Convert to meters if required and clamp tidal lagoons
+campus_dem_m <- campus_dem * 0.3048
+dry_mesa <- clamp(campus_dem_m, lower = 1.5, values = FALSE)
+```
 
-# 3. Calculate focal neighborhood statistics (e.g. min/mean difference)
-focal_min <- focal(dry_land, w = matrix(1, 3, 3), fun = "min")
-sinks <- dry_land - focal_min
+### Step 2: Focal Neighborhood Minimum & Depressional Sinks
 
-# 4. Extract candidates meeting depression criteria
-vernal_pools <- sinks > 0.15 # Minimum depth threshold
+A focal moving window (`terra::focal`) computes the maximum local rim elevation and minimum center elevation. Pixels where the cell elevation is strictly lower than the surrounding neighborhood represent topographic sinks:
+
+$$\Delta z = z_{\text{focal\_max}} - z_{\text{cell}}$$
+
+```r
+# 3. Calculate 3x3 and 5x5 focal neighborhood elevation difference
+focal_window <- matrix(1, nrow = 5, ncol = 5)
+focal_max <- focal(dry_mesa, w = focal_window, fun = "max", na.rm = TRUE)
+
+# Calculate depression depth relative to rim
+sink_depth <- focal_max - dry_mesa
+```
+
+### Step 3: Noise Thresholding & Hydrological Fill
+
+Micro-topographic roughness and lidar noise produce hundreds of sub-centimeter artifacts. Candidates are filtered to require a minimum standing pool depth of $\ge 0.15\text{ m}$ (6 inches) and a continuous inundation basin.
+
+```r
+# 4. Threshold depressions exceeding 15 cm depth
+candidate_sinks <- sink_depth >= 0.15
+candidate_sinks[candidate_sinks == 0] <- NA
+```
+
+### Step 4: Vector Patch Extraction (`patches`) & Spatial Overlays
+
+Contiguous depression pixels are clumped into individual discrete pool patches using `terra::patches()`, vectorized to polygon boundaries with `as.polygons()`, and filtered by surface area ($\ge 25\text{ m}^2$) to remove isolated pixel noise. The extracted vectors are then corroborated against known CCBER restoration records.
+
+```r
+# 5. Clump contiguous cells into unique water bodies
+pool_patches <- patches(candidate_sinks, directions = 8, zeroAsNA = TRUE)
+
+# Convert to vector polygons and calculate surface area
+pool_vect <- as.polygons(pool_patches)
+pool_vect$area_m2 <- expanse(pool_vect)
+vernal_pools <- subset(pool_vect, pool_vect$area_m2 >= 25)
+
+# Export shapefile
+writeVector(vernal_pools, "output_data/vernal_pool_candidates.shp", overwrite = TRUE)
+```
+
+---
+
+## Prototype Implementation Script (`scripts/map_09.r`)
+
+```{r}
+#| eval: false
+# Map 9 Prototype: Vernal Pool Topographic Sink Detection
+library(terra)
+library(tidyverse)
+library(sf)
+
+# 1. Ingest DEM
+campus_dem <- rast("source_data/campus_DEM.tif")
+
+# 2. Filter to elevated coastal mesa (excluding tidal sloughs)
+dry_mesa <- clamp(campus_dem, lower = 5.0) # feet
+
+# 3. Compute 5x5 focal neighborhood maximum rim
+focal_rim <- focal(dry_mesa, w = matrix(1, 5, 5), fun = "max", na.rm = TRUE)
+sink_depth <- focal_rim - dry_mesa
+
+# 4. Filter significant depressions (> 0.5 ft depth)
+candidate_sinks <- ifel(sink_depth >= 0.5, sink_depth, NA)
+
+# 5. Extract contiguous pool polygons
+pool_clumps <- patches(candidate_sinks, directions = 8, zeroAsNA = TRUE)
+pool_poly <- as.polygons(pool_clumps)
+
+cat("Prototype completed: candidate vernal pool sinks identified.\n")
 ```

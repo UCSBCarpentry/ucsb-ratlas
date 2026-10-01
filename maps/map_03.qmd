@@ -17,6 +17,7 @@ subtitle: "Regional locator inset showing topography across the Western United S
   * Western United States 90-meter Digital Elevation Model (`source_data/dem90_hf/dem90_hf.tif`)
   * Global shaded relief hillshade (`source_data/global_raster/GRAY_HR_SR_OB.tif`)
   * California Populated Places vector (`source_data/tl_2023_06_place/`)
+  * California State Boundary (`source_data/california_boundary.geojson`)
   * Southern California locator box (`source_data/socal_aoi.geojson`)
 * **Styling Decisions:**
   * Portrait 3 wide x 4 tall aspect ratio (`width = 3, height = 4`).
@@ -26,7 +27,80 @@ subtitle: "Regional locator inset showing topography across the Western United S
 
 ---
 
-## R Script (`scripts/map_03.r`)
+## Step-by-Step Cartographic Workflow & Intermediate Outputs
+
+The script `scripts/map_03.r` sets up the continental zoom level for the multi-scale locator sequence.
+
+### Step 1: Downsampling Regional DEM & Ocean Shaded Relief Cropping
+
+The high-resolution 90m Western US elevation model is aggregated by a factor of 5 to optimize rendering speeds. The global Natural Earth ocean hillshade (`GRAY_HR_SR_OB.tif`) is cropped to the California overview bounding box (`cali_overview.geojson`), and coordinate reference systems are unified.
+
+```r
+# Load and downsample DEM for fast regional plotting
+zoom_1_dem <- rast("source_data/dem90_hf/dem90_hf.tif")
+zoom_1_dem <- aggregate(zoom_1_dem, fact = 5)
+
+# Crop global shaded relief hillshade to West Coast extent
+zoom_1_extent <- geojson_sf("source_data/cali_overview.geojson")
+zoom_1_hillshade <- crop(world, zoom_1_extent)
+zoom_1_dem <- project(zoom_1_dem, crs(zoom_1_hillshade))
+zoom_1_dem <- crop(zoom_1_dem, zoom_1_hillshade)
+```
+
+### Step 2: Intermediate Plot — Base Terrain & Next-Zoom Inset Box
+
+An alpha-blended hillshade raster is paired with a viridis terrain gradient. A red bounding box is added to indicate the sub-regional scope of Map 4 (The Bight of California).
+
+```r
+# Initial raster overlay test with bounding box
+ggplot() +
+  geom_raster(data = zoom_1_dem_df, aes(x = x, y = y, fill = dem90_hf)) +
+  scale_fill_viridis_c() +
+  geom_raster(data = zoom_1_hillshade_df, aes(x = x, y = y, alpha = GRAY_HR_SR_OB)) +
+  scale_alpha(range = c(0.3, 0.6), guide = "none") +
+  geom_spatvector(data = zoom_2_crop_extent, color = "red", lwd = 1.5, fill = NA) +
+  my_theme +
+  coord_sf()
+```
+
+::: {.grid}
+::: {.g-col-12 .g-col-md-6}
+![Intermediate Output 3.1: Raw terrain elevation and ocean hillshade](../images/map3.1.png){fig-alt="Map 3.1 Intermediate Output" width="100%"}
+:::
+::: {.g-col-12 .g-col-md-6}
+![Intermediate Output 3.2: Adding subtle graticule guidelines](../images/map3.2.png){fig-alt="Map 3.2 Graticule Test" width="100%"}
+:::
+:::
+
+### Step 3: Vector Context & Whole-Degree Geographic Coordinate Labels
+
+To orient the viewer, California Census populated places (`tl_2023_06_place.shp`) are simplified (`simplifyGeom`) and rendered in semi-transparent light gray (`#EEEEEE50`). The state perimeter is traced in crisp black (`linewidth = 0.7`).
+
+Finally, custom coordinate tick formatters convert raw decimal degrees into clear geographical markers:
+* Longitude: `seq(-125, -115, by = 5)` &rarr; `125°W`, `120°W`, `115°W`
+* Latitude: `seq(32, 44, by = 4)` &rarr; `32°N`, `36°N`, `40°N`, `44°N`
+
+```r
+# Finalizing coordinate breaks and subtle census polygons
+zoom_1_final_plot <- ggplot() +
+  geom_raster(data = zoom_1_dem_df, aes(x = x, y = y, fill = dem90_hf)) +
+  scale_fill_viridis_c(guide = "none") +
+  geom_raster(data = zoom_1_hillshade_df, aes(x = x, y = y, alpha = GRAY_HR_SR_OB)) +
+  scale_alpha(range = c(0.05, 0.3), guide = "none") +
+  geom_spatvector(data = cal_poly, fill = NA, color = "black", linewidth = 0.7) +
+  geom_spatvector(data = places_simple, fill = NA, color = "#EEEEEE50", linewidth = 0.2) +
+  geom_spatvector(data = zoom_2_crop_extent, color = "red", lwd = 1, fill = NA) +
+  scale_x_continuous(breaks = seq(-125, -115, by = 5), labels = function(x) paste0(abs(x), "°W")) +
+  scale_y_continuous(breaks = seq(32, 44, by = 4), labels = function(y) paste0(y, "°N")) +
+  coord_sf(expand = FALSE) +
+  ggtitle("UCSB is located on the Pacific coast of California.")
+```
+
+![Intermediate Output: Final portrait rendering for Map 7 top tryptic](../images/map3.png){fig-alt="Map 3 Final Inset" width="80%"}
+
+---
+
+## Full R Script (`scripts/map_03.r`)
 
 ```{r}
 #| eval: false

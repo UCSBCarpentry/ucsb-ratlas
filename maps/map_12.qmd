@@ -21,14 +21,78 @@ subtitle: "Annual time-series satellite analysis of campus vegetation phenology"
 * **Key Packages:** `terra`, `ggplot2`, `dplyr`, `tidyr`, `lubridate`, `scales`
 * **Data Sources:**
   * Monthly PlanetScope AnalyticMS scenes (`output_data/ndvi/*.tif`)
-  * Campus boundary polygon
+  * Campus and NCOS study area boundaries
 * **Outputs:**
+  * Initial raw stack verification: `images/ndvi_series_stack_1.png`
   * Faceted multi-panel map plate: `final_output/map_12.png`
   * Time-series trajectory plot: `final_output/plot_12.png`
 
 ---
 
-## R Script (`scripts/map_12.r`)
+## Step-by-Step Cartographic Workflow & Intermediate Outputs
+
+The script `scripts/map_12.r` moves from raw multispectral GeoTIFFs through batch index calculation, extent filtering, Julian date sorting, and longitudinal trend plotting.
+
+### Step 1: Batch NDVI Calculation & Dimension Harmonization
+
+For each monthly scene, Band 8 (NIR) and Band 6 (Red) are extracted to compute NDVI. A consistency filter inspects raster dimensions (`dim(test_size) == valid_tiff`), discarding mismatched tiles:
+
+```r
+# Batch NDVI formula
+ndvi <- (nir - red) / (nir + red)
+
+# Harmonize dimensions across monthly stack
+ndvi_series_stack <- rast(ndvi_series_paths)
+```
+
+### Step 2: Intermediate Plot — Initial Full-Extent Raster Stack
+
+An initial diagnostic plot verifies that all seasonal scenes ingested successfully into the multi-layer `SpatRaster` object:
+
+```r
+# Plot initial stack layers
+plot(ndvi_series_stack)
+ggsave("images/ndvi_series_stack_1.png", plot = last_plot(), bg = "white")
+```
+
+![Intermediate Diagnostic: Initial full-extent multi-scene raster stack](../images/ndvi_series_stack_1.png){fig-alt="Map 12 Initial Raster Stack" width="100%"}
+
+### Step 3: Cropping to Focus AOI & Tidy Pivot for Faceting
+
+The full stack is cropped to the North Campus Open Space and West Campus reserve boundary (`scripts/ncos.geojson`). It is then converted into a long tidy data frame (`as.data.frame(xy=TRUE) %>% pivot_longer()`), mapping date strings to standardized calendar months and Julian days of the year (`yday(date)`).
+
+```r
+# Crop stack to focus area
+ncos_extent <- vect("scripts/ncos.geojson")
+ndvi_series_stack <- crop(ndvi_series_stack, project(ncos_extent, ndvi_series_stack))
+
+# Convert to tidy dataframe for ggplot faceting
+ndvi_series_df <- as.data.frame(ndvi_series_stack, xy = TRUE, na.rm = FALSE) %>%
+  pivot_longer(-(x:y), names_to = "image_date", values_to = "NDVI_value") %>%
+  mutate(
+    yyyymmdd = substr(image_date, 2, 9),
+    date = as_date(yyyymmdd),
+    julian_date = yday(date)
+  )
+```
+
+### Step 4: Faceted Small Multiples & Phenology Trajectory Curve
+
+1. **Faceted Stack (`map_12.png`):** Styled with a diverging Red-Yellow-Green spectral ramp (`scale_fill_distiller(palette = "RdYlGn", direction = 1)`), visually tracking the flush of winter/spring greens and the transition to summer golden-brown grasslands.
+2. **Phenology Curve (`plot_12.png`):** The mean NDVI per scene is computed, plotting seasonal canopy dynamics across the academic calendar.
+
+```r
+# Render faceted monthly grid
+ggplot() +
+  geom_raster(data = ndvi_series_df, aes(x = x, y = y, fill = NDVI_value)) +
+  scale_fill_distiller(palette = "RdYlGn", direction = 1) +
+  facet_wrap(~yyyymmdd) +
+  theme_minimal()
+```
+
+---
+
+## Full R Script (`scripts/map_12.r`)
 
 ```{r}
 #| eval: false

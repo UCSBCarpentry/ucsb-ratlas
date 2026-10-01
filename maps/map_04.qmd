@@ -25,7 +25,64 @@ subtitle: "Sub-regional locator panel showing the Southern California Bight and 
 
 ---
 
-## R Script (`scripts/map_04.r`)
+## Step-by-Step Cartographic Workflow & Intermediate Outputs
+
+The script `scripts/map_04.r` refines the sub-regional Southern California Bight scale (Zoom 2) bridging continental California (Map 3) and local campus topography (Map 5).
+
+### Step 1: Cropping Regional Rasters to the Bight AOI
+
+The 90m DEM and global shaded relief raster are cropped to the Southern California Area of Interest (`socal_aoi.geojson`). The extents and coordinate systems are matched.
+
+```r
+# Crop DEM and hillshade to SoCal Bight
+socal_aoi <- geojson_sf("source_data/socal_aoi.geojson")
+zoom_2_cropped <- crop(dem90, socal_aoi)
+zoom_2_hillshade <- crop(world_hillshade, socal_aoi)
+```
+
+### Step 2: Intermediate Plot — Solid Gray Census Places Overlay
+
+The census places vector layer was reprojected and plotted over the raster base. Initially, solid gray fills obscured the underlying topography of the Los Angeles Basin and Santa Barbara coastal plain.
+
+```r
+# Intermediate plot with solid gray places
+ggplot() +
+  geom_raster(data = zoom_2_DEM_df, aes(x = x, y = y, fill = dem90_hf)) +
+  geom_raster(data = zoom_2_hillshade_df, aes(x = x, y = y, alpha = GRAY_HR_SR_OB)) +
+  geom_spatvector(data = zoom_2_places, fill = "gray") +
+  geom_spatvector(data = zoom_3_extent, color = "red", fill = NA) +
+  coord_sf()
+```
+
+![Intermediate Output: Solid gray populated place polygons covering the coastal terrain](../images/map4.png){fig-alt="Map 4 Intermediate Solid Fill" width="80%"}
+
+### Step 3: Polishing Alpha Transparency & Campus Extent Box
+
+To retain topographic visibility beneath urban centers:
+1. Populated place fills are made transparent (`fill = NA, color = "#EEEEEE40"`), with thin outlines (`linewidth = 0.25`).
+2. The greater campus bounding box (`zoom_3_extent`) is reprojected and traced with a vivid red rectangle (`linewidth = 1.2`).
+3. Axis coordinates and tick marks are eliminated (`axis.text = element_blank()`, `axis.ticks = element_blank()`).
+4. An informative subtitle anchors the geographic boundaries: *"Point Conception to the Mexican Border"*.
+
+```r
+# Finalizing transparent vectors and red zoom 3 extent
+zoom_2_final_plot <- ggplot() +
+  geom_raster(data = zoom_2_DEM_df, aes(x = x, y = y, fill = dem90_hf)) +
+  scale_fill_viridis_c(guide = "none") +
+  geom_raster(data = zoom_2_hillshade_df, aes(x = x, y = y, alpha = GRAY_HR_SR_OB)) +
+  scale_alpha(range = c(0.05, 0.5), guide = "none") +
+  geom_spatvector(data = zoom_2_places, fill = NA, color = "#EEEEEE40", linewidth = 0.25) +
+  geom_spatvector(data = zoom_3_extent_proj, color = "red", fill = NA, linewidth = 1.2) +
+  theme_minimal() +
+  coord_sf(expand = FALSE) +
+  ggtitle("On the Bight of California", subtitle = "Point Conception to the Mexican Border")
+```
+
+![Final Zoom 2 Output Panel](../images/map_04.png){fig-alt="Map 4 Final Inset" width="80%"}
+
+---
+
+## Full R Script (`scripts/map_04.r`)
 
 ```{r}
 #| eval: false

@@ -52,18 +52,72 @@ An intermediate multi-sheet GeoTIFF is output to:
 
 ---
 
-## Cartographic Workflow
+## Step-by-Step Cartographic Workflow & Intermediate Outputs
 
-1. **Affine Rectification:** Historical scanned paper maps possess non-orthogonal rotation and scanner distortion. Both `DB0007.tif` and `DB0009.tif` are rectified using bilinear interpolation into orthogonal coordinates (`NAD27 / UTM zone 11N`).
-2. **Neatline Collar Trimming:** Paper margins contain bibliographic text, titles, and legends that would obscure the adjacent map if merged directly. Each raster is trimmed to its official 7.5-minute neatline:
-   * **Dos Pueblos Canyon:** $-120.000^\circ$ to $-119.875^\circ\text{ W}$, $34.375^\circ$ to $34.500^\circ\text{ N}$
-   * **Goleta:** $-119.875^\circ$ to $-119.750^\circ\text{ W}$, $34.375^\circ$ to $34.500^\circ\text{ N}$
-3. **Mosaicking / Splicing:** The trimmed quadrangles are joined along the $-119.875^\circ$ meridian using `terra::merge()`.
-4. **AOI Extraction:** The spliced mosaic is cropped to `greater_UCSB-campus-aoi.geojson` and rendered with `plotRGB()` at publication resolution.
+The script `scripts/map_11.r` details the end-to-end digital cartographic rectification, paper collar trimming, and mosaic splicing process.
+
+### Step 1: Affine Rectification of Scanned Historic Paper Maps
+
+Historical scanned paper maps contain non-orthogonal scanner rotation and skew. Both `DB0007.tif` (Goleta) and `DB0009.tif` (Dos Pueblos Canyon) are rectified using bilinear interpolation into orthogonal coordinates (`NAD27 / UTM zone 11N`):
+
+```r
+library(terra)
+
+# Bilinear rectification to orthogonal UTM coordinates
+gol <- rast("source_data/07gGoleta/DB0007.tif")
+gol_rect <- rectify(gol, method = "bilinear")
+names(gol_rect) <- c("red", "green", "blue")
+
+dp <- rast("source_data/09gDosPueblos/DB0009.tif")
+dp_rect <- rectify(dp, method = "bilinear")
+names(dp_rect) <- c("red", "green", "blue")
+```
+
+### Step 2: Intermediate Diagnostic — Full Uncropped Sheets with Neatlines and AOI
+
+If the two raw map sheets were merged directly, the white paper collars, quadrangle titles, and bibliographic legends of one sheet would overwrite the geological data of the other. The script generates a diagnostic graphic displaying the uncropped sheets side-by-side with overlaid 7.5-minute neatlines and the campus AOI boundary:
+
+```r
+# Intermediate diagnostic plot
+png("final_output/map11_both_tiffs_full_extent_aoi.png", width = 2400, height = 1500, res = 150)
+plotRGB(merge(aggregate(dp_rect, fact = 4), aggregate(gol_rect, fact = 4)))
+plot(poly_dp, border = "#2E7D32", lwd = 2.5, lty = 2, add = TRUE) # Dos Pueblos neatline
+plot(poly_gol, border = "#1565C0", lwd = 2.5, lty = 2, add = TRUE) # Goleta neatline
+plot(aoi_nad27, border = "#D50000", lwd = 4, add = TRUE)            # Campus AOI
+dev.off()
+```
+
+![Intermediate Diagnostic: Both uncropped Dibblee sheets showing overlapping paper collars and the campus boundary](../final_output/map11_both_tiffs_full_extent_aoi.png){fig-alt="Map 11 Diagnostic Both Sheets" width="100%"}
+
+### Step 3: Neatline Collar Trimming & Splicing Across the $119^\circ 52' 30''\text{ W}$ Meridian
+
+Both sheets are mathematically clipped to their official USGS 7.5-minute boundaries:
+* **Dos Pueblos Canyon:** $-120.000^\circ$ to $-119.875^\circ\text{ W}$ (East neatline at $X = 235,715.5\text{ m}$)
+* **Goleta:** $-119.875^\circ$ to $-119.750^\circ\text{ W}$ (West neatline at $X = 235,715.5\text{ m}$)
+
+By clipping exactly at $X = 235,715.5\text{ m}$ in `NAD27 / UTM zone 11N`, `terra::merge()` seamlessly joins the two sheets without seamline artifacts or collar occlusion.
+
+```r
+# Trim collars to shared neatline meridian and merge
+poly_dp_aoi <- ext(222896, 235715.5, ymin(aoi_ext), ymax(aoi_ext))
+poly_gol_aoi <- ext(235715.5, 252013, ymin(aoi_ext), ymax(aoi_ext))
+
+dp_sub <- crop(dp_rect, poly_dp_aoi)
+gol_sub <- crop(gol_rect, poly_gol_aoi)
+
+spliced_campus <- merge(dp_sub, gol_sub)
+campus_geology <- crop(spliced_campus, aoi_nad27)
+```
+
+### Step 4: Standalone Campus AOI Crop
+
+The spliced geological continuum is clipped to the Greater UCSB study area polygon and exported at high resolution.
+
+![Intermediate Crop: Standalone campus geological clip](../final_output/dibble_aoi.png){fig-alt="Dibblee AOI Map" width="70%"}
 
 ---
 
-## R Script (`scripts/map_11.r`)
+## Full R Script (`scripts/map_11.r`)
 
 ```{r}
 #| eval: false

@@ -471,9 +471,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#analytical-concept" id="toc-analytical-concept" class="nav-link active" data-scroll-target="#analytical-concept">Analytical Concept</a></li>
-  <li><a href="#intended-data-inputs" id="toc-intended-data-inputs" class="nav-link" data-scroll-target="#intended-data-inputs">Intended Data Inputs</a></li>
-  <li><a href="#planned-terra-workflow" id="toc-planned-terra-workflow" class="nav-link" data-scroll-target="#planned-terra-workflow">Planned Terra Workflow</a></li>
+  <li><a href="#rendered-map-plate-design-prototype-placeholder" id="toc-rendered-map-plate-design-prototype-placeholder" class="nav-link active" data-scroll-target="#rendered-map-plate-design-prototype-placeholder">Rendered Map Plate (Design Prototype Placeholder)</a></li>
+  <li><a href="#technical-summary" id="toc-technical-summary" class="nav-link" data-scroll-target="#technical-summary">Technical Summary</a></li>
+  <li><a href="#step-by-step-analytical-workflow-methodology" id="toc-step-by-step-analytical-workflow-methodology" class="nav-link" data-scroll-target="#step-by-step-analytical-workflow-methodology">Step-by-Step Analytical Workflow &amp; Methodology</a>
+  <ul class="collapse">
+  <li><a href="#step-1-terrain-ingestion-lowland-tide-masking" id="toc-step-1-terrain-ingestion-lowland-tide-masking" class="nav-link" data-scroll-target="#step-1-terrain-ingestion-lowland-tide-masking">Step 1: Terrain Ingestion &amp; Lowland Tide Masking</a></li>
+  <li><a href="#step-2-focal-neighborhood-minimum-depressional-sinks" id="toc-step-2-focal-neighborhood-minimum-depressional-sinks" class="nav-link" data-scroll-target="#step-2-focal-neighborhood-minimum-depressional-sinks">Step 2: Focal Neighborhood Minimum &amp; Depressional Sinks</a></li>
+  <li><a href="#step-3-noise-thresholding-hydrological-fill" id="toc-step-3-noise-thresholding-hydrological-fill" class="nav-link" data-scroll-target="#step-3-noise-thresholding-hydrological-fill">Step 3: Noise Thresholding &amp; Hydrological Fill</a></li>
+  <li><a href="#step-4-vector-patch-extraction-patches-spatial-overlays" id="toc-step-4-vector-patch-extraction-patches-spatial-overlays" class="nav-link" data-scroll-target="#step-4-vector-patch-extraction-patches-spatial-overlays">Step 4: Vector Patch Extraction (<code>patches</code>) &amp; Spatial Overlays</a></li>
+  </ul></li>
+  <li><a href="#prototype-implementation-script-scriptsmap_09.r" id="toc-prototype-implementation-script-scriptsmap_09.r" class="nav-link" data-scroll-target="#prototype-implementation-script-scriptsmap_09.r">Prototype Implementation Script (<code>scripts/map_09.r</code>)</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/UCSBCarpentry/ucsb-ratlas/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -483,7 +490,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Map 9: Vernal Pools Analysis (DEM)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Map 9: Vernal Pools Analysis (DEM)</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 <p class="subtitle lead">Topographic depression analysis to identify campus vernal pools</p>
 </div>
 
@@ -507,50 +514,122 @@ window.Quarto = {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Plate in Development
+<span class="screen-reader-only">Note</span>Plate in Algorithmic Prototyping
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Map 9 is currently in the algorithmic design phase. This page outlines the analytical methodology, data requirements, and planned implementation.</p>
+<p>Map 9 is currently in active algorithmic design. Below is the analytical methodology, step-by-step mathematical model, intermediate conceptual diagnostic, and planned script implementation.</p>
 </div>
 </div>
-<section id="analytical-concept" class="level2">
-<h2 class="anchored" data-anchor-id="analytical-concept">Analytical Concept</h2>
-<p>UCSB’s coastal mesa and North Campus Open Space (NCOS) host rare coastal vernal pool ecosystems — shallow depressions underlain by impermeable clay or hardpan layers that fill during winter rains and dry up by summer.</p>
-<p>This analysis uses digital elevation models (DEM) to identify topographic sinks or micro-depressions that meet vernal pool hydrological criteria:</p>
-<ol type="1">
-<li><strong>Elevation threshold:</strong> Must sit above mean sea level (<span class="math inline">\(z &gt; 0\text{ m}\)</span>) to exclude tidal flats and lagoons.</li>
-<li><strong>Local depression detection:</strong> Identify pixels whose elevation is strictly lower than their surrounding 8-connected neighbors (focal or sink detection).</li>
-<li><strong>Depression filling / thresholding:</strong> Calculate depression depth using hydrological sink filling (<code>terra::focal()</code> or terrain fill algorithms) and filter out noise below minimum depth or area thresholds.</li>
-<li><strong>Vector polygon extraction:</strong> Convert detected pools into vector polygons to overlay on campus infrastructure and habitat maps.</li>
-</ol>
+<section id="rendered-map-plate-design-prototype-placeholder" class="level2">
+<h2 class="anchored" data-anchor-id="rendered-map-plate-design-prototype-placeholder">Rendered Map Plate (Design Prototype Placeholder)</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/map_09_placeholder.svg" class="img-fluid figure-img" style="width:100.0%" alt="Map 9 Vernal Pool Placeholder Schematic"></p>
+<figcaption>Map 9 Placeholder: Conceptual schematic of focal depression extraction and vernal pool candidate detection</figcaption>
+</figure>
+</div>
 <hr>
 </section>
-<section id="intended-data-inputs" class="level2">
-<h2 class="anchored" data-anchor-id="intended-data-inputs">Intended Data Inputs</h2>
+<section id="technical-summary" class="level2">
+<h2 class="anchored" data-anchor-id="technical-summary">Technical Summary</h2>
 <ul>
-<li><strong>High-Resolution Campus DEM:</strong> <code>source_data/campus_DEM/campus_DEM.tif</code></li>
-<li><strong>NCOS Habitat Ground Truth:</strong> <code>source_data/NCOS_Shorebird_Foraging_Habitat/</code></li>
-<li><strong>Reference Imagery:</strong> PlanetScope seasonal imagery to corroborate standing water presence.</li>
+<li><strong>Objective:</strong> Detect and delineate potential coastal vernal pools and seasonal micro-wetlands across the UCSB Mesa, North Campus Open Space (NCOS), and West Campus bluffs by modeling local topographic depressions in high-resolution elevation data.</li>
+<li><strong>Key Packages:</strong> <code>terra</code>, <code>sf</code>, <code>tidyverse</code></li>
+<li><strong>Data Sources:</strong>
+<ul>
+<li>High-Resolution Campus Digital Elevation Model (<code>source_data/campus_DEM.tif</code>)</li>
+<li>Restored NCOS wetlands ground truth (<code>source_data/NCOS_Shorebird_Foraging_Habitat/</code>)</li>
+<li>PlanetScope high-resolution wet-season imagery (for spectral water verification)</li>
+</ul></li>
+<li><strong>Output Artifacts (Planned):</strong>
+<ul>
+<li>Hydrological sinks raster: <code>output_data/campus_vernal_pool_sinks.tif</code></li>
+<li>Delineated vernal pool polygons: <code>output_data/vernal_pool_candidates.shp</code></li>
+<li>Rendered plate: <code>final_output/map_09.png</code></li>
+</ul></li>
 </ul>
 <hr>
 </section>
-<section id="planned-terra-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="planned-terra-workflow">Planned Terra Workflow</h2>
+<section id="step-by-step-analytical-workflow-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step-analytical-workflow-methodology">Step-by-Step Analytical Workflow &amp; Methodology</h2>
+<p>Coastal vernal pools form where shallow depressions on ancient marine terraces sit above impermeable clay subsoil layers. The detection algorithm models these features using neighborhood focal metrics:</p>
+<section id="step-1-terrain-ingestion-lowland-tide-masking" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-terrain-ingestion-lowland-tide-masking">Step 1: Terrain Ingestion &amp; Lowland Tide Masking</h3>
+<p>Because vernal pools are exclusively perched freshwater depressions, the analysis first eliminates tidally influenced lowlands (such as Goleta Slough and Devereux Slough) by clamping elevations below the spring tide threshold (<span class="math inline">\(z \le 1.5\text{ m}\)</span> NAVD88).</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Load elevation model</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>campus_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/campus_DEM/campus_DEM.tif"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Ingest campus elevation model (units in feet or meters)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>campus_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/campus_DEM.tif"</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Filter to elevations above sea level</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dry_land <span class="ot">&lt;-</span> <span class="fu">clamp</span>(campus_dem, <span class="at">lower =</span> <span class="fl">0.5</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Calculate focal neighborhood statistics (e.g. min/mean difference)</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>focal_min <span class="ot">&lt;-</span> <span class="fu">focal</span>(dry_land, <span class="at">w =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">fun =</span> <span class="st">"min"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>sinks <span class="ot">&lt;-</span> dry_land <span class="sc">-</span> focal_min</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Extract candidates meeting depression criteria</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>vernal_pools <span class="ot">&lt;-</span> sinks <span class="sc">&gt;</span> <span class="fl">0.15</span> <span class="co"># Minimum depth threshold</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Convert to meters if required and clamp tidal lagoons</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>campus_dem_m <span class="ot">&lt;-</span> campus_dem <span class="sc">*</span> <span class="fl">0.3048</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>dry_mesa <span class="ot">&lt;-</span> <span class="fu">clamp</span>(campus_dem_m, <span class="at">lower =</span> <span class="fl">1.5</span>, <span class="at">values =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-2-focal-neighborhood-minimum-depressional-sinks" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-focal-neighborhood-minimum-depressional-sinks">Step 2: Focal Neighborhood Minimum &amp; Depressional Sinks</h3>
+<p>A focal moving window (<code>terra::focal</code>) computes the maximum local rim elevation and minimum center elevation. Pixels where the cell elevation is strictly lower than the surrounding neighborhood represent topographic sinks:</p>
+<p><span class="math display">\[\Delta z = z_{\text{focal\_max}} - z_{\text{cell}}\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Calculate 3x3 and 5x5 focal neighborhood elevation difference</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>focal_window <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>focal_max <span class="ot">&lt;-</span> <span class="fu">focal</span>(dry_mesa, <span class="at">w =</span> focal_window, <span class="at">fun =</span> <span class="st">"max"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate depression depth relative to rim</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sink_depth <span class="ot">&lt;-</span> focal_max <span class="sc">-</span> dry_mesa</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-3-noise-thresholding-hydrological-fill" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-noise-thresholding-hydrological-fill">Step 3: Noise Thresholding &amp; Hydrological Fill</h3>
+<p>Micro-topographic roughness and lidar noise produce hundreds of sub-centimeter artifacts. Candidates are filtered to require a minimum standing pool depth of <span class="math inline">\(\ge 0.15\text{ m}\)</span> (6 inches) and a continuous inundation basin.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Threshold depressions exceeding 15 cm depth</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>candidate_sinks <span class="ot">&lt;-</span> sink_depth <span class="sc">&gt;=</span> <span class="fl">0.15</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>candidate_sinks[candidate_sinks <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-4-vector-patch-extraction-patches-spatial-overlays" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-vector-patch-extraction-patches-spatial-overlays">Step 4: Vector Patch Extraction (<code>patches</code>) &amp; Spatial Overlays</h3>
+<p>Contiguous depression pixels are clumped into individual discrete pool patches using <code>terra::patches()</code>, vectorized to polygon boundaries with <code>as.polygons()</code>, and filtered by surface area (<span class="math inline">\(\ge 25\text{ m}^2\)</span>) to remove isolated pixel noise. The extracted vectors are then corroborated against known CCBER restoration records.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Clump contiguous cells into unique water bodies</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pool_patches <span class="ot">&lt;-</span> <span class="fu">patches</span>(candidate_sinks, <span class="at">directions =</span> <span class="dv">8</span>, <span class="at">zeroAsNA =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to vector polygons and calculate surface area</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>pool_vect <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(pool_patches)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>pool_vect<span class="sc">$</span>area_m2 <span class="ot">&lt;-</span> <span class="fu">expanse</span>(pool_vect)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>vernal_pools <span class="ot">&lt;-</span> <span class="fu">subset</span>(pool_vect, pool_vect<span class="sc">$</span>area_m2 <span class="sc">&gt;=</span> <span class="dv">25</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Export shapefile</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(vernal_pools, <span class="st">"output_data/vernal_pool_candidates.shp"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="prototype-implementation-script-scriptsmap_09.r" class="level2">
+<h2 class="anchored" data-anchor-id="prototype-implementation-script-scriptsmap_09.r">Prototype Implementation Script (<code>scripts/map_09.r</code>)</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show R Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Map 9 Prototype: Vernal Pool Topographic Sink Detection</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Ingest DEM</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>campus_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/campus_DEM.tif"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Filter to elevated coastal mesa (excluding tidal sloughs)</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>dry_mesa <span class="ot">&lt;-</span> <span class="fu">clamp</span>(campus_dem, <span class="at">lower =</span> <span class="fl">5.0</span>) <span class="co"># feet</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Compute 5x5 focal neighborhood maximum rim</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>focal_rim <span class="ot">&lt;-</span> <span class="fu">focal</span>(dry_mesa, <span class="at">w =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">5</span>), <span class="at">fun =</span> <span class="st">"max"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>sink_depth <span class="ot">&lt;-</span> focal_rim <span class="sc">-</span> dry_mesa</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Filter significant depressions (&gt; 0.5 ft depth)</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>candidate_sinks <span class="ot">&lt;-</span> <span class="fu">ifel</span>(sink_depth <span class="sc">&gt;=</span> <span class="fl">0.5</span>, sink_depth, <span class="cn">NA</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Extract contiguous pool polygons</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>pool_clumps <span class="ot">&lt;-</span> <span class="fu">patches</span>(candidate_sinks, <span class="at">directions =</span> <span class="dv">8</span>, <span class="at">zeroAsNA =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>pool_poly <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(pool_clumps)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Prototype completed: candidate vernal pool sinks identified.</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 
 
 <!-- -->
@@ -1022,55 +1101,129 @@ window.Quarto = {
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Map 9: Vernal Pools Analysis (DEM)"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Topographic depression analysis to identify campus vernal pools"</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">### Plate in Development</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>Map 9 is currently in the algorithmic design phase. This page outlines the analytical methodology, data requirements, and planned implementation.</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Analytical Concept</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>UCSB's coastal mesa and North Campus Open Space (NCOS) host rare coastal vernal pool ecosystems — shallow depressions underlain by impermeable clay or hardpan layers that fill during winter rains and dry up by summer.</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>This analysis uses digital elevation models (DEM) to identify topographic sinks or micro-depressions that meet vernal pool hydrological criteria:</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Elevation threshold:** Must sit above mean sea level ($z &gt; 0\text{ m}$) to exclude tidal flats and lagoons.</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Local depression detection:** Identify pixels whose elevation is strictly lower than their surrounding 8-connected neighbors (focal or sink detection).</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Depression filling / thresholding:** Calculate depression depth using hydrological sink filling (<span class="in">`terra::focal()`</span> or terrain fill algorithms) and filter out noise below minimum depth or area thresholds.</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Vector polygon extraction:** Convert detected pools into vector polygons to overlay on campus infrastructure and habitat maps.</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Intended Data Inputs</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**High-Resolution Campus DEM:** <span class="in">`source_data/campus_DEM/campus_DEM.tif`</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**NCOS Habitat Ground Truth:** <span class="in">`source_data/NCOS_Shorebird_Foraging_Habitat/`</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Reference Imagery:** PlanetScope seasonal imagery to corroborate standing water presence.</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Planned Terra Workflow</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Load elevation model</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>campus_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/campus_DEM/campus_DEM.tif"</span>)</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Filter to elevations above sea level</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>dry_land <span class="ot">&lt;-</span> <span class="fu">clamp</span>(campus_dem, <span class="at">lower =</span> <span class="fl">0.5</span>)</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Calculate focal neighborhood statistics (e.g. min/mean difference)</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>focal_min <span class="ot">&lt;-</span> <span class="fu">focal</span>(dry_land, <span class="at">w =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">fun =</span> <span class="st">"min"</span>)</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>sinks <span class="ot">&lt;-</span> dry_land <span class="sc">-</span> focal_min</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Extract candidates meeting depression criteria</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>vernal_pools <span class="ot">&lt;-</span> sinks <span class="sc">&gt;</span> <span class="fl">0.15</span> <span class="co"># Minimum depth threshold</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Map 9: Vernal Pools Analysis (DEM)"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Topographic depression analysis to identify campus vernal pools"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">### Plate in Algorithmic Prototyping</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>Map 9 is currently in active algorithmic design. Below is the analytical methodology, step-by-step mathematical model, intermediate conceptual diagnostic, and planned script implementation.</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rendered Map Plate (Design Prototype Placeholder)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 9 Placeholder: Conceptual schematic of focal depression extraction and vernal pool candidate detection](../images/map_09_placeholder.svg)</span>{fig-alt="Map 9 Vernal Pool Placeholder Schematic" width="100%"}</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Summary</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Objective:** Detect and delineate potential coastal vernal pools and seasonal micro-wetlands across the UCSB Mesa, North Campus Open Space (NCOS), and West Campus bluffs by modeling local topographic depressions in high-resolution elevation data.</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Key Packages:** <span class="in">`terra`</span>, <span class="in">`sf`</span>, <span class="in">`tidyverse`</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Data Sources:**</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>High-Resolution Campus Digital Elevation Model (<span class="in">`source_data/campus_DEM.tif`</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Restored NCOS wetlands ground truth (<span class="in">`source_data/NCOS_Shorebird_Foraging_Habitat/`</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>PlanetScope high-resolution wet-season imagery (for spectral water verification)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Output Artifacts (Planned):**</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Hydrological sinks raster: <span class="in">`output_data/campus_vernal_pool_sinks.tif`</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Delineated vernal pool polygons: <span class="in">`output_data/vernal_pool_candidates.shp`</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Rendered plate: <span class="in">`final_output/map_09.png`</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Step-by-Step Analytical Workflow &amp; Methodology</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>Coastal vernal pools form where shallow depressions on ancient marine terraces sit above impermeable clay subsoil layers. The detection algorithm models these features using neighborhood focal metrics:</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 1: Terrain Ingestion &amp; Lowland Tide Masking</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>Because vernal pools are exclusively perched freshwater depressions, the analysis first eliminates tidally influenced lowlands (such as Goleta Slough and Devereux Slough) by clamping elevations below the spring tide threshold ($z \le 1.5\text{ m}$ NAVD88).</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Ingest campus elevation model (units in feet or meters)</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>campus_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/campus_DEM.tif"</span>)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Convert to meters if required and clamp tidal lagoons</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>campus_dem_m <span class="ot">&lt;-</span> campus_dem <span class="sc">*</span> <span class="fl">0.3048</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>dry_mesa <span class="ot">&lt;-</span> <span class="fu">clamp</span>(campus_dem_m, <span class="at">lower =</span> <span class="fl">1.5</span>, <span class="at">values =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 2: Focal Neighborhood Minimum &amp; Depressional Sinks</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>A focal moving window (<span class="in">`terra::focal`</span>) computes the maximum local rim elevation and minimum center elevation. Pixels where the cell elevation is strictly lower than the surrounding neighborhood represent topographic sinks:</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>$$\Delta z = z_{\text{focal<span class="sc">\_</span>max}} - z_{\text{cell}}$$</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Calculate 3x3 and 5x5 focal neighborhood elevation difference</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>focal_window <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>focal_max <span class="ot">&lt;-</span> <span class="fu">focal</span>(dry_mesa, <span class="at">w =</span> focal_window, <span class="at">fun =</span> <span class="st">"max"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate depression depth relative to rim</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>sink_depth <span class="ot">&lt;-</span> focal_max <span class="sc">-</span> dry_mesa</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 3: Noise Thresholding &amp; Hydrological Fill</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>Micro-topographic roughness and lidar noise produce hundreds of sub-centimeter artifacts. Candidates are filtered to require a minimum standing pool depth of $\ge 0.15\text{ m}$ (6 inches) and a continuous inundation basin.</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Threshold depressions exceeding 15 cm depth</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>candidate_sinks <span class="ot">&lt;-</span> sink_depth <span class="sc">&gt;=</span> <span class="fl">0.15</span></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>candidate_sinks[candidate_sinks <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 4: Vector Patch Extraction (`patches`) &amp; Spatial Overlays</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>Contiguous depression pixels are clumped into individual discrete pool patches using <span class="in">`terra::patches()`</span>, vectorized to polygon boundaries with <span class="in">`as.polygons()`</span>, and filtered by surface area ($\ge 25\text{ m}^2$) to remove isolated pixel noise. The extracted vectors are then corroborated against known CCBER restoration records.</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Clump contiguous cells into unique water bodies</span></span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>pool_patches <span class="ot">&lt;-</span> <span class="fu">patches</span>(candidate_sinks, <span class="at">directions =</span> <span class="dv">8</span>, <span class="at">zeroAsNA =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to vector polygons and calculate surface area</span></span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>pool_vect <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(pool_patches)</span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>pool_vect<span class="sc">$</span>area_m2 <span class="ot">&lt;-</span> <span class="fu">expanse</span>(pool_vect)</span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>vernal_pools <span class="ot">&lt;-</span> <span class="fu">subset</span>(pool_vect, pool_vect<span class="sc">$</span>area_m2 <span class="sc">&gt;=</span> <span class="dv">25</span>)</span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Export shapefile</span></span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a><span class="fu">writeVector</span>(vernal_pools, <span class="st">"output_data/vernal_pool_candidates.shp"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a><span class="fu">## Prototype Implementation Script (`scripts/map_09.r`)</span></span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a><span class="co"># Map 9 Prototype: Vernal Pool Topographic Sink Detection</span></span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Ingest DEM</span></span>
+<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>campus_dem <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"source_data/campus_DEM.tif"</span>)</span>
+<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Filter to elevated coastal mesa (excluding tidal sloughs)</span></span>
+<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a>dry_mesa <span class="ot">&lt;-</span> <span class="fu">clamp</span>(campus_dem, <span class="at">lower =</span> <span class="fl">5.0</span>) <span class="co"># feet</span></span>
+<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Compute 5x5 focal neighborhood maximum rim</span></span>
+<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a>focal_rim <span class="ot">&lt;-</span> <span class="fu">focal</span>(dry_mesa, <span class="at">w =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">5</span>), <span class="at">fun =</span> <span class="st">"max"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a>sink_depth <span class="ot">&lt;-</span> focal_rim <span class="sc">-</span> dry_mesa</span>
+<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Filter significant depressions (&gt; 0.5 ft depth)</span></span>
+<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a>candidate_sinks <span class="ot">&lt;-</span> <span class="fu">ifel</span>(sink_depth <span class="sc">&gt;=</span> <span class="fl">0.5</span>, sink_depth, <span class="cn">NA</span>)</span>
+<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Extract contiguous pool polygons</span></span>
+<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>pool_clumps <span class="ot">&lt;-</span> <span class="fu">patches</span>(candidate_sinks, <span class="at">directions =</span> <span class="dv">8</span>, <span class="at">zeroAsNA =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-121"><a href="#cb6-121" aria-hidden="true" tabindex="-1"></a>pool_poly <span class="ot">&lt;-</span> <span class="fu">as.polygons</span>(pool_clumps)</span>
+<span id="cb6-122"><a href="#cb6-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Prototype completed: candidate vernal pool sinks identified.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

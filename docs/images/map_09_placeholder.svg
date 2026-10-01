@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E8F4F8"/>
+      <stop offset="100%" stop-color="#D4E6F1"/>
+    </linearGradient>
+    <linearGradient id="mesaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C5E1A5"/>
+      <stop offset="100%" stop-color="#81C784"/>
+    </linearGradient>
+    <linearGradient id="poolGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#29B6F6"/>
+      <stop offset="100%" stop-color="#0288D1"/>
+    </linearGradient>
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#B0BEC5" stroke-width="0.8" stroke-dasharray="2,2"/>
+    </pattern>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="800" fill="#F8F9FA"/>
+  <rect x="20" y="20" width="1160" height="760" rx="12" fill="white" stroke="#CFD8DC" stroke-width="2"/>
+
+  <!-- Header Banner -->
+  <rect x="20" y="20" width="1160" height="70" rx="12" fill="#2E7D32"/>
+  <text x="600" y="62" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">
+    PLATE PLACEHOLDER: MAP 9 — VERNAL POOL &amp; DEPRESSION HYDROLOGY
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="125" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#546E7A" text-anchor="middle">
+    Algorithmic Sink Extraction • Focal Neighborhood Analysis • Micro-Topography Modeling
+  </text>
+
+  <!-- Graphic Schematic Area -->
+  <g transform="translate(60, 160)">
+    <!-- Base Mesa Terrain Polygon -->
+    <rect x="0" y="0" width="1080" height="440" rx="8" fill="url(#mesaGrad)" stroke="#66BB6A" stroke-width="1.5"/>
+    <!-- Grid Overlay representing DEM cells -->
+    <rect x="0" y="0" width="1080" height="440" rx="8" fill="url(#gridPattern)" opacity="0.6"/>
+
+    <!-- Contour Lines Indicating Coastal Mesa Elevation -->
+    <path d="M 0 120 Q 250 80 500 130 T 1080 110" fill="none" stroke="#4CAF50" stroke-width="2" stroke-dasharray="6,4"/>
+    <path d="M 0 240 Q 300 210 600 260 T 1080 230" fill="none" stroke="#4CAF50" stroke-width="2" stroke-dasharray="6,4"/>
+    <path d="M 0 360 Q 350 330 700 370 T 1080 340" fill="none" stroke="#4CAF50" stroke-width="2" stroke-dasharray="6,4"/>
+
+    <!-- Simulated Vernal Pools (Depressions) -->
+    <!-- Pool 1: West Mesa -->
+    <ellipse cx="280" cy="190" rx="110" ry="65" fill="url(#poolGrad)" opacity="0.85" stroke="#01579B" stroke-width="2"/>
+    <text x="280" y="195" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">
+      Candidate Sink #1
+    </text>
+    <text x="280" y="215" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#E1F5FE" text-anchor="middle">
+      Depth: 0.32 m | Area: 1,420 m²
+    </text>
+
+    <!-- Pool 2: North Campus Open Space -->
+    <ellipse cx="680" cy="230" rx="140" ry="85" fill="url(#poolGrad)" opacity="0.85" stroke="#01579B" stroke-width="2"/>
+    <text x="680" y="235" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">
+      Candidate Sink #2 (NCOS Mesa)
+    </text>
+    <text x="680" y="255" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#E1F5FE" text-anchor="middle">
+      Depth: 0.48 m | Area: 2,850 m²
+    </text>
+
+    <!-- Pool 3: Small Micro-Depression -->
+    <ellipse cx="940" cy="140" rx="65" ry="40" fill="url(#poolGrad)" opacity="0.8" stroke="#01579B" stroke-width="1.5"/>
+    <text x="940" y="145" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">
+      Sink #3
+    </text>
+
+    <!-- Focal Window Matrix Demonstration Callout -->
+    <g transform="translate(60, 260)">
+      <rect width="180" height="150" rx="6" fill="#FFFFFFEE" stroke="#37474F" stroke-width="1.5"/>
+      <text x="90" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#263238" text-anchor="middle">
+        3×3 Focal Filter
+      </text>
+      <!-- Matrix Cells -->
+      <g transform="translate(30, 35)">
+        <rect x="0" y="0" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <rect x="40" y="0" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <rect x="80" y="0" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <rect x="0" y="35" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <rect x="40" y="35" width="35" height="30" fill="#FFE082" stroke="#FFA000" stroke-width="2"/>
+        <rect x="80" y="35" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <rect x="0" y="70" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <rect x="40" y="70" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <rect x="80" y="70" width="35" height="30" fill="#ECEFF1" stroke="#90A4AE"/>
+        <text x="57" y="55" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#D84315" text-anchor="middle">z&lt;zₙ</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom Workflow Milestone Indicators -->
+  <g transform="translate(80, 640)">
+    <!-- Stage 1 -->
+    <rect x="0" y="0" width="220" height="75" rx="6" fill="#F1F8E9" stroke="#8BC34A" stroke-width="1.5"/>
+    <text x="110" y="25" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#33691E" text-anchor="middle">Step 1: Ingest 1m DEM</text>
+    <text x="110" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#558B2F" text-anchor="middle">Clamp coastal marsh &gt; 1.5m</text>
+    <text x="110" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#7CB342" text-anchor="middle">Mask tidal lagoon influence</text>
+
+    <!-- Arrow 1 -->
+    <path d="M 235 38 L 260 38" stroke="#9E9E9E" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- Stage 2 -->
+    <rect x="270" y="0" width="220" height="75" rx="6" fill="#E3F2FD" stroke="#64B5F6" stroke-width="1.5"/>
+    <text x="380" y="25" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#0D47A1" text-anchor="middle">Step 2: Focal Sinks</text>
+    <text x="380" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#1565C0" text-anchor="middle">terra::focal() 3x3 &amp; 5x5</text>
+    <text x="380" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#1976D2" text-anchor="middle">Detect minimum elevation sinks</text>
+
+    <!-- Stage 3 -->
+    <rect x="540" y="0" width="220" height="75" rx="6" fill="#FFF8E1" stroke="#FFD54F" stroke-width="1.5"/>
+    <text x="650" y="25" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#F57F17" text-anchor="middle">Step 3: Depth Threshold</text>
+    <text x="650" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#FBC02D" text-anchor="middle">Depression fill differential</text>
+    <text x="650" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#F57F17" text-anchor="middle">Filter micro-noise &lt; 0.15m</text>
+
+    <!-- Stage 4 -->
+    <rect x="810" y="0" width="220" height="75" rx="6" fill="#EDE7F6" stroke="#B39DDB" stroke-width="1.5"/>
+    <text x="920" y="25" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#4A148C" text-anchor="middle">Step 4: Vector Clumping</text>
+    <text x="920" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6A1B9A" text-anchor="middle">as.polygons(terra::patches)</text>
+    <text x="920" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#7B1FA2" text-anchor="middle">Export candidate vernal pools</text>
+  </g>
+</svg>

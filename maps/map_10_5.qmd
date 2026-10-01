@@ -83,6 +83,59 @@ modern_crossings <- terra::intersect(streams_ncos, ncos_trails)
 
 ---
 
+## Step-by-Step Analytical Workflow & Intermediate Outputs
+
+The script `scripts/map_10_5.r` contrasts the legacy campus facilities layer against newly digitized CCBER trail geometry across the North Campus Open Space focus area (`scripts/ncos.geojson`).
+
+### Step 1: Spatial Bounding & Stream Network Cropping
+
+The statewide California streams dataset is cropped tightly to the NCOS study bounding box (`scripts/ncos.geojson`), isolating Devereux Creek and the upper arms of Devereux Slough.
+
+```r
+# Crop streams and wetland habitats to the NCOS focus area
+ncos_box <- vect(geojson_sf("scripts/ncos.geojson"))
+streams_full_proj <- project(streams_full, crs(ncos_box))
+streams_ncos <- crop(streams_full_proj, ncos_box)
+
+habitat <- vect("source_data/NCOS_Shorebird_Foraging_Habitat/NCOS_Shorebird_Foraging_Habitat.shp")
+habitat <- project(habitat, crs(ncos_box))
+```
+
+### Step 2: Comparing Topological Intersections Across Epochs
+
+Running `terra::intersect()` on both datasets proves the temporal failure mode:
+
+```r
+# Legacy 2016 ICM Dataset:
+bike_paths_ncos <- crop(project(bike_paths, crs(ncos_box)), ncos_box)
+legacy_crossings <- terra::intersect(streams_ncos, bike_paths_ncos)
+cat("Legacy crossings in NCOS:", length(legacy_crossings), "\n")
+# Output: 0 crossings!
+
+# Modern 2020 CCBER Dataset:
+modern_crossings <- terra::intersect(streams_ncos, ncos_trails)
+modern_crossings_disagg <- disagg(modern_crossings)
+cat("Modern crossings in NCOS:", length(modern_crossings_disagg), "\n")
+# Output: 2 verified crossings (Devereux Creek bridge & North Marsh)
+```
+
+### Step 3: Comparative Cartographic Plate Generation
+
+The final layout visualizes both data regimes simultaneously:
+* **Solid dark lines:** Legacy paved bikeways abruptly ending at Whittier Drive.
+* **Dashed purple lines:** Modern post-2018 NCOS multi-use trails and bridges.
+* **Cyan lines:** Devereux Creek stream channels.
+* **Crimson circle:** The ground-truthed Devereux Creek timber bridge crossing ($34.4204^\circ\text{ N}, 119.8770^\circ\text{ W}$) completely absent from the 2016 dataset.
+
+```r
+# Render and save provenance comparison plate
+ggsave("images/map10_5.png", plot = map10_5_plot, width = 12, height = 9, dpi = 300, bg = "white")
+```
+
+![Intermediate Output: Final comparative visualization saved to images/map10_5.png](../images/map10_5.png){fig-alt="Map 10.5 Intermediate Output" width="100%"}
+
+---
+
 ## Key Lessons for Geospatial Analysts
 
 1. **Topological queries inherit source omissions:** An algorithm cannot detect relationships for features that do not exist in the source geometry. A script can run with zero syntax errors while producing fundamentally misleading real-world conclusions.
