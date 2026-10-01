@@ -82,7 +82,7 @@ Rectified and cropped historic geologic quadrangle map.
 ::: {.g-col-12 .g-col-md-6}
 #### [Map 12: NDVI Phenology Stack](map_12.qmd)
 
-[![](../final_output/map_12.png)](map_12.qmd)
+[![](../final_output/map_12_monthly_ndvi.png)](map_12.qmd)
 
 Annual vegetation index dynamics from satellite time series.
 :::

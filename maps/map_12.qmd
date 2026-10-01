@@ -5,8 +5,13 @@ subtitle: "Annual time-series satellite analysis of campus vegetation phenology"
 
 ## Rendered Map Plates
 
-### Monthly NDVI Raster Stack
-![Map 12: 12 monthly NDVI scenes over the UCSB campus](../final_output/map_12.png){fig-alt="Map 12 NDVI Raster Stack" width="100%"}
+### Publication Plate: Month-by-Month NDVI Small Multiples
+The finished atlas plate below provides a **publication-quality small multiples sequence** of the month-by-month Normalized Difference Vegetation Index (NDVI) across North Campus Open Space (NCOS) and West Campus over the 2023–2024 annual cycle. Multiple daily satellite passes within each calendar month are harmonized into monthly composites, tracking seasonal phenology from dry-season dormancy (September–November), the winter green flush (December–January), peak spring biomass in April (mean NDVI $\sim 0.41$), and the early-summer dry-down (May–August).
+
+![Map 12 Small Multiples: Well-formatted small multiples of month-by-month NDVI phenology](../final_output/map_12_monthly_ndvi.png){fig-alt="Map 12 Month-by-Month NDVI Small Multiples" width="100%"}
+
+### Acquisition Date Raster Stack
+![Map 12: 11 satellite acquisition scenes over the UCSB campus and NCOS](../final_output/map_12.png){fig-alt="Map 12 NDVI Raster Stack" width="100%"}
 
 ### Vegetation Phenology Curve
 ![Plot 12: Mean campus NDVI across the annual cycle](../final_output/plot_12.png){fig-alt="Plot 12 Mean NDVI" width="85%"}
@@ -21,11 +26,12 @@ subtitle: "Annual time-series satellite analysis of campus vegetation phenology"
 * **Key Packages:** `terra`, `ggplot2`, `dplyr`, `tidyr`, `lubridate`, `scales`
 * **Data Sources:**
   * Monthly PlanetScope AnalyticMS scenes (`output_data/ndvi/*.tif`)
-  * Campus and NCOS study area boundaries
+  * Campus and NCOS study area boundaries (`scripts/ncos.geojson`)
 * **Outputs:**
   * Initial raw stack verification: `images/ndvi_series_stack_1.png`
-  * Faceted multi-panel map plate: `final_output/map_12.png`
-  * Time-series trajectory plot: `final_output/plot_12.png`
+  * Acquisition-date faceted stack: `final_output/map_12.png`
+  * Vegetation phenology trajectory curve: `final_output/plot_12.png`
+  * Publication-ready monthly small multiples: `final_output/map_12_monthly_ndvi.png` (also archived at `final_output/map_12_small_multiples.png`)
 
 ---
 
@@ -59,7 +65,7 @@ ggsave("images/ndvi_series_stack_1.png", plot = last_plot(), bg = "white")
 
 ### Step 3: Cropping to Focus AOI & Tidy Pivot for Faceting
 
-The full stack is cropped to the North Campus Open Space and West Campus reserve boundary (`scripts/ncos.geojson`). It is then converted into a long tidy data frame (`as.data.frame(xy=TRUE) %>% pivot_longer()`), mapping date strings to standardized calendar months and Julian days of the year (`yday(date)`).
+The full stack is cropped to the North Campus Open Space and West Campus reserve boundary (`scripts/ncos.geojson`). It is then converted into a long tidy data frame (`as.data.frame(xy=TRUE) %>% pivot_longer()`), extracting clean 8-digit date strings (`YYYYMMDD`) to resolve calendar dates and Julian days of the year (`yday(date)`).
 
 ```r
 # Crop stack to focus area
@@ -70,23 +76,34 @@ ndvi_series_stack <- crop(ndvi_series_stack, project(ncos_extent, ndvi_series_st
 ndvi_series_df <- as.data.frame(ndvi_series_stack, xy = TRUE, na.rm = FALSE) %>%
   pivot_longer(-(x:y), names_to = "image_date", values_to = "NDVI_value") %>%
   mutate(
-    yyyymmdd = substr(image_date, 2, 9),
+    yyyymmdd = sub(".*?([0-9]{8}).*", "\\1", image_date),
     date = as_date(yyyymmdd),
     julian_date = yday(date)
   )
 ```
 
-### Step 4: Faceted Small Multiples & Phenology Trajectory Curve
+### Step 4: Exploratory Faceting & Phenology Trajectory Curve
 
-1. **Faceted Stack (`map_12.png`):** Styled with a diverging Red-Yellow-Green spectral ramp (`scale_fill_distiller(palette = "RdYlGn", direction = 1)`), visually tracking the flush of winter/spring greens and the transition to summer golden-brown grasslands.
-2. **Phenology Curve (`plot_12.png`):** The mean NDVI per scene is computed, plotting seasonal canopy dynamics across the academic calendar.
+1. **Acquisition Facets (`map_12.png`):** Displays all 11 individual satellite acquisition scenes to observe sensor coverage patterns and data consistency.
+2. **Phenology Curve (`plot_12.png`):** The global spatial mean NDVI is computed per scene, revealing that April 2024 achieved the annual maximum canopy greenness.
+
+### Step 5: Publication Plate — Well-Formatted Monthly Small Multiples
+
+To produce a cartographically refined atlas plate:
+* Intra-month acquisition passes are averaged into seamless monthly surfaces (`group_by(x, y, year_month, month_name) %>% summarize(NDVI = mean(...))`).
+* A standardized, diverging Red-Yellow-Green spectral ramp (`scale_fill_distiller(palette = "RdYlGn", direction = 1)`) maps negative values (open water and wetland channels) to deep rust, bare soils to buff/yellow, and dense canopy to rich forest green across identical limits `[-0.2, 0.8]`.
+* Distracting coordinate clutter and tick marks are eliminated in favor of clean facet headers, subtle borders, and an anchored horizontal legend.
 
 ```r
-# Render faceted monthly grid
-ggplot() +
-  geom_raster(data = ndvi_series_df, aes(x = x, y = y, fill = NDVI_value)) +
-  scale_fill_distiller(palette = "RdYlGn", direction = 1) +
-  facet_wrap(~yyyymmdd) +
+# Render publication small multiples plate
+ggplot(monthly_ndvi_df) +
+  geom_raster(aes(x = x, y = y, fill = NDVI)) +
+  scale_fill_distiller(
+    palette = "RdYlGn", direction = 1,
+    limits = c(-0.2, 0.8), oob = scales::squish
+  ) +
+  facet_wrap(~month_name, ncol = 5) +
+  coord_equal() +
   theme_minimal()
 ```
 

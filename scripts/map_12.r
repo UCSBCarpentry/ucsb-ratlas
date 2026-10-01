@@ -268,11 +268,11 @@ ggplot() +
 # fix those facet labels!
 # this is what it should look like:
 str(ndvi_series_df)
-year_month_label <- substr(ndvi_series_df$image_date, 2, 9)
+year_month_label <- sub(".*?([0-9]{8}).*", "\\1", ndvi_series_df$image_date)
 year_month_label
 
 # now that we've tested, mutate here to add the new column:
-ndvi_series_w_dates_df <- mutate(ndvi_series_df, yyyymmdd = substr(ndvi_series_df$image_date, 2, 9))
+ndvi_series_w_dates_df <- mutate(ndvi_series_df, yyyymmdd = sub(".*?([0-9]{8}).*", "\\1", image_date))
 ndvi_series_w_dates_df
 str(ndvi_series_w_dates_df)
 
@@ -403,6 +403,80 @@ ggplot(avg_NDVI_df, mapping = aes(Month, MeanNDVI)) +
   ggtitle(gg_labelmaker(current_ggplot + 1), subtitle = "Now we can read this axis")
 
 ggsave("final_output/plot_12.png", plot = last_plot(), bg = "white")
+
+
+# ==============================================================================
+# Final Output Plate: Well-Formatted Month-by-Month NDVI Small Multiples
+# ==============================================================================
+
+# Aggregate pixel-level NDVI by calendar month across the annual cycle
+monthly_ndvi_df <- ndvi_series_df %>%
+  filter(!is.na(NDVI_value)) %>%
+  mutate(
+    date_str = sub(".*?([0-9]{8}).*", "\\1", image_date),
+    date = as_date(date_str),
+    year_month = format(date, "%Y-%m"),
+    month_name = format(date, "%B %Y")
+  ) %>%
+  group_by(x, y, year_month, month_name) %>%
+  summarize(NDVI = mean(NDVI_value, na.rm = TRUE), .groups = "drop") %>%
+  arrange(year_month)
+
+# Enforce chronological ordering of month panels
+monthly_ndvi_df$month_name <- factor(
+  monthly_ndvi_df$month_name,
+  levels = unique(monthly_ndvi_df$month_name)
+)
+
+# Render publication-quality small multiples plate
+map_12_small_multiples <- ggplot(monthly_ndvi_df) +
+  geom_raster(aes(x = x, y = y, fill = NDVI)) +
+  scale_fill_distiller(
+    palette = "RdYlGn",
+    direction = 1,
+    limits = c(-0.2, 0.8),
+    oob = scales::squish,
+    breaks = seq(-0.2, 0.8, by = 0.2),
+    labels = c("-0.2 (Water)", "0.0 (Bare)", "0.2 (Dry Grass)", "0.4", "0.6", "0.8 (Dense Green)"),
+    guide = guide_colorbar(
+      title = "Normalized Difference Vegetation Index (NDVI)",
+      title.position = "top",
+      title.hjust = 0.5,
+      barwidth = unit(20, "lines"),
+      barheight = unit(0.7, "lines")
+    )
+  ) +
+  facet_wrap(~month_name, ncol = 5) +
+  coord_equal() +
+  labs(
+    title = "NCOS - Monthly NDVI (2023-2024)",
+    subtitle = "Which month was the greenest?",
+    caption = "UCSB R-Atlas | Sensor: PlanetScope AnalyticMS (3m native downsampled 4x) | Coordinate Reference: UTM Zone 10N (WGS 84)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold", size = 15, hjust = 0.5, margin = margin(b = 5)),
+    plot.subtitle = element_text(size = 11, color = "grey30", hjust = 0.5, margin = margin(b = 12)),
+    plot.caption = element_text(size = 8.5, color = "grey40", hjust = 0.5, margin = margin(t = 10)),
+    strip.text = element_text(face = "bold", size = 11, color = "grey15"),
+    strip.background = element_rect(fill = "#f2f4f7", color = "#d0d5dd", linewidth = 0.5),
+    panel.border = element_rect(color = "#d0d5dd", fill = NA, linewidth = 0.5),
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "bottom",
+    legend.title = element_text(size = 9.5, face = "bold"),
+    legend.text = element_text(size = 8.5),
+    legend.margin = margin(t = 6, b = 2),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "#f8f9fa", color = NA)
+  )
+
+print(map_12_small_multiples)
+ggsave("final_output/map_12_monthly_ndvi.png", plot = map_12_small_multiples, width = 14, height = 7.5, dpi = 300, bg = "white")
+ggsave("images/map12_monthly_ndvi.png", plot = map_12_small_multiples, width = 14, height = 7.5, dpi = 300, bg = "white")
+file.copy("final_output/map_12_monthly_ndvi.png", "final_output/map_12_small_multiples.png", overwrite = TRUE)
 
 
 # we still need to format those as Julian dates

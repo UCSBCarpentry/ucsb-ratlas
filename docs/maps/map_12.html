@@ -473,7 +473,8 @@ window.Quarto = {
   <ul>
   <li><a href="#rendered-map-plates" id="toc-rendered-map-plates" class="nav-link active" data-scroll-target="#rendered-map-plates">Rendered Map Plates</a>
   <ul class="collapse">
-  <li><a href="#monthly-ndvi-raster-stack" id="toc-monthly-ndvi-raster-stack" class="nav-link" data-scroll-target="#monthly-ndvi-raster-stack">Monthly NDVI Raster Stack</a></li>
+  <li><a href="#publication-plate-month-by-month-ndvi-small-multiples" id="toc-publication-plate-month-by-month-ndvi-small-multiples" class="nav-link" data-scroll-target="#publication-plate-month-by-month-ndvi-small-multiples">Publication Plate: Month-by-Month NDVI Small Multiples</a></li>
+  <li><a href="#acquisition-date-raster-stack" id="toc-acquisition-date-raster-stack" class="nav-link" data-scroll-target="#acquisition-date-raster-stack">Acquisition Date Raster Stack</a></li>
   <li><a href="#vegetation-phenology-curve" id="toc-vegetation-phenology-curve" class="nav-link" data-scroll-target="#vegetation-phenology-curve">Vegetation Phenology Curve</a></li>
   </ul></li>
   <li><a href="#technical-summary" id="toc-technical-summary" class="nav-link" data-scroll-target="#technical-summary">Technical Summary</a></li>
@@ -482,7 +483,8 @@ window.Quarto = {
   <li><a href="#step-1-batch-ndvi-calculation-dimension-harmonization" id="toc-step-1-batch-ndvi-calculation-dimension-harmonization" class="nav-link" data-scroll-target="#step-1-batch-ndvi-calculation-dimension-harmonization">Step 1: Batch NDVI Calculation &amp; Dimension Harmonization</a></li>
   <li><a href="#step-2-intermediate-plot-initial-full-extent-raster-stack" id="toc-step-2-intermediate-plot-initial-full-extent-raster-stack" class="nav-link" data-scroll-target="#step-2-intermediate-plot-initial-full-extent-raster-stack">Step 2: Intermediate Plot — Initial Full-Extent Raster Stack</a></li>
   <li><a href="#step-3-cropping-to-focus-aoi-tidy-pivot-for-faceting" id="toc-step-3-cropping-to-focus-aoi-tidy-pivot-for-faceting" class="nav-link" data-scroll-target="#step-3-cropping-to-focus-aoi-tidy-pivot-for-faceting">Step 3: Cropping to Focus AOI &amp; Tidy Pivot for Faceting</a></li>
-  <li><a href="#step-4-faceted-small-multiples-phenology-trajectory-curve" id="toc-step-4-faceted-small-multiples-phenology-trajectory-curve" class="nav-link" data-scroll-target="#step-4-faceted-small-multiples-phenology-trajectory-curve">Step 4: Faceted Small Multiples &amp; Phenology Trajectory Curve</a></li>
+  <li><a href="#step-4-exploratory-faceting-phenology-trajectory-curve" id="toc-step-4-exploratory-faceting-phenology-trajectory-curve" class="nav-link" data-scroll-target="#step-4-exploratory-faceting-phenology-trajectory-curve">Step 4: Exploratory Faceting &amp; Phenology Trajectory Curve</a></li>
+  <li><a href="#step-5-publication-plate-well-formatted-monthly-small-multiples" id="toc-step-5-publication-plate-well-formatted-monthly-small-multiples" class="nav-link" data-scroll-target="#step-5-publication-plate-well-formatted-monthly-small-multiples">Step 5: Publication Plate — Well-Formatted Monthly Small Multiples</a></li>
   </ul></li>
   <li><a href="#full-r-script-scriptsmap_12.r" id="toc-full-r-script-scriptsmap_12.r" class="nav-link" data-scroll-target="#full-r-script-scriptsmap_12.r">Full R Script (<code>scripts/map_12.r</code>)</a></li>
   </ul>
@@ -514,12 +516,22 @@ window.Quarto = {
 
 <section id="rendered-map-plates" class="level2">
 <h2 class="anchored" data-anchor-id="rendered-map-plates">Rendered Map Plates</h2>
-<section id="monthly-ndvi-raster-stack" class="level3">
-<h3 class="anchored" data-anchor-id="monthly-ndvi-raster-stack">Monthly NDVI Raster Stack</h3>
+<section id="publication-plate-month-by-month-ndvi-small-multiples" class="level3">
+<h3 class="anchored" data-anchor-id="publication-plate-month-by-month-ndvi-small-multiples">Publication Plate: Month-by-Month NDVI Small Multiples</h3>
+<p>The finished atlas plate below provides a <strong>publication-quality small multiples sequence</strong> of the month-by-month Normalized Difference Vegetation Index (NDVI) across North Campus Open Space (NCOS) and West Campus over the 2023–2024 annual cycle. Multiple daily satellite passes within each calendar month are harmonized into monthly composites, tracking seasonal phenology from dry-season dormancy (September–November), the winter green flush (December–January), peak spring biomass in April (mean NDVI <span class="math inline">\(\sim 0.41\)</span>), and the early-summer dry-down (May–August).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../final_output/map_12_monthly_ndvi.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 12 Month-by-Month NDVI Small Multiples"></p>
+<figcaption>Map 12 Small Multiples: Well-formatted small multiples of month-by-month NDVI phenology</figcaption>
+</figure>
+</div>
+</section>
+<section id="acquisition-date-raster-stack" class="level3">
+<h3 class="anchored" data-anchor-id="acquisition-date-raster-stack">Acquisition Date Raster Stack</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../final_output/map_12.png" class="img-fluid figure-img" style="width:100.0%" alt="Map 12 NDVI Raster Stack"></p>
-<figcaption>Map 12: 12 monthly NDVI scenes over the UCSB campus</figcaption>
+<figcaption>Map 12: 11 satellite acquisition scenes over the UCSB campus and NCOS</figcaption>
 </figure>
 </div>
 </section>
@@ -543,13 +555,14 @@ window.Quarto = {
 <li><strong>Data Sources:</strong>
 <ul>
 <li>Monthly PlanetScope AnalyticMS scenes (<code>output_data/ndvi/*.tif</code>)</li>
-<li>Campus and NCOS study area boundaries</li>
+<li>Campus and NCOS study area boundaries (<code>scripts/ncos.geojson</code>)</li>
 </ul></li>
 <li><strong>Outputs:</strong>
 <ul>
 <li>Initial raw stack verification: <code>images/ndvi_series_stack_1.png</code></li>
-<li>Faceted multi-panel map plate: <code>final_output/map_12.png</code></li>
-<li>Time-series trajectory plot: <code>final_output/plot_12.png</code></li>
+<li>Acquisition-date faceted stack: <code>final_output/map_12.png</code></li>
+<li>Vegetation phenology trajectory curve: <code>final_output/plot_12.png</code></li>
+<li>Publication-ready monthly small multiples: <code>final_output/map_12_monthly_ndvi.png</code> (also archived at <code>final_output/map_12_small_multiples.png</code>)</li>
 </ul></li>
 </ul>
 <hr>
@@ -581,7 +594,7 @@ window.Quarto = {
 </section>
 <section id="step-3-cropping-to-focus-aoi-tidy-pivot-for-faceting" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-cropping-to-focus-aoi-tidy-pivot-for-faceting">Step 3: Cropping to Focus AOI &amp; Tidy Pivot for Faceting</h3>
-<p>The full stack is cropped to the North Campus Open Space and West Campus reserve boundary (<code>scripts/ncos.geojson</code>). It is then converted into a long tidy data frame (<code>as.data.frame(xy=TRUE) %&gt;% pivot_longer()</code>), mapping date strings to standardized calendar months and Julian days of the year (<code>yday(date)</code>).</p>
+<p>The full stack is cropped to the North Campus Open Space and West Campus reserve boundary (<code>scripts/ncos.geojson</code>). It is then converted into a long tidy data frame (<code>as.data.frame(xy=TRUE) %&gt;% pivot_longer()</code>), extracting clean 8-digit date strings (<code>YYYYMMDD</code>) to resolve calendar dates and Julian days of the year (<code>yday(date)</code>).</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crop stack to focus area</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ncos_extent <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"scripts/ncos.geojson"</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ndvi_series_stack <span class="ot">&lt;-</span> <span class="fu">crop</span>(ndvi_series_stack, <span class="fu">project</span>(ncos_extent, ndvi_series_stack))</span>
@@ -590,23 +603,31 @@ window.Quarto = {
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ndvi_series_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ndvi_series_stack, <span class="at">xy =</span> <span class="cn">TRUE</span>, <span class="at">na.rm =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>(x<span class="sc">:</span>y), <span class="at">names_to =</span> <span class="st">"image_date"</span>, <span class="at">values_to =</span> <span class="st">"NDVI_value"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">yyyymmdd =</span> <span class="fu">substr</span>(image_date, <span class="dv">2</span>, <span class="dv">9</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">yyyymmdd =</span> <span class="fu">sub</span>(<span class="st">".*?([0-9]{8}).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, image_date),</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as_date</span>(yyyymmdd),</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">julian_date =</span> <span class="fu">yday</span>(date)</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="step-4-faceted-small-multiples-phenology-trajectory-curve" class="level3">
-<h3 class="anchored" data-anchor-id="step-4-faceted-small-multiples-phenology-trajectory-curve">Step 4: Faceted Small Multiples &amp; Phenology Trajectory Curve</h3>
+<section id="step-4-exploratory-faceting-phenology-trajectory-curve" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-exploratory-faceting-phenology-trajectory-curve">Step 4: Exploratory Faceting &amp; Phenology Trajectory Curve</h3>
 <ol type="1">
-<li><strong>Faceted Stack (<code>map_12.png</code>):</strong> Styled with a diverging Red-Yellow-Green spectral ramp (<code>scale_fill_distiller(palette = "RdYlGn", direction = 1)</code>), visually tracking the flush of winter/spring greens and the transition to summer golden-brown grasslands.</li>
-<li><strong>Phenology Curve (<code>plot_12.png</code>):</strong> The mean NDVI per scene is computed, plotting seasonal canopy dynamics across the academic calendar.</li>
+<li><strong>Acquisition Facets (<code>map_12.png</code>):</strong> Displays all 11 individual satellite acquisition scenes to observe sensor coverage patterns and data consistency.</li>
+<li><strong>Phenology Curve (<code>plot_12.png</code>):</strong> The global spatial mean NDVI is computed per scene, revealing that April 2024 achieved the annual maximum canopy greenness.</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Render faceted monthly grid</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> ndvi_series_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> NDVI_value)) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdYlGn"</span>, <span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>yyyymmdd) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-5-publication-plate-well-formatted-monthly-small-multiples" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-publication-plate-well-formatted-monthly-small-multiples">Step 5: Publication Plate — Well-Formatted Monthly Small Multiples</h3>
+<p>To produce a cartographically refined atlas plate: * Intra-month acquisition passes are averaged into seamless monthly surfaces (<code>group_by(x, y, year_month, month_name) %&gt;% summarize(NDVI = mean(...))</code>). * A standardized, diverging Red-Yellow-Green spectral ramp (<code>scale_fill_distiller(palette = "RdYlGn", direction = 1)</code>) maps negative values (open water and wetland channels) to deep rust, bare soils to buff/yellow, and dense canopy to rich forest green across identical limits <code>[-0.2, 0.8]</code>. * Distracting coordinate clutter and tick marks are eliminated in favor of clean facet headers, subtle borders, and an anchored horizontal legend.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Render publication small multiples plate</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(monthly_ndvi_df) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> NDVI)) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"RdYlGn"</span>, <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="fl">0.8</span>), <span class="at">oob =</span> scales<span class="sc">::</span>squish</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>month_name, <span class="at">ncol =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
@@ -885,11 +906,11 @@ window.Quarto = {
 <span id="cb5-268"><a href="#cb5-268" aria-hidden="true" tabindex="-1"></a><span class="co"># fix those facet labels!</span></span>
 <span id="cb5-269"><a href="#cb5-269" aria-hidden="true" tabindex="-1"></a><span class="co"># this is what it should look like:</span></span>
 <span id="cb5-270"><a href="#cb5-270" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(ndvi_series_df)</span>
-<span id="cb5-271"><a href="#cb5-271" aria-hidden="true" tabindex="-1"></a>year_month_label <span class="ot">&lt;-</span> <span class="fu">substr</span>(ndvi_series_df<span class="sc">$</span>image_date, <span class="dv">2</span>, <span class="dv">9</span>)</span>
+<span id="cb5-271"><a href="#cb5-271" aria-hidden="true" tabindex="-1"></a>year_month_label <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">".*?([0-9]{8}).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, ndvi_series_df<span class="sc">$</span>image_date)</span>
 <span id="cb5-272"><a href="#cb5-272" aria-hidden="true" tabindex="-1"></a>year_month_label</span>
 <span id="cb5-273"><a href="#cb5-273" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-274"><a href="#cb5-274" aria-hidden="true" tabindex="-1"></a><span class="co"># now that we've tested, mutate here to add the new column:</span></span>
-<span id="cb5-275"><a href="#cb5-275" aria-hidden="true" tabindex="-1"></a>ndvi_series_w_dates_df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(ndvi_series_df, <span class="at">yyyymmdd =</span> <span class="fu">substr</span>(ndvi_series_df<span class="sc">$</span>image_date, <span class="dv">2</span>, <span class="dv">9</span>))</span>
+<span id="cb5-275"><a href="#cb5-275" aria-hidden="true" tabindex="-1"></a>ndvi_series_w_dates_df <span class="ot">&lt;-</span> <span class="fu">mutate</span>(ndvi_series_df, <span class="at">yyyymmdd =</span> <span class="fu">sub</span>(<span class="st">".*?([0-9]{8}).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, image_date))</span>
 <span id="cb5-276"><a href="#cb5-276" aria-hidden="true" tabindex="-1"></a>ndvi_series_w_dates_df</span>
 <span id="cb5-277"><a href="#cb5-277" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(ndvi_series_w_dates_df)</span>
 <span id="cb5-278"><a href="#cb5-278" aria-hidden="true" tabindex="-1"></a></span>
@@ -1022,20 +1043,94 @@ window.Quarto = {
 <span id="cb5-405"><a href="#cb5-405" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"final_output/plot_12.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">bg =</span> <span class="st">"white"</span>)</span>
 <span id="cb5-406"><a href="#cb5-406" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-407"><a href="#cb5-407" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-408"><a href="#cb5-408" aria-hidden="true" tabindex="-1"></a><span class="co"># we still need to format those as Julian dates</span></span>
-<span id="cb5-409"><a href="#cb5-409" aria-hidden="true" tabindex="-1"></a><span class="co"># hallucinated graph:</span></span>
-<span id="cb5-410"><a href="#cb5-410" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(avg_NDVI_df, mapping = aes(JulianDate, MeanNDVI)) +</span></span>
-<span id="cb5-411"><a href="#cb5-411" aria-hidden="true" tabindex="-1"></a><span class="co">#  geom_point() +</span></span>
-<span id="cb5-412"><a href="#cb5-412" aria-hidden="true" tabindex="-1"></a><span class="co">#  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Now we can read this axis")</span></span>
-<span id="cb5-413"><a href="#cb5-413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-414"><a href="#cb5-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-415"><a href="#cb5-415" aria-hidden="true" tabindex="-1"></a><span class="co"># we'll need weather data to mimic the lesson.</span></span>
-<span id="cb5-416"><a href="#cb5-416" aria-hidden="true" tabindex="-1"></a><span class="co"># or use our brains and eyes to define</span></span>
-<span id="cb5-417"><a href="#cb5-417" aria-hidden="true" tabindex="-1"></a><span class="co"># when was it rainiest?</span></span>
-<span id="cb5-418"><a href="#cb5-418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-419"><a href="#cb5-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-420"><a href="#cb5-420" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="st">"Map 12 Complete"</span></span>
-<span id="cb5-421"><a href="#cb5-421" aria-hidden="true" tabindex="-1"></a>current_sheet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-408"><a href="#cb5-408" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb5-409"><a href="#cb5-409" aria-hidden="true" tabindex="-1"></a><span class="co"># Final Output Plate: Well-Formatted Month-by-Month NDVI Small Multiples</span></span>
+<span id="cb5-410"><a href="#cb5-410" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================================</span></span>
+<span id="cb5-411"><a href="#cb5-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-412"><a href="#cb5-412" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate pixel-level NDVI by calendar month across the annual cycle</span></span>
+<span id="cb5-413"><a href="#cb5-413" aria-hidden="true" tabindex="-1"></a>monthly_ndvi_df <span class="ot">&lt;-</span> ndvi_series_df <span class="sc">%&gt;%</span></span>
+<span id="cb5-414"><a href="#cb5-414" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(NDVI_value)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-415"><a href="#cb5-415" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-416"><a href="#cb5-416" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_str =</span> <span class="fu">sub</span>(<span class="st">".*?([0-9]{8}).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, image_date),</span>
+<span id="cb5-417"><a href="#cb5-417" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as_date</span>(date_str),</span>
+<span id="cb5-418"><a href="#cb5-418" aria-hidden="true" tabindex="-1"></a>    <span class="at">year_month =</span> <span class="fu">format</span>(date, <span class="st">"%Y-%m"</span>),</span>
+<span id="cb5-419"><a href="#cb5-419" aria-hidden="true" tabindex="-1"></a>    <span class="at">month_name =</span> <span class="fu">format</span>(date, <span class="st">"%B %Y"</span>)</span>
+<span id="cb5-420"><a href="#cb5-420" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-421"><a href="#cb5-421" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(x, y, year_month, month_name) <span class="sc">%&gt;%</span></span>
+<span id="cb5-422"><a href="#cb5-422" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">NDVI =</span> <span class="fu">mean</span>(NDVI_value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-423"><a href="#cb5-423" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year_month)</span>
+<span id="cb5-424"><a href="#cb5-424" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-425"><a href="#cb5-425" aria-hidden="true" tabindex="-1"></a><span class="co"># Enforce chronological ordering of month panels</span></span>
+<span id="cb5-426"><a href="#cb5-426" aria-hidden="true" tabindex="-1"></a>monthly_ndvi_df<span class="sc">$</span>month_name <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb5-427"><a href="#cb5-427" aria-hidden="true" tabindex="-1"></a>  monthly_ndvi_df<span class="sc">$</span>month_name,</span>
+<span id="cb5-428"><a href="#cb5-428" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">unique</span>(monthly_ndvi_df<span class="sc">$</span>month_name)</span>
+<span id="cb5-429"><a href="#cb5-429" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-430"><a href="#cb5-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-431"><a href="#cb5-431" aria-hidden="true" tabindex="-1"></a><span class="co"># Render publication-quality small multiples plate</span></span>
+<span id="cb5-432"><a href="#cb5-432" aria-hidden="true" tabindex="-1"></a>map_12_small_multiples <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(monthly_ndvi_df) <span class="sc">+</span></span>
+<span id="cb5-433"><a href="#cb5-433" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> NDVI)) <span class="sc">+</span></span>
+<span id="cb5-434"><a href="#cb5-434" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(</span>
+<span id="cb5-435"><a href="#cb5-435" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"RdYlGn"</span>,</span>
+<span id="cb5-436"><a href="#cb5-436" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb5-437"><a href="#cb5-437" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="fl">0.8</span>),</span>
+<span id="cb5-438"><a href="#cb5-438" aria-hidden="true" tabindex="-1"></a>    <span class="at">oob =</span> scales<span class="sc">::</span>squish,</span>
+<span id="cb5-439"><a href="#cb5-439" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="fl">0.8</span>, <span class="at">by =</span> <span class="fl">0.2</span>),</span>
+<span id="cb5-440"><a href="#cb5-440" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"-0.2 (Water)"</span>, <span class="st">"0.0 (Bare)"</span>, <span class="st">"0.2 (Dry Grass)"</span>, <span class="st">"0.4"</span>, <span class="st">"0.6"</span>, <span class="st">"0.8 (Dense Green)"</span>),</span>
+<span id="cb5-441"><a href="#cb5-441" aria-hidden="true" tabindex="-1"></a>    <span class="at">guide =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb5-442"><a href="#cb5-442" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Normalized Difference Vegetation Index (NDVI)"</span>,</span>
+<span id="cb5-443"><a href="#cb5-443" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb5-444"><a href="#cb5-444" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb5-445"><a href="#cb5-445" aria-hidden="true" tabindex="-1"></a>      <span class="at">barwidth =</span> <span class="fu">unit</span>(<span class="dv">20</span>, <span class="st">"lines"</span>),</span>
+<span id="cb5-446"><a href="#cb5-446" aria-hidden="true" tabindex="-1"></a>      <span class="at">barheight =</span> <span class="fu">unit</span>(<span class="fl">0.7</span>, <span class="st">"lines"</span>)</span>
+<span id="cb5-447"><a href="#cb5-447" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-448"><a href="#cb5-448" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-449"><a href="#cb5-449" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>month_name, <span class="at">ncol =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb5-450"><a href="#cb5-450" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb5-451"><a href="#cb5-451" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-452"><a href="#cb5-452" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"North Campus Open Space (NCOS) - Monthly NDVI Phenology (2023-2024)"</span>,</span>
+<span id="cb5-453"><a href="#cb5-453" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Month-by-month vegetation dynamics from PlanetScope 8-band multispectral satellite imagery (3m resolution)"</span>,</span>
+<span id="cb5-454"><a href="#cb5-454" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"UCSB R-Atlas | Sensor: PlanetScope AnalyticMS (3m native downsampled 4x) | Coordinate Reference: UTM Zone 10N (WGS 84)"</span></span>
+<span id="cb5-455"><a href="#cb5-455" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-456"><a href="#cb5-456" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb5-457"><a href="#cb5-457" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb5-458"><a href="#cb5-458" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">5</span>)),</span>
+<span id="cb5-459"><a href="#cb5-459" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>, <span class="at">color =</span> <span class="st">"grey30"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">12</span>)),</span>
+<span id="cb5-460"><a href="#cb5-460" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.5</span>, <span class="at">color =</span> <span class="st">"grey40"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>)),</span>
+<span id="cb5-461"><a href="#cb5-461" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>, <span class="at">color =</span> <span class="st">"grey15"</span>),</span>
+<span id="cb5-462"><a href="#cb5-462" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#f2f4f7"</span>, <span class="at">color =</span> <span class="st">"#d0d5dd"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb5-463"><a href="#cb5-463" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"#d0d5dd"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb5-464"><a href="#cb5-464" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-465"><a href="#cb5-465" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-466"><a href="#cb5-466" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-467"><a href="#cb5-467" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-468"><a href="#cb5-468" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb5-469"><a href="#cb5-469" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">9.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb5-470"><a href="#cb5-470" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.5</span>),</span>
+<span id="cb5-471"><a href="#cb5-471" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">6</span>, <span class="at">b =</span> <span class="dv">2</span>),</span>
+<span id="cb5-472"><a href="#cb5-472" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb5-473"><a href="#cb5-473" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#f8f9fa"</span>, <span class="at">color =</span> <span class="cn">NA</span>)</span>
+<span id="cb5-474"><a href="#cb5-474" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-475"><a href="#cb5-475" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-476"><a href="#cb5-476" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(map_12_small_multiples)</span>
+<span id="cb5-477"><a href="#cb5-477" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"final_output/map_12_monthly_ndvi.png"</span>, <span class="at">plot =</span> map_12_small_multiples, <span class="at">width =</span> <span class="dv">14</span>, <span class="at">height =</span> <span class="fl">7.5</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb5-478"><a href="#cb5-478" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"images/map12_monthly_ndvi.png"</span>, <span class="at">plot =</span> map_12_small_multiples, <span class="at">width =</span> <span class="dv">14</span>, <span class="at">height =</span> <span class="fl">7.5</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb5-479"><a href="#cb5-479" aria-hidden="true" tabindex="-1"></a><span class="fu">file.copy</span>(<span class="st">"final_output/map_12_monthly_ndvi.png"</span>, <span class="st">"final_output/map_12_small_multiples.png"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-480"><a href="#cb5-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-481"><a href="#cb5-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-482"><a href="#cb5-482" aria-hidden="true" tabindex="-1"></a><span class="co"># we still need to format those as Julian dates</span></span>
+<span id="cb5-483"><a href="#cb5-483" aria-hidden="true" tabindex="-1"></a><span class="co"># hallucinated graph:</span></span>
+<span id="cb5-484"><a href="#cb5-484" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(avg_NDVI_df, mapping = aes(JulianDate, MeanNDVI)) +</span></span>
+<span id="cb5-485"><a href="#cb5-485" aria-hidden="true" tabindex="-1"></a><span class="co">#  geom_point() +</span></span>
+<span id="cb5-486"><a href="#cb5-486" aria-hidden="true" tabindex="-1"></a><span class="co">#  ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Now we can read this axis")</span></span>
+<span id="cb5-487"><a href="#cb5-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-488"><a href="#cb5-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-489"><a href="#cb5-489" aria-hidden="true" tabindex="-1"></a><span class="co"># we'll need weather data to mimic the lesson.</span></span>
+<span id="cb5-490"><a href="#cb5-490" aria-hidden="true" tabindex="-1"></a><span class="co"># or use our brains and eyes to define</span></span>
+<span id="cb5-491"><a href="#cb5-491" aria-hidden="true" tabindex="-1"></a><span class="co"># when was it rainiest?</span></span>
+<span id="cb5-492"><a href="#cb5-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-493"><a href="#cb5-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-494"><a href="#cb5-494" aria-hidden="true" tabindex="-1"></a>current_sheet <span class="ot">&lt;-</span> <span class="st">"Map 12 Complete"</span></span>
+<span id="cb5-495"><a href="#cb5-495" aria-hidden="true" tabindex="-1"></a>current_sheet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
@@ -1516,99 +1611,116 @@ window.Quarto = {
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rendered Map Plates</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### Monthly NDVI Raster Stack</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 12: 12 monthly NDVI scenes over the UCSB campus](../final_output/map_12.png)</span>{fig-alt="Map 12 NDVI Raster Stack" width="100%"}</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### Publication Plate: Month-by-Month NDVI Small Multiples</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>The finished atlas plate below provides a **publication-quality small multiples sequence** of the month-by-month Normalized Difference Vegetation Index (NDVI) across North Campus Open Space (NCOS) and West Campus over the 2023–2024 annual cycle. Multiple daily satellite passes within each calendar month are harmonized into monthly composites, tracking seasonal phenology from dry-season dormancy (September–November), the winter green flush (December–January), peak spring biomass in April (mean NDVI $\sim 0.41$), and the early-summer dry-down (May–August).</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### Vegetation Phenology Curve</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="al">![Plot 12: Mean campus NDVI across the annual cycle](../final_output/plot_12.png)</span>{fig-alt="Plot 12 Mean NDVI" width="85%"}</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 12 Small Multiples: Well-formatted small multiples of month-by-month NDVI phenology](../final_output/map_12_monthly_ndvi.png)</span>{fig-alt="Map 12 Month-by-Month NDVI Small Multiples" width="100%"}</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">### Acquisition Date Raster Stack</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="al">![Map 12: 11 satellite acquisition scenes over the UCSB campus and NCOS](../final_output/map_12.png)</span>{fig-alt="Map 12 NDVI Raster Stack" width="100%"}</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Summary</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Objective:** Calculate monthly Normalized Difference Vegetation Index (NDVI) rasters across an entire annual cycle using PlanetScope satellite collections to answer the question: *What month is UCSB greenest?*</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Formula:**</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}} = \frac{\text{Band 8} - \text{Band 6}}{\text{Band 8} + \text{Band 6}}$$</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Key Packages:** <span class="in">`terra`</span>, <span class="in">`ggplot2`</span>, <span class="in">`dplyr`</span>, <span class="in">`tidyr`</span>, <span class="in">`lubridate`</span>, <span class="in">`scales`</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Data Sources:**</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Monthly PlanetScope AnalyticMS scenes (<span class="in">`output_data/ndvi/*.tif`</span>)</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Campus and NCOS study area boundaries</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Outputs:**</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Initial raw stack verification: <span class="in">`images/ndvi_series_stack_1.png`</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Faceted multi-panel map plate: <span class="in">`final_output/map_12.png`</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Time-series trajectory plot: <span class="in">`final_output/plot_12.png`</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Step-by-Step Cartographic Workflow &amp; Intermediate Outputs</span></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>The script <span class="in">`scripts/map_12.r`</span> moves from raw multispectral GeoTIFFs through batch index calculation, extent filtering, Julian date sorting, and longitudinal trend plotting.</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">### Vegetation Phenology Curve</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="al">![Plot 12: Mean campus NDVI across the annual cycle](../final_output/plot_12.png)</span>{fig-alt="Plot 12 Mean NDVI" width="85%"}</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## Technical Summary</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Objective:** Calculate monthly Normalized Difference Vegetation Index (NDVI) rasters across an entire annual cycle using PlanetScope satellite collections to answer the question: *What month is UCSB greenest?*</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Formula:**</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}} = \frac{\text{Band 8} - \text{Band 6}}{\text{Band 8} + \text{Band 6}}$$</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Key Packages:** <span class="in">`terra`</span>, <span class="in">`ggplot2`</span>, <span class="in">`dplyr`</span>, <span class="in">`tidyr`</span>, <span class="in">`lubridate`</span>, <span class="in">`scales`</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Data Sources:**</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Monthly PlanetScope AnalyticMS scenes (<span class="in">`output_data/ndvi/*.tif`</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Campus and NCOS study area boundaries (<span class="in">`scripts/ncos.geojson`</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Outputs:**</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Initial raw stack verification: <span class="in">`images/ndvi_series_stack_1.png`</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Acquisition-date faceted stack: <span class="in">`final_output/map_12.png`</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Vegetation phenology trajectory curve: <span class="in">`final_output/plot_12.png`</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Publication-ready monthly small multiples: <span class="in">`final_output/map_12_monthly_ndvi.png`</span> (also archived at <span class="in">`final_output/map_12_small_multiples.png`</span>)</span>
 <span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 1: Batch NDVI Calculation &amp; Dimension Harmonization</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>For each monthly scene, Band 8 (NIR) and Band 6 (Red) are extracted to compute NDVI. A consistency filter inspects raster dimensions (<span class="in">`dim(test_size) == valid_tiff`</span>), discarding mismatched tiles:</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## Step-by-Step Cartographic Workflow &amp; Intermediate Outputs</span></span>
 <span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Batch NDVI formula</span></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>ndvi <span class="ot">&lt;-</span> (nir <span class="sc">-</span> red) <span class="sc">/</span> (nir <span class="sc">+</span> red)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>The script <span class="in">`scripts/map_12.r`</span> moves from raw multispectral GeoTIFFs through batch index calculation, extent filtering, Julian date sorting, and longitudinal trend plotting.</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 1: Batch NDVI Calculation &amp; Dimension Harmonization</span></span>
 <span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Harmonize dimensions across monthly stack</span></span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>ndvi_series_stack <span class="ot">&lt;-</span> <span class="fu">rast</span>(ndvi_series_paths)</span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 2: Intermediate Plot — Initial Full-Extent Raster Stack</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>For each monthly scene, Band 8 (NIR) and Band 6 (Red) are extracted to compute NDVI. A consistency filter inspects raster dimensions (<span class="in">`dim(test_size) == valid_tiff`</span>), discarding mismatched tiles:</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Batch NDVI formula</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>ndvi <span class="ot">&lt;-</span> (nir <span class="sc">-</span> red) <span class="sc">/</span> (nir <span class="sc">+</span> red)</span>
 <span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>An initial diagnostic plot verifies that all seasonal scenes ingested successfully into the multi-layer <span class="in">`SpatRaster`</span> object:</span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot initial stack layers</span></span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ndvi_series_stack)</span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"images/ndvi_series_stack_1.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">bg =</span> <span class="st">"white"</span>)</span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Harmonize dimensions across monthly stack</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>ndvi_series_stack <span class="ot">&lt;-</span> <span class="fu">rast</span>(ndvi_series_paths)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 2: Intermediate Plot — Initial Full-Extent Raster Stack</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>An initial diagnostic plot verifies that all seasonal scenes ingested successfully into the multi-layer <span class="in">`SpatRaster`</span> object:</span>
 <span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="al">![Intermediate Diagnostic: Initial full-extent multi-scene raster stack](../images/ndvi_series_stack_1.png)</span>{fig-alt="Map 12 Initial Raster Stack" width="100%"}</span>
-<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 3: Cropping to Focus AOI &amp; Tidy Pivot for Faceting</span></span>
-<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>The full stack is cropped to the North Campus Open Space and West Campus reserve boundary (<span class="in">`scripts/ncos.geojson`</span>). It is then converted into a long tidy data frame (<span class="in">`as.data.frame(xy=TRUE) %&gt;% pivot_longer()`</span>), mapping date strings to standardized calendar months and Julian days of the year (<span class="in">`yday(date)`</span>).</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot initial stack layers</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ndvi_series_stack)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"images/ndvi_series_stack_1.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Crop stack to focus area</span></span>
-<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>ncos_extent <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"scripts/ncos.geojson"</span>)</span>
-<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>ndvi_series_stack <span class="ot">&lt;-</span> <span class="fu">crop</span>(ndvi_series_stack, <span class="fu">project</span>(ncos_extent, ndvi_series_stack))</span>
-<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to tidy dataframe for ggplot faceting</span></span>
-<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>ndvi_series_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ndvi_series_stack, <span class="at">xy =</span> <span class="cn">TRUE</span>, <span class="at">na.rm =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>(x<span class="sc">:</span>y), <span class="at">names_to =</span> <span class="st">"image_date"</span>, <span class="at">values_to =</span> <span class="st">"NDVI_value"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">yyyymmdd =</span> <span class="fu">substr</span>(image_date, <span class="dv">2</span>, <span class="dv">9</span>),</span>
-<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as_date</span>(yyyymmdd),</span>
-<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">julian_date =</span> <span class="fu">yday</span>(date)</span>
-<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 4: Faceted Small Multiples &amp; Phenology Trajectory Curve</span></span>
-<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Faceted Stack (`map_12.png`):** Styled with a diverging Red-Yellow-Green spectral ramp (<span class="in">`scale_fill_distiller(palette = "RdYlGn", direction = 1)`</span>), visually tracking the flush of winter/spring greens and the transition to summer golden-brown grasslands.</span>
-<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Phenology Curve (`plot_12.png`):** The mean NDVI per scene is computed, plotting seasonal canopy dynamics across the academic calendar.</span>
-<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Render faceted monthly grid</span></span>
-<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> ndvi_series_df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> NDVI_value)) <span class="sc">+</span></span>
-<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdYlGn"</span>, <span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>yyyymmdd) <span class="sc">+</span></span>
-<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a><span class="fu">## Full R Script (`scripts/map_12.r`)</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="al">![Intermediate Diagnostic: Initial full-extent multi-scene raster stack](../images/ndvi_series_stack_1.png)</span>{fig-alt="Map 12 Initial Raster Stack" width="100%"}</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 3: Cropping to Focus AOI &amp; Tidy Pivot for Faceting</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>The full stack is cropped to the North Campus Open Space and West Campus reserve boundary (<span class="in">`scripts/ncos.geojson`</span>). It is then converted into a long tidy data frame (<span class="in">`as.data.frame(xy=TRUE) %&gt;% pivot_longer()`</span>), extracting clean 8-digit date strings (<span class="in">`YYYYMMDD`</span>) to resolve calendar dates and Julian days of the year (<span class="in">`yday(date)`</span>).</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Crop stack to focus area</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>ncos_extent <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="st">"scripts/ncos.geojson"</span>)</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>ndvi_series_stack <span class="ot">&lt;-</span> <span class="fu">crop</span>(ndvi_series_stack, <span class="fu">project</span>(ncos_extent, ndvi_series_stack))</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to tidy dataframe for ggplot faceting</span></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>ndvi_series_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ndvi_series_stack, <span class="at">xy =</span> <span class="cn">TRUE</span>, <span class="at">na.rm =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>(x<span class="sc">:</span>y), <span class="at">names_to =</span> <span class="st">"image_date"</span>, <span class="at">values_to =</span> <span class="st">"NDVI_value"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">yyyymmdd =</span> <span class="fu">sub</span>(<span class="st">".*?([0-9]{8}).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, image_date),</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as_date</span>(yyyymmdd),</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">julian_date =</span> <span class="fu">yday</span>(date)</span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 4: Exploratory Faceting &amp; Phenology Trajectory Curve</span></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Acquisition Facets (`map_12.png`):** Displays all 11 individual satellite acquisition scenes to observe sensor coverage patterns and data consistency.</span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Phenology Curve (`plot_12.png`):** The global spatial mean NDVI is computed per scene, revealing that April 2024 achieved the annual maximum canopy greenness.</span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a><span class="fu">### Step 5: Publication Plate — Well-Formatted Monthly Small Multiples</span></span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>To produce a cartographically refined atlas plate:</span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Intra-month acquisition passes are averaged into seamless monthly surfaces (<span class="in">`group_by(x, y, year_month, month_name) %&gt;% summarize(NDVI = mean(...))`</span>).</span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>A standardized, diverging Red-Yellow-Green spectral ramp (<span class="in">`scale_fill_distiller(palette = "RdYlGn", direction = 1)`</span>) maps negative values (open water and wetland channels) to deep rust, bare soils to buff/yellow, and dense canopy to rich forest green across identical limits <span class="in">`[-0.2, 0.8]`</span>.</span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Distracting coordinate clutter and tick marks are eliminated in favor of clean facet headers, subtle borders, and an anchored horizontal legend.</span>
 <span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_12.r")</span></span>
-<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a><span class="co"># Render publication small multiples plate</span></span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(monthly_ndvi_df) <span class="sc">+</span></span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> NDVI)) <span class="sc">+</span></span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(</span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"RdYlGn"</span>, <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>, <span class="fl">0.8</span>), <span class="at">oob =</span> scales<span class="sc">::</span>squish</span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>month_name, <span class="at">ncol =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## Full R Script (`scripts/map_12.r`)</span></span>
+<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a><span class="co">#| code: !expr readLines("../scripts/map_12.r")</span></span>
+<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
