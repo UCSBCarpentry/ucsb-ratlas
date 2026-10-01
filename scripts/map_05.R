@@ -40,8 +40,15 @@ gg_labelmaker <- function(plot_num){
 
 campus_DEM <- rast("source_data/campus_DEM.tif")
 plot(campus_DEM)
+png("images/map5_base_dem.png", width = 1200, height = 900, res = 300)
+plot(campus_DEM)
+dev.off()
+
 zoom_3_hillshade <- rast("source_data/campus_hillshade.tif")
 plot(zoom_3_hillshade)
+png("images/map5_base_hillshade.png", width = 1200, height = 900, res = 300)
+plot(zoom_3_hillshade)
+dev.off()
 
 
 #################################################
@@ -77,6 +84,7 @@ zoom_3_plot <- ggplot() +
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "Campus hillshade")
 
 zoom_3_plot
+ggsave("images/map5.1.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
 
 # ggplot the DEM
 zoom_3_DEM_df <- as.data.frame(campus_DEM, xy=TRUE)
@@ -91,6 +99,7 @@ zoom_3_plot <- ggplot() +
   ggtitle(gg_labelmaker(current_ggplot+1), subtitle = "UCSB DEM")
 
 zoom_3_plot
+ggsave("images/map5.2.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
 
 # now overlay
 zoom_3_plot <- ggplot() +
@@ -105,6 +114,7 @@ zoom_3_plot <- ggplot() +
   ggtitle("Map 5: zm 3: UCSB & Surroundings", subtitle = gg_labelmaker(current_ggplot+1))
 
 zoom_3_plot
+ggsave("images/map5.3.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
 
 # back out of the shortened theme and use what works
 zoom_3_plot <- ggplot() +
@@ -119,6 +129,7 @@ zoom_3_plot <- ggplot() +
   ggtitle("Map 5: zm 3: no axis labels", subtitle = gg_labelmaker(current_ggplot+1))
 
 zoom_3_plot
+ggsave("images/map5.4.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
 
 # back out of the shortened theme and use what works
 zoom_3_plot <- ggplot() +
@@ -133,6 +144,7 @@ zoom_3_plot <- ggplot() +
   ggtitle("UCSB Surroundings", subtitle = "on unceded land of the Chumash")
 
 zoom_3_plot
+ggsave("images/map5.5.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
 
 
 
@@ -161,6 +173,7 @@ zoom_3_plot <- ggplot() +
   ggtitle("UCSB Surroundings", subtitle = "on unceded land of the Chumash")
 
 zoom_3_plot
+ggsave("images/map5.6.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")
 
 
 zoom_3_plot <- ggplot() +
