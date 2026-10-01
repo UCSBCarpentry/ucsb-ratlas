@@ -4,7 +4,7 @@ subtitle: "A geospatial R example atlas of the UC Santa Barbara campus"
 ---
 
 ::: {.lead}
-Welcome to the **UCSB R-Atlas**, a collection of maps and wscripts workflows showcasing the University of California, Santa Barbara campus and the work of the Library's DREAM Lab.
+Welcome to the **UCSB R-Atlas**, a collection of maps and scripts showcasing the University of California, Santa Barbara campus and the work of the Library's DREAM Lab.
 :::
 
 This project started by using local UCSB examples applied to all steps of the Carpentries' [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.org/r-raster-vector-geospatial/) curriculum. That curriculum is now retired, but the rAtlas lives on as a Gemini- and OpenCode example project.
