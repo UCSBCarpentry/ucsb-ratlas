@@ -180,8 +180,12 @@ zoom_3_plot <- ggplot() +
   geom_sf(data = bikeways, color = "#00abff", linewidth = 0.4) +
   geom_sf(data = ncos_trails, color = "#00abff", linewidth = 0.4) +
   my_theme +
+  theme(
+    plot.title = element_text(size = 9.5, face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = 8, hjust = 0)
+  ) +
   coord_sf(expand = FALSE) + 
-  ggtitle("UCSB Surroundings")
+  labs(title = "UCSB Surroundings")
 
 zoom_3_plot
 ggsave("images/map5.6.png", width = 4, height = 3, plot = zoom_3_plot, bg = "white")

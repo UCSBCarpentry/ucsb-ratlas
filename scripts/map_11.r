@@ -94,7 +94,8 @@ plot(poly_gol, border = "#1565C0", lwd = 2.5, lty = 2, add = TRUE)
 plot(aoi_nad27, border = "#D50000", lwd = 4, add = TRUE)
 title(
   main = "Both Dibblee Geologic Sheets (Dos Pueblos DF-09 & Goleta DF-07) with Campus AOI",
-  sub = "Green = Dos Pueblos neatline | Blue = Goleta neatline | Red = Greater Campus AOI"
+  sub = "Green = Dos Pueblos neatline | Blue = Goleta neatline | Red = Greater Campus AOI",
+  adj = 0
 )
 dev.off()
 file.copy("final_output/map11_both_tiffs_full_extent_aoi.png", "images/map11_both_tiffs_full_extent_aoi.png", overwrite = TRUE)
@@ -121,7 +122,8 @@ plotRGB(campus_geology)
 plot(aoi_nad27, border = "#D50000", lwd = 2.5, add = TRUE)
 title(
   main = "Spliced Dibblee Geologic Map - Greater UCSB Campus AOI",
-  sub = "Seamless mosaic of Dos Pueblos Canyon (DB0009) & Goleta (DB0007) Quadrangles"
+  sub = "Seamless mosaic of Dos Pueblos Canyon (DB0009) & Goleta (DB0007) Quadrangles",
+  adj = 0
 )
 dev.off()
 file.copy("images/map11.png", "final_output/map_11.png", overwrite = TRUE)

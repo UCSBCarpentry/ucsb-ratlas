@@ -123,24 +123,23 @@ par(mfrow = c(2,2), mar = c(2, 2, 3, 1))
 
 #  natural color
 natural <- plotRGB(planet_scene, stretch = "hist",
-                   r = 4, g = 3, b = 2,
-                   main = "Natural Color (Bands 4, 3, 2)")
-
+                   r = 4, g = 3, b = 2)
+title(main = "Natural Color (Bands 4, 3, 2)", adj = 0, font.main = 2)
 
 #  false-color IR
 false_color_ir <- plotRGB(planet_scene, stretch = "hist",
-                          r = 8, g = 3, b = 2,
-                          main = "False-Color Infrared (Bands 8, 3, 2)")
+                          r = 8, g = 3, b = 2)
+title(main = "False-Color Infrared (Bands 8, 3, 2)", adj = 0, font.main = 2)
 
 #  yellow = green
 yellow_green <- plotRGB(planet_scene, stretch = "hist",
-                        r = 7, g = 5, b = 1,
-                        main = "Red Edge & Yellow (Bands 7, 5, 1)")
+                        r = 7, g = 5, b = 1)
+title(main = "Red Edge & Yellow (Bands 7, 5, 1)", adj = 0, font.main = 2)
 
 #  coastal/aquatic 7,4,1
 pretty_741 <- plotRGB(planet_scene, stretch = "hist",
-                      r = 7, g = 4, b = 1,
-                      main = "Coastal & Aquatic (Bands 7, 4, 1)")
+                      r = 7, g = 4, b = 1)
+title(main = "Coastal & Aquatic (Bands 7, 4, 1)", adj = 0, font.main = 2)
 
 
 

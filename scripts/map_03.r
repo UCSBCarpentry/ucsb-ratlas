@@ -246,8 +246,8 @@ zoom_1_final_plot <- ggplot() +
   scale_x_continuous(breaks = seq(-125, -115, by = 5), labels = function(x) paste0(abs(x), "°W")) +
   scale_y_continuous(breaks = seq(32, 44, by = 4), labels = function(y) paste0(y, "°N")) +
   theme(
-    plot.title = element_text(size = 9.5, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 8, hjust = 0.5),
+    plot.title = element_text(size = 9.5, face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = 8, hjust = 0),
     axis.title = element_blank(),
     axis.text = element_text(size = 8, color = "gray20"),
     axis.ticks = element_line(color = "gray40", linewidth = 0.3),

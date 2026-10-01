@@ -129,8 +129,8 @@ final_map6 <- ggplot() +
   ) +
   rAtlas_theme +
   theme(
-    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 13, hjust = 0.5),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = 13, hjust = 0),
     legend.position = "bottom"
   )
 

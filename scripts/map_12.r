@@ -455,9 +455,9 @@ map_12_small_multiples <- ggplot(monthly_ndvi_df) +
   ) +
   theme_minimal(base_size = 11) +
   theme(
-    plot.title = element_text(face = "bold", size = 15, hjust = 0.5, margin = margin(b = 5)),
-    plot.subtitle = element_text(size = 11, color = "grey30", hjust = 0.5, margin = margin(b = 12)),
-    plot.caption = element_text(size = 8.5, color = "grey40", hjust = 0.5, margin = margin(t = 10)),
+    plot.title = element_text(face = "bold", size = 15, hjust = 0, margin = margin(b = 5)),
+    plot.subtitle = element_text(size = 11, color = "grey30", hjust = 0, margin = margin(b = 12)),
+    plot.caption = element_text(size = 8.5, color = "grey40", hjust = 0, margin = margin(t = 10)),
     strip.text = element_text(face = "bold", size = 11, color = "grey15"),
     strip.background = element_rect(fill = "#f2f4f7", color = "#d0d5dd", linewidth = 0.5),
     panel.border = element_rect(color = "#d0d5dd", fill = NA, linewidth = 0.5),

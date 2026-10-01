@@ -408,6 +408,8 @@ zoom_2_final_plot <- ggplot() +
   geom_spatvector(data = zoom_3_extent_proj, color = "red", fill = NA, linewidth = 1.2) +
   theme_minimal() +
   theme(
+    plot.title = element_text(size = 9.5, face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = 8, hjust = 0),
     axis.title = element_blank(),
     axis.text = element_blank(),
     axis.ticks = element_blank(),
@@ -417,7 +419,8 @@ zoom_2_final_plot <- ggplot() +
     panel.background = element_blank()
   ) +
   coord_sf(expand = FALSE) +
-  ggtitle("On the Bight of California",
+  labs(
+    title = "On the Bight of California",
     subtitle = "Point Conception to Mexico"
   )
 

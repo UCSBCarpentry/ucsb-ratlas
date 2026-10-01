@@ -484,8 +484,8 @@ map2_gg6 <- ggplot() +
     x = NULL, y = NULL
   ) +
   theme(
-    plot.title = element_text(hjust = 0.5, size = 22, face = "bold"),
-    plot.subtitle = element_text(hjust = 0.5, size = 16),
+    plot.title = element_text(hjust = 0, size = 22, face = "bold"),
+    plot.subtitle = element_text(hjust = 0, size = 16),
     axis.title = element_blank(),
     axis.text = element_blank(),
     axis.ticks = element_blank(),

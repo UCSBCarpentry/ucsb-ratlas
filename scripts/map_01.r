@@ -394,10 +394,14 @@ final_ggplot <- ggplot() +
   geom_sf(data=habitat, color=alpha("darkorchid1", .1), fill=NA) +
   geom_sf(data=bikeways, color="#00abff") +
   geom_sf(data=ncos_trails, color="#00abff") +
-  labs(title=gg_title_string, 
-       subtitle="UCSB, buildings, environs, bikepaths",
+  labs(title = "Map 1: Campus Overview", 
+       subtitle = "UCSB, buildings, environs, bikepaths",
        caption = "rAtlas Map 1") + 
   my_theme +
+  theme(
+    plot.title = element_text(size = 22, face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = 16, hjust = 0)
+  ) +
   coord_sf()
 
 

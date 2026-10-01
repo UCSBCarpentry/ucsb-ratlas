@@ -159,8 +159,8 @@ map10_5_plot <- ggplot() +
   ) +
   theme_minimal() +
   theme(
-    plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
-    plot.subtitle = element_text(size = 13.5, hjust = 0.5, color = "gray25"),
+    plot.title = element_text(face = "bold", size = 20, hjust = 0),
+    plot.subtitle = element_text(size = 13.5, hjust = 0, color = "gray25"),
     plot.caption = element_text(size = 10, color = "gray50"),
     axis.title = element_blank(),
     axis.text = element_text(size = 9, color = "gray30"),
