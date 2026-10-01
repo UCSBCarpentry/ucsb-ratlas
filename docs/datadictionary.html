@@ -474,6 +474,7 @@ Note
 <li>Walkways &amp; Campus Buildings: <code>Campus_Buildings.shp</code> (ICM via AGO circa 2017).</li>
 <li>Campus Trees: UCSB Treekeeper ArcGIS Online layer.</li>
 <li>Bike Paths: <code>bikelanescollapsedv8.shp</code> (<code>source_data/icm_bikes/bike_paths/</code>).</li>
+<li>Modern NCOS Multi-Use Trails: <code>source_data/ncos_trails/ncos_multiuse_trails.geojson</code>.</li>
 <li>Wetland &amp; Lagoon Habitats: NCOS habitat boundary shapefiles.</li>
 </ul></li>
 <li><strong>Rasters:</strong>
@@ -1055,52 +1056,53 @@ Note
 <span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Walkways &amp; Campus Buildings: <span class="in">`Campus_Buildings.shp`</span> (ICM via AGO circa 2017).</span>
 <span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Campus Trees: UCSB Treekeeper ArcGIS Online layer.</span>
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Bike Paths: <span class="in">`bikelanescollapsedv8.shp`</span> (<span class="in">`source_data/icm_bikes/bike_paths/`</span>).</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Wetland &amp; Lagoon Habitats: NCOS habitat boundary shapefiles.</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Rasters:**</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Merged bathymetry + topography: <span class="in">`campus_bathotopo.tif`</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Hillshade raster generated via <span class="in">`terra::shade()`</span>.</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 2: Thematic Trees &amp; Water</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Campus Trees (<span class="in">`DTK_012116.shp`</span>) filtered by top 5 species and classified by height.</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Stream and lagoon network (<span class="in">`california_streams/streams_crop.shp`</span>).</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Campus bikeway centerlines.</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="fu">### Maps 3, 4, 5 &amp; 6: Progressive Zoom Series</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 3 (Western US):** Broad regional context with hillshade, whole degree graticule, and populated places.</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 4 (Bight of California):** Regional Southern California Bight, ocean hillshade, and campus locator box.</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 5 (Extended Campus):** Detailed local context with greater campus DEM, batho-topo, and hillshade.</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 6 (UCSB &amp; Environs):** Detailed base map linking regional geometry to campus bounds.</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 8: PlanetScope Satellite Imagery</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>4-band and 8-band PlanetScope imagery representing seasonal snapshots (Fall, Winter, Spring, Summer).</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Used for natural color (RGB) and false-color infrared visualization.</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 10: Vector Intersections</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Bike paths (<span class="in">`bikelanescollapsedv8.shp`</span>, 2016 ICM) &amp; California streams (<span class="in">`streams_crop.shp`</span>).</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Intersection points computed via <span class="in">`terra::intersect()`</span>, saved as <span class="in">`output_data/creek_bike_intersections.shp`</span>.</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 10.5: NCOS Trail Data Provenance &amp; Infrastructure Comparison</span></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Legacy Campus Bikeways:** <span class="in">`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`</span> — Captured from UCSB Interactive Campus Map (ICM) via ArcGIS Online circa 2016–2017. Terminates at Whittier Drive prior to NCOS restoration.</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Modern NCOS Multi-Use Trails:** <span class="in">`source_data/ncos_trails/ncos_multiuse_trails.geojson`</span> — Derived from <span class="co">[</span><span class="ot">UCSB CCBER NCOS Public Access &amp; Trail Map</span><span class="co">](https://www.ccber.ucsb.edu/ncos)</span> (constructed 2018–2021). Cross-validated against CIRGIS 2020 1-foot orthophotography (<span class="in">`source_data/cirgis_1ft/w_campus_1ft.tif`</span>) and OpenStreetMap (<span class="in">`highway=cycleway`</span> / <span class="in">`path`</span>).</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Study Area Bounding Box:** <span class="in">`scripts/ncos.geojson`</span>.</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Restored Wetland Ground Truth:** <span class="in">`source_data/NCOS_Shorebird_Foraging_Habitat/`</span>.</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Full Stream Network:** <span class="in">`source_data/california_streams/California_Streams.shp`</span>.</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Actual Bridge Crossing Export:** <span class="in">`output_data/ncos_creek_crossing_actual.shp`</span> (Devereux Creek timber bridge at 34.4204° N, 119.8770° W).</span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 11: Dibblee Geologic Quadrangle</span></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Western Quadrangle: Dos Pueblos Canyon 7.5' geologic quadrangle (<span class="in">`source_data/09gDosPueblos/DB0009.tif`</span>, DF-09).</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Eastern Quadrangle: Goleta 7.5' geologic quadrangle (<span class="in">`source_data/07gGoleta/DB0007.tif`</span>, DF-07).</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Spliced Dividing Meridian: Longitude $-119^\circ 52' 30''\text{ W}$ ($-119.875^\circ\text{ W}$).</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Campus Area of Interest: <span class="in">`source_data/greater_UCSB-campus-aoi.geojson`</span> (straddles both sheets).</span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Intermediate Full-Extent GeoTIFF with AOI: <span class="in">`output_data/dibblee_both_tiffs_full_extent_with_aoi.tif`</span>.</span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Diagnostic Multi-Sheet Plate: <span class="in">`final_output/map11_both_tiffs_full_extent_aoi.png`</span>.</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Rectified and spliced using <span class="in">`terra::rectify(..., method = "bilinear")`</span> and <span class="in">`terra::merge()`</span>.</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 12: 12-Month NDVI Phenology Stack</span></span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Monthly PlanetScope imagery clipped to UCSB campus.</span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Normalized Difference Vegetation Index:</span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$$</span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Outputs 12-month raster time series and mean NDVI seasonal profile plot.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Modern NCOS Multi-Use Trails: <span class="in">`source_data/ncos_trails/ncos_multiuse_trails.geojson`</span>.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Wetland &amp; Lagoon Habitats: NCOS habitat boundary shapefiles.</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Rasters:**</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Merged bathymetry + topography: <span class="in">`campus_bathotopo.tif`</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Hillshade raster generated via <span class="in">`terra::shade()`</span>.</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 2: Thematic Trees &amp; Water</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Campus Trees (<span class="in">`DTK_012116.shp`</span>) filtered by top 5 species and classified by height.</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Stream and lagoon network (<span class="in">`california_streams/streams_crop.shp`</span>).</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Campus bikeway centerlines.</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">### Maps 3, 4, 5 &amp; 6: Progressive Zoom Series</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 3 (Western US):** Broad regional context with hillshade, whole degree graticule, and populated places.</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 4 (Bight of California):** Regional Southern California Bight, ocean hillshade, and campus locator box.</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 5 (Extended Campus):** Detailed local context with greater campus DEM, batho-topo, and hillshade.</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Map 6 (UCSB &amp; Environs):** Detailed base map linking regional geometry to campus bounds.</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 8: PlanetScope Satellite Imagery</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>4-band and 8-band PlanetScope imagery representing seasonal snapshots (Fall, Winter, Spring, Summer).</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Used for natural color (RGB) and false-color infrared visualization.</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 10: Vector Intersections</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Bike paths (<span class="in">`bikelanescollapsedv8.shp`</span>, 2016 ICM) &amp; California streams (<span class="in">`streams_crop.shp`</span>).</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Intersection points computed via <span class="in">`terra::intersect()`</span>, saved as <span class="in">`output_data/creek_bike_intersections.shp`</span>.</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 10.5: NCOS Trail Data Provenance &amp; Infrastructure Comparison</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Legacy Campus Bikeways:** <span class="in">`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`</span> — Captured from UCSB Interactive Campus Map (ICM) via ArcGIS Online circa 2016–2017. Terminates at Whittier Drive prior to NCOS restoration.</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Modern NCOS Multi-Use Trails:** <span class="in">`source_data/ncos_trails/ncos_multiuse_trails.geojson`</span> — Derived from <span class="co">[</span><span class="ot">UCSB CCBER NCOS Public Access &amp; Trail Map</span><span class="co">](https://www.ccber.ucsb.edu/ncos)</span> (constructed 2018–2021). Cross-validated against CIRGIS 2020 1-foot orthophotography (<span class="in">`source_data/cirgis_1ft/w_campus_1ft.tif`</span>) and OpenStreetMap (<span class="in">`highway=cycleway`</span> / <span class="in">`path`</span>).</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Study Area Bounding Box:** <span class="in">`scripts/ncos.geojson`</span>.</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Restored Wetland Ground Truth:** <span class="in">`source_data/NCOS_Shorebird_Foraging_Habitat/`</span>.</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Full Stream Network:** <span class="in">`source_data/california_streams/California_Streams.shp`</span>.</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Actual Bridge Crossing Export:** <span class="in">`output_data/ncos_creek_crossing_actual.shp`</span> (Devereux Creek timber bridge at 34.4204° N, 119.8770° W).</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 11: Dibblee Geologic Quadrangle</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Western Quadrangle: Dos Pueblos Canyon 7.5' geologic quadrangle (<span class="in">`source_data/09gDosPueblos/DB0009.tif`</span>, DF-09).</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Eastern Quadrangle: Goleta 7.5' geologic quadrangle (<span class="in">`source_data/07gGoleta/DB0007.tif`</span>, DF-07).</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Spliced Dividing Meridian: Longitude $-119^\circ 52' 30''\text{ W}$ ($-119.875^\circ\text{ W}$).</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Campus Area of Interest: <span class="in">`source_data/greater_UCSB-campus-aoi.geojson`</span> (straddles both sheets).</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Intermediate Full-Extent GeoTIFF with AOI: <span class="in">`output_data/dibblee_both_tiffs_full_extent_with_aoi.tif`</span>.</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Diagnostic Multi-Sheet Plate: <span class="in">`final_output/map11_both_tiffs_full_extent_aoi.png`</span>.</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Rectified and spliced using <span class="in">`terra::rectify(..., method = "bilinear")`</span> and <span class="in">`terra::merge()`</span>.</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="fu">### Map 12: 12-Month NDVI Phenology Stack</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Monthly PlanetScope imagery clipped to UCSB campus.</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Normalized Difference Vegetation Index:</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$$</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Outputs 12-month raster time series and mean NDVI seasonal profile plot.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

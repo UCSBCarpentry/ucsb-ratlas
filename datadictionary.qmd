@@ -37,6 +37,7 @@ Items from the Carpentry Google Drive are downloaded as a single compressed arch
   * Walkways & Campus Buildings: `Campus_Buildings.shp` (ICM via AGO circa 2017).
   * Campus Trees: UCSB Treekeeper ArcGIS Online layer.
   * Bike Paths: `bikelanescollapsedv8.shp` (`source_data/icm_bikes/bike_paths/`).
+  * Modern NCOS Multi-Use Trails: `source_data/ncos_trails/ncos_multiuse_trails.geojson`.
   * Wetland & Lagoon Habitats: NCOS habitat boundary shapefiles.
 * **Rasters:**
   * Merged bathymetry + topography: `campus_bathotopo.tif`

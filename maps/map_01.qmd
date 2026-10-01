@@ -20,6 +20,7 @@ subtitle: "Wide view of campus featuring bathymetry, topography, hillshade, and 
   * Campus buildings footprint shapefile (`source_data/campus_buildings/Campus_Buildings.shp`)
   * Isla Vista building footprints (`source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp`)
   * Bike path centerlines (`source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp`)
+  * Modern NCOS multi-use trails (`source_data/ncos_trails/ncos_multiuse_trails.geojson`)
   * Lagoon & shorebird foraging habitat (`source_data/NCOS_Shorebird_Foraging_Habitat/`)
 * **Aspect Ratio:** 16 inches wide x 9 inches tall (`16x9`).
 
@@ -39,12 +40,14 @@ buildings <- st_read("source_data/campus_buildings/Campus_Buildings.shp")
 iv_buildings <- st_read("source_data/iv_buildings/iv_buildings/CA_Structures_ExportFeatures.shp")
 bikeways <- st_read("source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp")
 habitat <- st_read("source_data/NCOS_Shorebird_Foraging_Habitat/NCOS_Shorebird_Foraging_Habitat.shp")
+ncos_trails <- st_read("source_data/ncos_trails/ncos_multiuse_trails.geojson")
 
 ggplot() +
   geom_sf(data=habitat) +
   geom_sf(data=buildings) +
   geom_sf(data=iv_buildings) +
   geom_sf(data=bikeways) +
+  geom_sf(data=ncos_trails) +
   coord_sf()
 ```
 
@@ -61,6 +64,7 @@ ggplot() +
   geom_sf(data=iv_buildings, color="light gray") +
   geom_sf(data=buildings) +
   geom_sf(data=bikeways, color="blue") +
+  geom_sf(data=ncos_trails, color="blue") +
   my_theme +
   coord_sf()
 ```
@@ -95,6 +99,7 @@ buildings <- st_transform(buildings, campus_projection)
 iv_buildings <- st_transform(iv_buildings, campus_projection)
 bikeways <- st_transform(bikeways, campus_projection)
 habitat <- st_transform(habitat, campus_projection)
+ncos_trails <- st_transform(ncos_trails, campus_projection)
 ```
 
 ### Step 4: Alpha-Blended Hillshading & Final Composition
@@ -113,6 +118,7 @@ final_ggplot <- ggplot() +
   geom_sf(data=buildings, color ="pink") +
   geom_sf(data=habitat, color=alpha("darkorchid1", .1), fill=NA) +
   geom_sf(data=bikeways, color="#00abff") +
+  geom_sf(data=ncos_trails, color="#00abff") +
   labs(title="UCSB, buildings, environs, bikepaths", caption = "rAtlas Map 1") + 
   my_theme +
   coord_sf()

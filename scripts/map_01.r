@@ -49,6 +49,7 @@ iv_buildings <- st_read("source_data/iv_buildings/iv_buildings/CA_Structures_Exp
 # walkways <- ???
 bikeways <- st_read("source_data/icm_bikes/bike_paths/bikelanescollapsedv8.shp")
 habitat <- st_read("source_data/NCOS_Shorebird_Foraging_Habitat/NCOS_Shorebird_Foraging_Habitat.shp")
+ncos_trails <- st_read("source_data/ncos_trails/ncos_multiuse_trails.geojson")
 
 
 # basic terra plots
@@ -57,6 +58,7 @@ plot(buildings$geometry)
 plot(iv_buildings$geometry)
 plot(bikeways$geometry)
 plot(habitat$geometry)
+plot(ncos_trails$geometry)
 
 
 # overlays as in episode 8
@@ -67,6 +69,7 @@ ggplot() +
   geom_sf(data=buildings) +
   geom_sf(data=iv_buildings) +
   geom_sf(data=bikeways) +
+  geom_sf(data=ncos_trails) +
   ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf()
 
@@ -78,6 +81,7 @@ ggplot() +
   geom_sf(data=buildings) +
   geom_sf(data=iv_buildings) +
   geom_sf(data=bikeways)  +
+  geom_sf(data=ncos_trails) +
   my_theme +
   ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf()
@@ -94,6 +98,7 @@ ggplot() +
   geom_sf(data=iv_buildings, color="pink") +
   geom_sf(data=buildings) +
   geom_sf(data=bikeways, color="blue") +
+  geom_sf(data=ncos_trails, color="blue") +
   my_theme +
   ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf()
@@ -107,6 +112,7 @@ ggplot() +
   geom_sf(data=iv_buildings, color="light gray") +
   geom_sf(data=buildings) +
   geom_sf(data=bikeways, color="blue") +
+  geom_sf(data=ncos_trails, color="blue") +
   my_theme +
     ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf() 
@@ -312,6 +318,7 @@ ggplot() +
   geom_sf(data=habitat, color="yellow") +
   geom_sf(data=buildings) +
   geom_sf(data=bikeways, color="blue") +
+  geom_sf(data=ncos_trails, color="blue") +
   my_theme +
   ggtitle(gg_labelmaker(current_ggplot+1)) +
     coord_sf()
@@ -321,6 +328,7 @@ buildings <- st_transform(buildings, crs(campus_DEM))
 iv_buildings <- st_transform(iv_buildings, crs(campus_DEM))
 bikeways <- st_transform(bikeways, crs(campus_DEM))
 habitat <- st_transform(habitat, crs(campus_DEM))
+ncos_trails <- st_transform(ncos_trails, crs(campus_DEM))
 
 # now the overlays work
 ggplot() +
@@ -330,6 +338,7 @@ ggplot() +
   geom_sf(data=habitat, color="yellow") +
   geom_sf(data=buildings) +
   geom_sf(data=bikeways, color="blue") +
+  geom_sf(data=ncos_trails, color="blue") +
   my_theme +
   ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf()
@@ -355,11 +364,12 @@ ggplot() +
   geom_raster(data = campus_hillshade_df, aes(x=x, y=y, alpha = campus_hillshade), show.legend = FALSE) +
   geom_raster(data = campus_bath_df, aes(x=x, y=y, fill = bathymetry)) +
   scale_fill_viridis_c(na.value="NA")+ 
-  labs(labels =label_number(scale = 1/1000)) +
+  scale_y_continuous(labels = number_format(accuracy = 0.01)) +
   geom_sf(data=iv_buildings, color=alpha("light gray", .1), fill=NA) +
   geom_sf(data=buildings, color ="hotpink") +
   geom_sf(data=habitat, color="darkorchid1") +
   geom_sf(data=bikeways, color="#00abff") +
+  geom_sf(data=ncos_trails, color="#00abff") +
   my_theme +
   ggtitle(gg_labelmaker(current_ggplot+1)) +
   coord_sf()
@@ -383,6 +393,7 @@ final_ggplot <- ggplot() +
   geom_sf(data=buildings, color ="pink") +
   geom_sf(data=habitat, color=alpha("darkorchid1", .1), fill=NA) +
   geom_sf(data=bikeways, color="#00abff") +
+  geom_sf(data=ncos_trails, color="#00abff") +
   labs(title=gg_title_string, 
        subtitle="UCSB, buildings, environs, bikepaths",
        caption = "rAtlas Map 1") + 
@@ -390,9 +401,7 @@ final_ggplot <- ggplot() +
   coord_sf()
 
 
-# is there anything we don't like about this?
-# do we want subtle off-campus bike paths?
-# or at least a current set that would got across NCOS?
+# Modern NCOS multi-use trails added to bridge the network across NCOS
 
 final_ggplot
 ggsave("images/map1.11.png", width = 16, height = 9, plot=final_ggplot)
