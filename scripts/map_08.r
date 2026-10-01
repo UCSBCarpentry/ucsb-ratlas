@@ -56,19 +56,28 @@ plotRGB(planet_scene, stretch = "lin")
 plotRGB(planet_scene, stretch = "hist")
 
 # Now plot out some different combinations:
-#  natural color
+#  1. Natural color (Bands 4, 3, 2):
+#     Why use it? Approximates human vision; ideal baseline for orientation,
+#     recognizing familiar campus buildings, roads, and beach sands.
 plotRGB(planet_scene, stretch = "hist",
         r = 4, g = 3, b = 2)
 
-#  false-color IR
+#  2. False-color IR (CIR) (Bands 8, 3, 2):
+#     Why use it? NIR (Band 8) is strongly reflected by healthy chlorophyll
+#     and absorbed by water. Irrigated campus turf/trees glow crimson, while
+#     Campus Lagoon and ocean water appear ink-black, creating sharp land-water boundaries.
 plotRGB(planet_scene, stretch = "hist",
         r = 8, g = 3, b = 2)
 
-#  something pretty or odd
+#  3. High-contrast coastal/odd (Bands 1, 2, 6):
+#     Why use it? Emphasizes coastal water penetration (Band 1 Coastal Blue)
+#     against red-absorbing terrestrial surfaces.
 plotRGB(planet_scene, stretch = "hist",
         r = 1, g = 2, b = 6)
 
-#  yellow = green
+#  4. Yellow = green / Red Edge (Bands 7, 5, 1):
+#     Why use it? Band 7 (Red Edge) is sensitive to pre-visual plant stress and
+#     canopy nitrogen, while Band 5 (Yellow) detects senescence and drying grasses.
 plotRGB(planet_scene, stretch = "hist",
         r = 7, g = 5, b = 1)
 
