@@ -84,6 +84,8 @@ PlanetScope multi-spectral satellite imagery comparing campus across seasons.
 ::: {.g-col-12 .g-col-md-6}
 ### [Map 9: Vernal Pools Analysis](maps/map_09.qmd)
 
+[![](images/map_09_placeholder.svg)](maps/map_09.qmd)
+
 Topographic depression analysis using DEMs to identify campus vernal pools (*in design*).
 :::
 
